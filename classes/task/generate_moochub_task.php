@@ -34,7 +34,7 @@ class generate_moochub_task extends \core\task\scheduled_task {
 		$products = $DB->get_records('ildmeta');
 		foreach ($products as $product) {
 			//mtrace('debug: product: '.$product->courseid.' '.$product->coursetitle);
-			if ($product->noindexcourse == 0) {
+			if ($product->noindexcourse == 0 && $DB->record_exists('course', array('id' => $product->courseid))) {
 				$data_entry = array();
 				$data_entry['type'] = 'courses';
 				$data_entry['id'] = 'openvhb'.$product->courseid;
@@ -99,7 +99,7 @@ class generate_moochub_task extends \core\task\scheduled_task {
 
 
 
-		$json['data'][] = $data_entry;
+		#$json['data'][] = $data_entry;
 
 		if ($fp = fopen($CFG->dirroot.'/courses.json', 'w')) {
 			fwrite($fp, json_encode($json));
