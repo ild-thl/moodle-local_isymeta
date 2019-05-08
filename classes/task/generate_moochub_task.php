@@ -84,6 +84,7 @@ class generate_moochub_task extends \core\task\scheduled_task {
 				$data_entry['attributes']['subjectarea'] = explode("\n", $subjectareas->param1)[$product->subjectarea];
 				$data_entry['attributes']['processingtime'] = $product->processingtime . ' Stunden';
 				$data_entry['attributes']['starttime'] = date('d.m.y', $product->starttime);
+				$data_entry['attributes']['teasertext'] = $product->teasertext;
 
 				$json['data'][] = $data_entry;
 			}
