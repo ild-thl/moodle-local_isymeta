@@ -187,8 +187,6 @@ class ildmeta_form extends moodleform
             $licenses_arr[] = $license->shortname;
         }
 
-        // print_object($licenses_arr);
-
         $mform->addElement('select', 'license', get_string('license', 'local_ildmeta'), $licenses_arr);
         $mform->setType('license', PARAM_RAW);
 
@@ -210,7 +208,6 @@ class ildmeta_form extends moodleform
     }
 	// Funktioniert hier nicht. Falsche Stelle
 	function data_preprocessing(&$default_values) {
-		//print_object($this->_customdata); die();
 		$lecturer = $this->_customdata['lecturer'];
 		print($lecturer);die();
 		if ($this->current->instance) {

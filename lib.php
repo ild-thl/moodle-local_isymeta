@@ -36,7 +36,7 @@ function local_ildmeta_extend_settings_navigation($settingsnav, $context) {
 function local_ildmeta_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options=array()) {
 
     global $DB;
-    if ($context->contextlevel != CONTEXT_COURSE /*&& $context->contextlevel != CONTEXT_SYSTEM*/) {
+    if ($context->contextlevel != CONTEXT_COURSE) {
 
         return false;
     }
