@@ -11,16 +11,6 @@ class ildmeta_form extends moodleform
         global $CFG, $DB;
         $mform = $this->_form; // Don't forget the underscore!
 
-
-        /*
-        if($this->_customdata['max_lecturer'] > 0) {
-            $max_lecturer = $this->_customdata['max_lecturer'];
-        } else {
-            $max_lecturer = 2;
-        }
-        */
-
-
         $lecturer = $this->_customdata['lecturer'];
         $max_lecturer = $this->_customdata['max_lecturer'];
         $courseid = $this->_customdata['courseid'];
@@ -119,32 +109,6 @@ class ildmeta_form extends moodleform
         $mform->addElement('html', '<h2>Angaben zu Autoren*innen und Anbieter*innen</h2>');
         $i = 1;
         
-        /*
-        while ($i <= $max_lecturer) {
-
-            // Anbieter*innen / Autor*innen
-            $radioarray = array();
-            $radioarray[] = $mform->createElement('radio', 'lecturer_type_' . $i, '', get_string('lecturer_type_0', 'local_ildmeta'), 0, '');
-            $radioarray[] = $mform->createElement('radio', 'lecturer_type_' . $i, '', get_string('lecturer_type_1', 'local_ildmeta'), 1, '');
-            $mform->addGroup($radioarray, 'radioar', get_string('lecturer_type', 'local_ildmeta'), array(' '), false);
-            if ($i > 1) {
-                $mform->setDefault('lecturer_type_' . $i, 1);
-            }
-
-            // Übersichtsbild 1
-            $mform->addElement('filemanager', 'detailslecturer_image_' . $i, get_string('detailslecturer_image', 'local_ildmeta'), null, $filemanageropts);
-
-            // Details Dozent 1
-            $mform->addElement('editor', 'detailslecturer_editor_' . $i, get_string('detailslecturer', 'local_ildmeta'), null, $editoropts);
-            $mform->setType('detailslecturer_editor', PARAM_RAW);
-
-            $mform->addElement('html', '<hr>');
-
-            $i++;
-
-        }
-        */
-        
         // above $i will be used here!
         if (empty($lecturer)) {
 
@@ -213,18 +177,6 @@ class ildmeta_form extends moodleform
         $mform->addRule('additional_lecturer', 'Bitte eine Zahl angeben', 'numeric', '', 'client');
         $mform->addElement('static', 'text_additional_lecturer', '', 'Bitte die Anzahl der zusätzlich benötigten Felder zum Anlegen weiterer Autor*innen und Anbieter*innen angeben.');
         $this->add_action_buttons($cancel = false, $submitlabel = 'Felder hinzufügen');
-
-
-        // Details Dozent
-        //  $mform->addElement('editor', 'detailslecturer_editor', get_string('detailslecturer', 'local_ildmeta'), null, $editoropts);
-        //  $mform->setType('detailslecturer_editor', PARAM_RAW);
-
-        // Weitere Autor*innen
-        //  $mform->addElement('editor', 'detailsmorelecturer_editor', get_string('detailsmorelecturer', 'local_ildmeta'), null, $editoropts);
-        //  $mform->setType('detailsmorelecturer_editor', PARAM_RAW);
-
-        // Lizenz
-        //$licenses = $DB->get_record('license', array('shortname' => 'subjectareas'));
 
         $mform->addElement('html', '<h2>Weitere Informationen</h2>');
 

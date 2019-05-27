@@ -45,13 +45,9 @@ $editoropts = array(
     'maxbytes' => '100000',
     'maxfiles' => 10,
     'context' => $context,
-    //'noclean' => 0,
     'trusttext' => true,
     'enable_filemanagement' => true
 );
-
-
-// $max_lecturer = $record->detailslecturer;
 
 if (isset($record->detailslecturer)) {
     $max_lecturer = $record->detailslecturer;
@@ -61,16 +57,9 @@ if (isset($record->detailslecturer)) {
 
 $records_lect = $DB->get_records($tbl_lecturer, array('courseid' => $courseid));
 
-
-// $customdata = array('filemanageropts' => $filemanageropts, 'editoropts' => $editoropts, 'max_lecturer' => $max_lecturer);
 $customdata = array('filemanageropts' => $filemanageropts, 'editoropts' => $editoropts, 'max_lecturer' => $max_lecturer, 'courseid' => $courseid, 'lecturer' => $records_lect);
 
 $mform = new ildmeta_form($url . '?courseid=' . $courseid, $customdata);
-
-
-//$customdata = array('filemanageropts' => $filemanageropts, 'editoropts' => $editoropts);
-
-//$mform = new ildmeta_form($url.'?courseid='.$course_id, $customdata);
 
 $itemid = 0;
 
@@ -89,37 +78,7 @@ if ($mform->is_cancelled()) {
     file_prepare_draft_area($draftitemid, $coursecontext->id, 'local_ildmeta', 'overviewimage', $draftitemid);
 
     $overimage = $DB->get_record($tbl, ['courseid' => $courseid])->overviewimage;
-//if($draftitemid != $overimage) {
     file_save_draft_area_files($fromform->overviewimage, $coursecontext->id, 'local_ildmeta', 'overviewimage', 0);
-//} else {
-//	$draftitemid = $overimage;
-//}
-
-
-    /*
-    // Get lecturer editor + filemanager
-    $i = 1;
-
-    $lecturer = new stdClass();
-    while ($i <= $max_lecturer) {
-
-        $str1 = "detailslecturer_image_" . $i;
-        $str2 = "detailslecturer_editor_" . $i;
-        $str3 = "lecturer_type_" . $i;
-
-        $lecturer->$str1 = $fromform->$str1;
-        $lecturer->$str2 = $fromform->$str2['text'];
-        $lecturer->$str3 = $fromform->$str3;
-
-        $draftlecturer = file_get_submitted_draft_itemid($str1);
-        file_prepare_draft_area($draftlecturer, $context->id, 'local_ildmeta', $str1, $draftlecturer);
-        file_save_draft_area_files($draftlecturer, $context->id, 'local_ildmeta', $str1, $draftlecturer);
-
-        $i++;
-    }
-
-    */
-
 
     // first of all, check for additional lecturer fields
 
@@ -138,7 +97,6 @@ if ($mform->is_cancelled()) {
         $record_lect_last = $DB->get_record_sql("SELECT * FROM {ildmeta_additional} WHERE courseid = ? ORDER BY id DESC", array('courseid' => $courseid));
 
         $i = substr($record_lect_last->name, -1) + 1;
-        //$i = $addlect->detailslecturer + 1;
         $maxi = ($i - 1) + $fromform->additional_lecturer;
 
         while ($i <= $maxi) {
@@ -166,13 +124,11 @@ if ($mform->is_cancelled()) {
 
 
     $todb = new stdClass;
-    //$todb->courseid 					= $course_id;
     $todb->courseid = $courseid;
     $todb->overviewimage = $draftitemid;
     $todb->coursetitle = $fromform->coursetitle;
     $todb->lecturer = $fromform->lecturer;
     $todb->noindexcourse = $fromform->noindexcourse;
-    //$todb->courseid 					= $course_id;
     $todb->overviewimage = $draftitemid;
     $todb->detailimage = $fromform->detailimage;
     $todb->university = $fromform->university;
@@ -184,9 +140,6 @@ if ($mform->is_cancelled()) {
     $todb->targetgroup = $fromform->targetgroup['text'];
     $todb->learninggoals = $fromform->learninggoals['text'];
     $todb->structure = $fromform->structure['text'];
-    //$todb->detailslecturer 				= $fromform->detailslecturer_editor['text'];
-//	$todb->detailsmorelecturer 			= $fromform->detailsmorelecturer_editor['text'];
-    //$todb->detailslecturerimage 		= $fromform->detailslecturerimage;
     $todb->certificateofachievement = $fromform->certificateofachievement['text'];
     $todb->license = $fromform->license;
     $todb->videocode = $fromform->videocode;
@@ -194,7 +147,6 @@ if ($mform->is_cancelled()) {
     $todb->tags = $fromform->tags;
 
 // !
-    //$mform->set_data($todb);
 
     // if course is not in db yet
     if (!$DB->get_record($tbl, array('courseid' => $course_id))) {
@@ -208,8 +160,6 @@ if ($mform->is_cancelled()) {
         $todb->id = $primkey->id;
         $DB->update_record($tbl, $todb);
     }
-
-    //$mform->set_data($todb);
 
     // Get lecturer editor + filemanager
 
@@ -231,8 +181,6 @@ if ($mform->is_cancelled()) {
         }
     }
 
-    // if lecturer is not in db yet - ildmeta_additional - we will insert it, else the field will be updated
-
     foreach ($lecturer as $key => $value) {
 
         $lectodb = new stdClass();
@@ -253,42 +201,6 @@ if ($mform->is_cancelled()) {
         }
 
     }
-
-
-    /*
-    foreach ($lecturer as $key => $value) {
-        $lectodb = new stdClass();
-
-        $lectodb->courseid = $courseid;
-        $lectodb->name = $key;
-        $lectodb->value = $value;
-
-        if (!$DB->get_record($tbl_lecturer, array('name' => $lectodb->name, 'courseid' => $courseid))) {
-            $DB->insert_record($tbl_lecturer, $lectodb);
-        } else {
-
-            $primkey = $DB->get_record($tbl_lecturer, array('courseid' => $courseid, 'name' => $lectodb->name));
-
-            $lectodb->id = $primkey->id;
-
-            $DB->update_record($tbl_lecturer, $lectodb);
-        }
-
-    }
-
-    if ($fromform->additional_lecturer > 0) {
-        $addlect = new stdClass();
-        $addlect->id = $record->id;
-        $addlect->detailslecturer = $fromform->additional_lecturer + $record->detailslecturer;
-        $DB->update_record($tbl, $addlect);
-
-        $url = new moodle_url('/local/ildmeta/pages/ildmeta.php');
-        redirect($url . '?courseid=' . $courseid, 'Daten erfolgreich gespeichert', null, \core\output\notification::NOTIFY_SUCCESS);
-
-    }
-
-    */
-
 
     // after database redirect to detailpage
     // $url defined after check for additional lecturer
@@ -297,16 +209,8 @@ if ($mform->is_cancelled()) {
 } else {
     // prefill forms from db
     $getdb = $DB->get_record($tbl, array('courseid' => $course_id));
-    //$uni = $DB->get_record('user_info_field', array('id' => 1));
 
     $getlect = $DB->get_records($tbl_lecturer, array('courseid' => $courseid));
-
-//$entry = new stdClass;
-//$overviewimageid = file_prepare_standard_filemanager($entry, 'overviewimage', array(), $context, 'local_ildmeta', 'overviewimage', 0);
-
-//print_object($overviewimageid);
-
-//$overviewimageid = $overviewimageid->overviewimage_filemanager;
 
 
     if ($getdb != null) {
@@ -326,8 +230,6 @@ if ($mform->is_cancelled()) {
         $new->learninggoals['text'] = $getdb->learninggoals;
         $new->structure['text'] = $getdb->structure;
         $new->additional_lecturer = '0';
-        //	$new->detailslecturer_editor['text'] 	= $getdb->detailslecturer;
-        //	$new->detailsmorelecturer_editor['text'] 	= $getdb->detailsmorelecturer;
         $new->certificateofachievement['text'] = $getdb->certificateofachievement;
         $new->license = $getdb->license;
         $new->videocode = $getdb->videocode;
@@ -348,37 +250,6 @@ if ($mform->is_cancelled()) {
             }
 
         }
-
-        /*
-        if (!empty($getlect)) {
-            $i = 1;
-            while ($i <= $max_lecturer) {
-
-                foreach ($getlect as $lec) {
-
-                    $str1 = "detailslecturer_image_" . $i;
-                    $str2 = "detailslecturer_editor_" . $i;
-                    $str3 = "lecturer_type_" . $i;
-
-                    if ($lec->name === $str1) {
-                        $new->$str1 = $lec->value;
-                    }
-
-                    if ($lec->name === $str2) {
-                        $new->$str2['text'] = $lec->value;
-                    }
-
-                    if ($lec->name === $str3) {
-                        $new->$str3 = $lec->value;
-                    }
-                }
-
-                $i++;
-            }
-        }
-
-        */
-		// 
 		
 		$sql = 'SELECT filearea 
 					    FROM {files} 

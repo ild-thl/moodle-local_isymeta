@@ -6,9 +6,6 @@ use context_system;
 use context_course;
 use moodle_url;
 
-//require_once('../../lib.php');
-//require_once('../../../../blocks/ildmetaselect/lib.php');
-
 class generate_moochub_task extends \core\task\scheduled_task {
  
     public function get_name() {
@@ -33,7 +30,6 @@ class generate_moochub_task extends \core\task\scheduled_task {
 
 		$products = $DB->get_records('ildmeta');
 		foreach ($products as $product) {
-			//mtrace('debug: product: '.$product->courseid.' '.$product->coursetitle);
 			if ($product->noindexcourse == 0 && $DB->record_exists('course', array('id' => $product->courseid))) {
 				$data_entry = array();
 				$data_entry['type'] = 'courses';
@@ -52,18 +48,11 @@ class generate_moochub_task extends \core\task\scheduled_task {
 
 				$fs = get_file_storage();
 				$fileurl = '';
-				//$context = context_system::instance();
 				$context = context_course::instance($product->courseid);
-				//mtrace('debug:   contextid: '.$context->id);
-				//$files = $fs->get_area_files($context->id, 'local_ildmeta', 'overviewimage', $product->overviewimage);
 				$files = $fs->get_area_files($context->id, 'local_ildmeta', 'overviewimage', 0);
-				//mtrace('debug:   files: '.count($files));
-			//	mtrace($context->contextlevel);
 				$fileurl = '';
 				foreach ($files as $file) {
-				    //if ($file->get_itemid() == $product->overviewimage && $file->get_filename() !== '.') {
 					if ($file->get_filename() !== '.') {
-						//mtrace('debug:     filename: '.$file->get_filename());
 				        $fileurl = moodle_url::make_pluginfile_url(
 				            $file->get_contextid(),
 				            $file->get_component(),
@@ -72,7 +61,6 @@ class generate_moochub_task extends \core\task\scheduled_task {
 				            $file->get_filepath(),
 				            $file->get_filename()
 				        );
-						//mtrace('debug:     fileurl: '.$fileurl);
 				    }
 				}
 
@@ -91,17 +79,6 @@ class generate_moochub_task extends \core\task\scheduled_task {
 			mtrace('product added: '.$product->courseid.' '.$product->coursetitle);
 		}
 
-
-
-
-
-
-
-
-
-
-		#$json['data'][] = $data_entry;
-
 		if ($fp = fopen($CFG->dirroot.'/courses.json', 'w')) {
 			fwrite($fp, json_encode($json));
 			fclose($fp);
@@ -110,109 +87,3 @@ class generate_moochub_task extends \core\task\scheduled_task {
 		}
     }
 }
-
-/*
-
-Temporär deaktiviert
-
-*/
-
-
-
-
-
-
-/*require_once('../../../../config.php');
-require_once('../../lib.php');
-
-
- 
-class generate_moochub_task extends \core\task\scheduled_task {
- 
-    public function get_name() {
-        return get_string('generate_moochub_task', 'local_ildmeta');
-    }
- 
-    public function execute() {
-    	*/
-  /*  	global $CFG, $DB;
-	
-		$json = array();
-		$json['links'] = array(
-				'self'=>'',
-				'first'=>'',
-				'last'=>'',
-				'prev'=>'',
-				'next'=>''
-		);
-		$json['data'] = array();
-		*/
-	/*	$products = $DB->get_records('ildmeta');
-		foreach ($products as $product) {
-			if ($product->noindexcourse == 0) {
-				$data_entry = array();
-				$data_entry['type'] = 'courses';
-				$data_entry['id'] = 'openvhb'.$product->courseid;
-				$data_entry['attributes'] = array();
-				$data_entry['attributes']['url'] = $CFG->wwwroot . '/course/view.php?id=' . $product->courseid;
-
-				$universities = $DB->get_record('user_info_field', array('shortname' => 'universities'));
-				$subjectareas = $DB->get_record('user_info_field', array('shortname' => 'subjectareas'));
-
-				//Liste noch statisch, später dynamisch (?)
-				$lang_list = [
-				    'Deutsch',
-				    'Englisch'
-				];
-
-				$context = context_system::instance();
-				$fs = get_file_storage();
-				$fileurl = '';
-				$context = context_system::instance();
-				$files = $fs->get_area_files($context->id, 'local_ildmeta', 'overviewimage', $product->overviewimage);
-
-				foreach ($files as $file) {
-				    if ($file->get_itemid() == $product->overviewimage && $file->get_filename() !== '.') {
-				        $fileurl = moodle_url::make_pluginfile_url(
-				            $file->get_contextid(),
-				            $file->get_component(),
-				            $file->get_filearea(),
-				            $file->get_itemid(),
-				            $file->get_filepath(),
-				            $file->get_filename()
-				        );
-				    }
-				}
-
-				$data_entry['attributes']['name'] = $product->coursetitle;
-				$data_entry['attributes']['overviewimage'] = $fileurl;
-				$data_entry['attributes']['lecturer'] = $product->lecturer;
-				$data_entry['attributes']['university'] = explode("\n", $universities->param1)[$product->university];
-				$data_entry['attributes']['courselanguage'] = $lang_list[$product->courselanguage];
-				$data_entry['attributes']['subjectarea'] = explode("\n", $subjectareas->param1)[$product->subjectarea];
-				$data_entry['attributes']['processingtime'] = $product->processingtime . ' Stunden';
-				$data_entry['attributes']['starttime'] = date('d.m.y', $product->starttime);
-
-				$json['data'][] = $data_entry;
-			}
-		}*/
-
-		// Test
-		/*
-		$data_entry = array();
-		$data_entry['attributes'] = array();
-		$data_entry['attributes'] = 'Test';
-		$json['data'][] = $data_entry;
-
-		if ($fp = fopen($CFG->dirroot.'/courses.json', 'w')) {
-			fwrite($fp, json_encode($json));
-			fclose($fp);
-		} else {
-			mtrace('Error opening file:'.$CFG->dirroot.'/courses.json');
-		}
-		
-		return true;
-    }
-    
-}
-*/

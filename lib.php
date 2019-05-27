@@ -41,18 +41,8 @@ function local_ildmeta_pluginfile($course, $cm, $context, $filearea, $args, $for
         return false;
     }
     //require_login();
-
-    // temporary deactivated because of the dynamic generated fileareas detailslecturer_image_'.$i
-  /* if ($filearea != 'overviewimage') {
-        return false;
-    }*/
     $itemid = (int)array_shift($args);
 
-    /*
-    if ($itemid != 5) {
-        return false;
-    }
-*/
 
     $fs = get_file_storage();
     $filename = array_pop($args);

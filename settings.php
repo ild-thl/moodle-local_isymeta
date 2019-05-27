@@ -12,15 +12,4 @@ if ( $hassiteconfig ){
 	// Create 
 	$ADMIN->add( 'localplugins', $settings );
  
-	// Add a setting field to the settings for this page
-	//$settings->add( new admin_setting_configtext(
- 
-/*		$name = "Name",
-		$title = "Title",
-		$description = "asdd",
-		$default = "asd",
-		PARAM_NOTAGS
- */
-	//) );
- 
 }
