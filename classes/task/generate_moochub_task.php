@@ -35,7 +35,7 @@ class generate_moochub_task extends \core\task\scheduled_task {
 				$data_entry['type'] = 'courses';
 				$data_entry['id'] = 'openvhb'.$product->courseid;
 				$data_entry['attributes'] = array();
-				$data_entry['attributes']['url'] = $CFG->wwwroot . '/course/view.php?id=' . $product->courseid;
+				$data_entry['attributes']['url'] = $CFG->wwwroot . '/blocks/ildmetaselect/detailpage.php?id=' . $product->courseid;
 
 				$universities = $DB->get_record('user_info_field', array('shortname' => 'universities'));
 				$subjectareas = $DB->get_record('user_info_field', array('shortname' => 'subjectareas'));
