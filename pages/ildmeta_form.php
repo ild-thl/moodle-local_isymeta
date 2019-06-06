@@ -2,7 +2,6 @@
 
 //defined('MOODLE_INTERNAL') || die();
 
-require_once('../../config.php');
 require_once("$CFG->libdir/formslib.php");
 
 class ildmeta_form extends moodleform
