@@ -2,6 +2,7 @@
 
 //defined('MOODLE_INTERNAL') || die();
 
+require_once('../../config.php');
 require_once("$CFG->libdir/formslib.php");
 
 class ildmeta_form extends moodleform
@@ -29,8 +30,12 @@ class ildmeta_form extends moodleform
         $mform->addElement('html', '<h2>Meta: Übersichtsseite</h2>');
 
         // Indexierung
-        $mform->addElement('select', 'noindexcourse', get_string('noindexcourse', 'local_ildmeta'), array(get_string('noindexcourse_yes', 'local_ildmeta'), get_string('noindexcourse_no', 'local_ildmeta')));
-        $mform->setType('index', PARAM_RAW);
+        $context = context_system::instance();
+
+        if (has_capability('local/ildmeta:indexation', $context)) {
+            $mform->addElement('select', 'noindexcourse', get_string('noindexcourse', 'local_ildmeta'), array(get_string('noindexcourse_yes', 'local_ildmeta'), get_string('noindexcourse_no', 'local_ildmeta'), get_string('noindexcourse_limited', 'local_ildmeta')));
+            $mform->setType('index', PARAM_RAW);
+        }
 
         // Anbietende Unis
         $universities = $DB->get_record('user_info_field', array('shortname' => 'universities'));

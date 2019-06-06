@@ -35,6 +35,15 @@ $capabilities = array(
             'kursmanager' => CAP_ALLOW,
             'coursecreator' => CAP_ALLOW
         ),
+    ),
+
+    'local/ildmeta:indexation' => array(
+        'riskbitmask' => RISK_SPAM | RISK_XSS,
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_COURSE,
+        'archetypes' => array(
+            'manager' => CAP_ALLOW
+        ),
     )
 
 );

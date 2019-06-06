@@ -42,6 +42,8 @@ $string['subjectarea'] = 'Fachbereich Wissensgebiet';
 $string['noindexcourse'] = 'Indexierung';
 $string['noindexcourse_yes'] = 'Ja';
 $string['noindexcourse_no'] = 'Nein';
+$string['noindexcourse_limited'] = 'Nur Kurskachel';
+
 
 $string['text_university'] = 'Liste wird aus Nutzerprofilfelder-Liste namens "universities" gespeist.';
 $string['text_subjectarea'] = 'Liste wird aus Nutzerprofilfelder-Liste namens "subjectareas" gespeist.';
