@@ -128,7 +128,9 @@ if ($mform->is_cancelled()) {
     $todb->overviewimage = $draftitemid;
     $todb->coursetitle = $fromform->coursetitle;
     $todb->lecturer = $fromform->lecturer;
-    $todb->noindexcourse = $fromform->noindexcourse;
+    if(isset($fromform->noindexcourse)){
+        $todb->noindexcourse = $fromform->noindexcourse;
+    }
     $todb->overviewimage = $draftitemid;
     $todb->detailimage = $fromform->detailimage;
     $todb->university = $fromform->university;
@@ -151,6 +153,11 @@ if ($mform->is_cancelled()) {
     // if course is not in db yet
     if (!$DB->get_record($tbl, array('courseid' => $course_id))) {
 
+        //if noindexcourse in todb is not set
+        if(!isset($todb->noindexcourse)){
+            //use the default value "no indexination"
+            $todb->noindexcourse = 1;
+        }
         $DB->insert_record($tbl, $todb);
 
         //if course is in db, update
@@ -158,6 +165,11 @@ if ($mform->is_cancelled()) {
         $primkey = $DB->get_record($tbl, array('courseid' => $course_id));
 
         $todb->id = $primkey->id;
+        //if noindexcourse in todb is not set
+        if(!isset($todb->noindexcourse)){
+            //use the old value from the db
+            $todb->noindexcourse = $primkey->noindexcourse;
+        }
         $DB->update_record($tbl, $todb);
     }
 
