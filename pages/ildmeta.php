@@ -63,8 +63,8 @@ $mform = new ildmeta_form($url . '?courseid=' . $courseid, $customdata);
 
 $itemid = 0;
 
-$draftitemid = file_get_submitted_draft_itemid('overviewimage');
-file_prepare_draft_area($draftitemid, $coursecontext->id, 'local_ildmeta', 'overviewimage', $draftitemid);
+#$draftitemid = file_get_submitted_draft_itemid('overviewimage');
+#file_prepare_draft_area($draftitemid, $coursecontext->id, 'local_ildmeta', 'overviewimage', $draftitemid);
 
 
 if ($mform->is_cancelled()) {
@@ -77,8 +77,14 @@ if ($mform->is_cancelled()) {
     $draftitemid = file_get_submitted_draft_itemid('overviewimage');
     file_prepare_draft_area($draftitemid, $coursecontext->id, 'local_ildmeta', 'overviewimage', $draftitemid);
 
-    $overimage = $DB->get_record($tbl, ['courseid' => $courseid])->overviewimage;
+    $draftitemid_di = file_get_submitted_draft_itemid('detailimage');
+    file_prepare_draft_area($draftitemid_di, $coursecontext->id, 'local_ildmeta', 'detailimage', $draftitemid_di);
+
+    #$overimage = $DB->get_record($tbl, ['courseid' => $courseid])->overviewimage;
     file_save_draft_area_files($fromform->overviewimage, $coursecontext->id, 'local_ildmeta', 'overviewimage', 0);
+
+    #$detailimage = $DB->get_record($tbl, ['courseid' => $courseid])->detailimage;
+    file_save_draft_area_files($fromform->detailimage, $coursecontext->id, 'local_ildmeta', 'detailimage', 0);
 
     // first of all, check for additional lecturer fields
 
@@ -96,7 +102,9 @@ if ($mform->is_cancelled()) {
 
         $record_lect_last = $DB->get_record_sql("SELECT * FROM {ildmeta_additional} WHERE courseid = ? ORDER BY id DESC", array('courseid' => $courseid));
 
-        $i = substr($record_lect_last->name, -1) + 1;
+        //$i = substr($record_lect_last->name, -1) + 1;
+        $i = explode("_", $record_lect_last->name)[2] + 1;
+
         $maxi = ($i - 1) + $fromform->additional_lecturer;
 
         while ($i <= $maxi) {
@@ -133,7 +141,7 @@ if ($mform->is_cancelled()) {
     }
     $todb->overviewimage = $draftitemid;
     $todb->detailimage = $fromform->detailimage;
-    $todb->university = $fromform->university;
+    $todb->university = implode(",", $fromform->university);
     $todb->subjectarea = $fromform->subjectarea;
     $todb->courselanguage = $fromform->courselanguage;
     $todb->processingtime = $fromform->processingtime;

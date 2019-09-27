@@ -39,8 +39,9 @@ class ildmeta_form extends moodleform
         // Anbietende Unis
         $universities = $DB->get_record('user_info_field', array('shortname' => 'universities'));
 
-        $mform->addElement('select', 'university', get_string('university', 'local_ildmeta'), explode("\n", $universities->param1));
+        $select = $mform->addElement('select', 'university', get_string('university', 'local_ildmeta'), explode("\n", $universities->param1));
         $mform->setType('university', PARAM_RAW);
+        $select->setMultiple(true);
         $mform->addElement('static', 'text_university', '', get_string('text_university', 'local_ildmeta'));
 
         // Fachbereich/Wissensgebiet
