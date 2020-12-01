@@ -6,7 +6,7 @@ defined('MOODLE_INTERNAL') || die();
 
 $string['generate_moochub_task'] = 'MOOCHUB Task';
 
-$string['pluginname'] = 'ILD Meta';
+$string['pluginname'] = 'Metatiles';
 $string['testtext'] = 'This is a Teststring';
 $string['heading'] = 'Metadaten bearbeiten';
 $string['heading_output'] = 'This is the Ouput Heading';

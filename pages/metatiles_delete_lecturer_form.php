@@ -2,7 +2,7 @@
 
 require_once("$CFG->libdir/formslib.php");
 
-class ildmeta_delete_lecturer_form extends moodleform
+class metatiles_delete_lecturer_form extends moodleform
 {
 //Add elements to form
     function definition()

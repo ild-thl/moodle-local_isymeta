@@ -1,11 +1,11 @@
 <?php
 
-function xmldb_local_ildmeta_upgrade($oldversion) {
+function xmldb_local_metatiles_upgrade($oldversion) {
     global $DB;
     $dbman = $DB->get_manager();
 
     //if ($oldversion < 2018091800) {
-    	$table = new xmldb_table('ildmeta');
+    	$table = new xmldb_table('metatiles');
 
         $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
         $table->add_field('courseid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
@@ -39,25 +39,25 @@ function xmldb_local_ildmeta_upgrade($oldversion) {
 
     // if ($oldversion < 2020061906) {
 
-        // Define table ildmeta_additional to be created.
-        $table = new xmldb_table('ildmeta_additional');
+        // Define table metatiles_additional to be created.
+        $table = new xmldb_table('metatiles_additional');
 
-        // Adding fields to table ildmeta_additional.
+        // Adding fields to table metatiles_additional.
         $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
         $table->add_field('courseid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
         $table->add_field('name', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
         $table->add_field('value', XMLDB_TYPE_TEXT, null, null, null, null, null);
 
-        // Adding keys to table ildmeta_additional.
+        // Adding keys to table metatiles_additional.
         $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
 
-        // Conditionally launch create table for ildmeta_additional.
+        // Conditionally launch create table for metatiles_additional.
         if (!$dbman->table_exists($table)) {
             $dbman->create_table($table);
         }
 
-        // Ildmeta savepoint reached.
-        upgrade_plugin_savepoint(true, 2020062301, 'local', 'ildmeta');
+        // metatiles savepoint reached.
+        upgrade_plugin_savepoint(true, 2020120102, 'local', 'metatiles');
     //  }
 
 

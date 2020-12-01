@@ -4,7 +4,7 @@
 
 require_once("$CFG->libdir/formslib.php");
 
-class ildmeta_form extends moodleform
+class metatiles_form extends moodleform
 {
     function definition()
     {
@@ -31,82 +31,82 @@ class ildmeta_form extends moodleform
         // Indexierung
         $context = context_system::instance();
 
-        if (has_capability('local/ildmeta:indexation', $context)) {
-            $mform->addElement('select', 'noindexcourse', get_string('noindexcourse', 'local_ildmeta'), array(get_string('noindexcourse_yes', 'local_ildmeta'), get_string('noindexcourse_no', 'local_ildmeta'), get_string('noindexcourse_limited', 'local_ildmeta')));
+        if (has_capability('local/metatiles:indexation', $context)) {
+            $mform->addElement('select', 'noindexcourse', get_string('noindexcourse', 'local_metatiles'), array(get_string('noindexcourse_yes', 'local_metatiles'), get_string('noindexcourse_no', 'local_metatiles'), get_string('noindexcourse_limited', 'local_metatiles')));
             $mform->setType('index', PARAM_RAW);
         }
 
         // Anbietende Unis
-        $universities = $DB->get_record('user_info_field', array('shortname' => 'universities'));
+        $universities = $DB->get_record('user_info_field', array('shortname' => 'targetgroups'));
 
-        $select = $mform->addElement('select', 'university', get_string('university', 'local_ildmeta'), explode("\n", $universities->param1));
+        $select = $mform->addElement('select', 'university', get_string('university', 'local_metatiles'), explode("\n", $universities->param1));
         $mform->setType('university', PARAM_RAW);
         $select->setMultiple(true);
-        $mform->addElement('static', 'text_university', '', get_string('text_university', 'local_ildmeta'));
+        $mform->addElement('static', 'text_university', '', get_string('text_university', 'local_metatiles'));
 
         // Fachbereich/Wissensgebiet
-        $subjectareas = $DB->get_record('user_info_field', array('shortname' => 'subjectareas'));
+        $subjectareas = $DB->get_record('user_info_field', array('shortname' => 'formats'));
 
-        $mform->addElement('select', 'subjectarea', get_string('subjectarea', 'local_ildmeta'), explode("\n", $subjectareas->param1));
+        $mform->addElement('select', 'subjectarea', get_string('subjectarea', 'local_metatiles'), explode("\n", $subjectareas->param1));
         $mform->setType('subjectarea', PARAM_RAW);
-        $mform->addElement('static', 'text_subjectarea', '', get_string('text_subjectarea', 'local_ildmeta'));
+        $mform->addElement('static', 'text_subjectarea', '', get_string('text_subjectarea', 'local_metatiles'));
 
         // Übersichtsbild
-        $mform->addElement('filemanager', 'overviewimage', get_string('overviewimage', 'local_ildmeta'), null, $filemanageropts);
+        $mform->addElement('filemanager', 'overviewimage', get_string('overviewimage', 'local_metatiles'), null, $filemanageropts);
 
         // Detailbild
-        $mform->addElement('filemanager', 'detailimage', get_string('detailimage', 'local_ildmeta'), null, $filemanageropts);
+        $mform->addElement('filemanager', 'detailimage', get_string('detailimage', 'local_metatiles'), null, $filemanageropts);
 
         // Videocode
-        $mform->addElement('text', 'videocode', get_string('videocode', 'local_ildmeta'));
+        $mform->addElement('text', 'videocode', get_string('videocode', 'local_metatiles'));
         $mform->setType('videocode', PARAM_TEXT);
 
         // Kurstitel
-        $mform->addElement('text', 'coursetitle', get_string('coursetitle', 'local_ildmeta'));
+        $mform->addElement('text', 'coursetitle', get_string('coursetitle', 'local_metatiles'));
         $mform->setType('coursetitle', PARAM_TEXT);
 
         // Dozent
-        $mform->addElement('text', 'lecturer', get_string('lecturer', 'local_ildmeta'));
+        $mform->addElement('text', 'lecturer', get_string('lecturer', 'local_metatiles'));
         $mform->setType('lecturer', PARAM_TEXT);
 
         // Kurssprache
-        $mform->addElement('select', 'courselanguage', get_string('courselanguage', 'local_ildmeta'), $lang_list);
+        $mform->addElement('select', 'courselanguage', get_string('courselanguage', 'local_metatiles'), $lang_list);
         $mform->setType('courselanguage', PARAM_RAW);
 
         // Bearbeitungszeit in Stunden
-        $mform->addElement('text', 'processingtime', get_string('processingtime', 'local_ildmeta'));
+        $mform->addElement('text', 'processingtime', get_string('processingtime', 'local_metatiles'));
         $mform->setType('processingtime', PARAM_INT);
-        $mform->addRule('processingtime', get_string('text_processingtime', 'local_ildmeta'), 'numeric');
-        $mform->addElement('static', 'text_processingtime', '', get_string('text_processingtime', 'local_ildmeta'));
+        $mform->addRule('processingtime', get_string('text_processingtime', 'local_metatiles'), 'numeric');
+        $mform->addElement('static', 'text_processingtime', '', get_string('text_processingtime', 'local_metatiles'));
 
         // Startzeit
-        $mform->addElement('date_selector', 'starttime', get_string('starttime', 'local_ildmeta'));
+        $mform->addElement('date_selector', 'starttime', get_string('starttime', 'local_metatiles'));
 
         $mform->addElement('html', '<h2>Meta: Detailseite</h2>');
 
         // Teasertext
-        $mform->addElement('editor', 'teasertext', get_string('teasertext', 'local_ildmeta'));
+        $mform->addElement('editor', 'teasertext', get_string('teasertext', 'local_metatiles'));
         $mform->setType('teasertext', PARAM_RAW);
         //  $mform->setDefault('teasertext', array('text'=>''));
 
         // Zielgruppe
-        $mform->addElement('editor', 'targetgroup', get_string('targetgroup', 'local_ildmeta'));
+        $mform->addElement('editor', 'targetgroup', get_string('targetgroup', 'local_metatiles'));
         $mform->setType('targetgroup', PARAM_RAW);
         //  $mform->setDefault('targetgroup', array('text'=>''));
 
         // Lernziele
-        $mform->addElement('editor', 'learninggoals', get_string('learninggoals', 'local_ildmeta'));
+        $mform->addElement('editor', 'learninggoals', get_string('learninggoals', 'local_metatiles'));
         $mform->setType('learninggoals', PARAM_RAW);
 
         // Gliederung
-        $mform->addElement('editor', 'structure', get_string('structure', 'local_ildmeta'));
+        $mform->addElement('editor', 'structure', get_string('structure', 'local_metatiles'));
         $mform->setType('structure', PARAM_RAW);
 
 
                  /*
                  * We need editor + filemanager for each lecturer.
-                 * The data will be stored in the new table "mdl_ildmeta_additional" with "courseid", "name" and "value".
-                 * ??? SURE ??? The "name" will be saved as reference in the table "mdl_ildmeta".
+                 * The data will be stored in the new table "mdl_metatiles_additional" with "courseid", "name" and "value".
+                 * ??? SURE ??? The "name" will be saved as reference in the table "mdl_metatiles".
                  * Each record will be selected by "courseid" and "name"
                  */
 
@@ -121,21 +121,21 @@ class ildmeta_form extends moodleform
 
                 // Anbieter*innen / Autor*innen
                 $radioarray = array();
-                $radioarray[] = $mform->createElement('radio', 'lecturer_type_' . $i, '', get_string('lecturer_type_0', 'local_ildmeta'), 0);
-                $radioarray[] = $mform->createElement('radio', 'lecturer_type_' . $i, '', get_string('lecturer_type_1', 'local_ildmeta'), 1);
-                $mform->addGroup($radioarray, 'radioar', get_string('lecturer_type', 'local_ildmeta'), array(' '), false);
+                $radioarray[] = $mform->createElement('radio', 'lecturer_type_' . $i, '', get_string('lecturer_type_0', 'local_metatiles'), 0);
+                $radioarray[] = $mform->createElement('radio', 'lecturer_type_' . $i, '', get_string('lecturer_type_1', 'local_metatiles'), 1);
+                $mform->addGroup($radioarray, 'radioar', get_string('lecturer_type', 'local_metatiles'), array(' '), false);
                 if ($i > 1) {
                     $mform->setDefault('lecturer_type_' . $i, 1);
                 }
 
                 // Bild Anbieter*innen / Autor*innen
-                $mform->addElement('filemanager', 'detailslecturer_image_' . $i, get_string('detailslecturer_image', 'local_ildmeta'), null, $filemanageropts);
+                $mform->addElement('filemanager', 'detailslecturer_image_' . $i, get_string('detailslecturer_image', 'local_metatiles'), null, $filemanageropts);
 
                 // Details Anbieter*innen / Autor*innen
-                $mform->addElement('editor', 'detailslecturer_editor_' . $i, get_string('detailslecturer', 'local_ildmeta'), null, $editoropts);
+                $mform->addElement('editor', 'detailslecturer_editor_' . $i, get_string('detailslecturer', 'local_metatiles'), null, $editoropts);
                 $mform->setType('detailslecturer_editor', PARAM_RAW);
 
-                $url = new moodle_url('/local/ildmeta/pages/ildmeta_delete_lecturer.php', array('courseid' => $courseid, 'id' => $i));
+                $url = new moodle_url('/local/metatiles/pages/metatiles_delete_lecturer.php', array('courseid' => $courseid, 'id' => $i));
 
                 $mform->addElement('html', html_writer::link($url, 'Eingabefeld entfernen'));
 
@@ -148,24 +148,24 @@ class ildmeta_form extends moodleform
                 if(strpos($lect->name, 'type')) {
                     // Anbieter*innen / Autor*innen
                     $radioarray = array();
-                    $radioarray[] = $mform->createElement('radio', $lect->name, '', get_string('lecturer_type_0', 'local_ildmeta'), 0);
-                    $radioarray[] = $mform->createElement('radio', $lect->name, '', get_string('lecturer_type_1', 'local_ildmeta'), 1);
-                    $mform->addGroup($radioarray, 'radioar', get_string('lecturer_type', 'local_ildmeta'), array(' '), false);
+                    $radioarray[] = $mform->createElement('radio', $lect->name, '', get_string('lecturer_type_0', 'local_metatiles'), 0);
+                    $radioarray[] = $mform->createElement('radio', $lect->name, '', get_string('lecturer_type_1', 'local_metatiles'), 1);
+                    $mform->addGroup($radioarray, 'radioar', get_string('lecturer_type', 'local_metatiles'), array(' '), false);
                     if ($i > 1) {
                         $mform->setDefault($lect->name, 1);
                     }
                 }
                 if(strpos($lect->name, 'image')) {
                     // Bild Anbieter*innen / Autor*innen
-                    $mform->addElement('filemanager', $lect->name, get_string('detailslecturer_image', 'local_ildmeta'), null, $filemanageropts);
+                    $mform->addElement('filemanager', $lect->name, get_string('detailslecturer_image', 'local_metatiles'), null, $filemanageropts);
                 }
                 if(strpos($lect->name, 'editor')) {
                     // Details Anbieter*innen / Autor*innen
-                    $mform->addElement('editor', $lect->name, get_string('detailslecturer', 'local_ildmeta'), null, $editoropts);
+                    $mform->addElement('editor', $lect->name, get_string('detailslecturer', 'local_metatiles'), null, $editoropts);
                     $mform->setType('detailslecturer_editor', PARAM_RAW);
 
                     $id = substr($lect->name, -1);
-                    $url = new moodle_url('/local/ildmeta/pages/ildmeta_delete_lecturer.php', array('courseid' => $courseid, 'id' => $id));
+                    $url = new moodle_url('/local/metatiles/pages/metatiles_delete_lecturer.php', array('courseid' => $courseid, 'id' => $id));
                     $mform->addElement('html', html_writer::link($url, 'Eingabefeld entfernen'));
                     $mform->addElement('html', '<h>');
 
@@ -192,16 +192,16 @@ class ildmeta_form extends moodleform
             $licenses_arr[] = $license->shortname;
         }
 
-        $mform->addElement('select', 'license', get_string('license', 'local_ildmeta'), $licenses_arr);
+        $mform->addElement('select', 'license', get_string('license', 'local_metatiles'), $licenses_arr);
         $mform->setType('license', PARAM_RAW);
 
         // Leistungsnachweis
-        $mform->addElement('editor', 'certificateofachievement', get_string('certificateofachievement', 'local_ildmeta'));
+        $mform->addElement('editor', 'certificateofachievement', get_string('certificateofachievement', 'local_metatiles'));
         $mform->setType('certificateofachievement', PARAM_RAW);
 
 
         // Schlagwörter
-        $mform->addElement('text', 'tags', get_string('tags', 'local_ildmeta'));
+        $mform->addElement('text', 'tags', get_string('tags', 'local_metatiles'));
         $mform->setType('tags', PARAM_TEXT);
 
         $this->add_action_buttons();
@@ -219,7 +219,7 @@ class ildmeta_form extends moodleform
 			foreach ($lecturer as $lect) {
 				$draftitemid = file_get_submitted_draft_itemid($lect->name);
 				$context = context_course::instance($this->_customdata['courseid']);
-				file_prepare_draft_area($draftitemid, $context->id, 'local_ildmeta', $lect->name, 0);
+				file_prepare_draft_area($draftitemid, $context->id, 'local_metatiles', $lect->name, 0);
 				$default_values[$lect->name] = $draftitemid;
 			}
 		}

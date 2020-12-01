@@ -1,7 +1,7 @@
 <?php
 $capabilities = array(
 
-    'local/ildmeta:allowaccess' => array(
+    'local/metatiles:allowaccess' => array(
         'riskbitmask' => RISK_SPAM | RISK_CONFIG,
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
@@ -13,7 +13,7 @@ $capabilities = array(
         )
     ),
 
-    'local/ildmeta:addinstance' => array(
+    'local/metatiles:addinstance' => array(
         'riskbitmask' => RISK_SPAM | RISK_XSS,
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
@@ -25,7 +25,7 @@ $capabilities = array(
         ),
     ),
 
-    'local/ildmeta:delete_lecturer' => array(
+    'local/metatiles:delete_lecturer' => array(
         'riskbitmask' => RISK_SPAM | RISK_XSS,
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
@@ -37,7 +37,7 @@ $capabilities = array(
         ),
     ),
 
-    'local/ildmeta:indexation' => array(
+    'local/metatiles:indexation' => array(
         'riskbitmask' => RISK_SPAM | RISK_XSS,
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,

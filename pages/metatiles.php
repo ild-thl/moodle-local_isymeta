@@ -1,7 +1,7 @@
 <?php
 require_once('../../../config.php');
 require_once('../lib.php');
-require_once('ildmeta_form.php');
+require_once('metatiles_form.php');
 defined('MOODLE_INTERNAL') || die();
 
 // Prevent access for students/guests
@@ -10,23 +10,23 @@ defined('MOODLE_INTERNAL') || die();
 $courseid = optional_param('courseid', array(), PARAM_INT);
 $coursecontext = context_course::instance($courseid);
 
-if (!has_capability('local/ildmeta:allowaccess', $coursecontext)) redirect(new moodle_url('/'));
+if (!has_capability('local/metatiles:allowaccess', $coursecontext)) redirect(new moodle_url('/'));
 
-$url = new moodle_url('/local/ildmeta/pages/ildmeta.php');
+$url = new moodle_url('/local/metatiles/pages/metatiles.php');
 require_login();
 
-$tbl = 'ildmeta';
+$tbl = 'metatiles';
 
 // Dozenten Bilder
-$tbl_lecturer = 'ildmeta_additional';
+$tbl_lecturer = 'metatiles_additional';
 
 $context = context_system::instance();
 
 $PAGE->set_pagelayout('admin');
 $PAGE->set_context($context);
 $PAGE->set_url($url);
-$PAGE->set_title(get_string('title', 'local_ildmeta'));
-$PAGE->set_heading(get_string('heading', 'local_ildmeta'));
+$PAGE->set_title(get_string('title', 'local_metatiles'));
+$PAGE->set_heading(get_string('heading', 'local_metatiles'));
 
 $course_id = optional_param('courseid', 0, PARAM_INT);
 
@@ -59,12 +59,12 @@ $records_lect = $DB->get_records($tbl_lecturer, array('courseid' => $courseid));
 
 $customdata = array('filemanageropts' => $filemanageropts, 'editoropts' => $editoropts, 'max_lecturer' => $max_lecturer, 'courseid' => $courseid, 'lecturer' => $records_lect);
 
-$mform = new ildmeta_form($url . '?courseid=' . $courseid, $customdata);
+$mform = new metatiles_form($url . '?courseid=' . $courseid, $customdata);
 
 $itemid = 0;
 
 #$draftitemid = file_get_submitted_draft_itemid('overviewimage');
-#file_prepare_draft_area($draftitemid, $coursecontext->id, 'local_ildmeta', 'overviewimage', $draftitemid);
+#file_prepare_draft_area($draftitemid, $coursecontext->id, 'local_metatiles', 'overviewimage', $draftitemid);
 
 
 if ($mform->is_cancelled()) {
@@ -75,16 +75,16 @@ if ($mform->is_cancelled()) {
 } else if ($fromform = $mform->get_data()) {
 
     $draftitemid = file_get_submitted_draft_itemid('overviewimage');
-    file_prepare_draft_area($draftitemid, $coursecontext->id, 'local_ildmeta', 'overviewimage', $draftitemid);
+    file_prepare_draft_area($draftitemid, $coursecontext->id, 'local_metatiles', 'overviewimage', $draftitemid);
 
     $draftitemid_di = file_get_submitted_draft_itemid('detailimage');
-    file_prepare_draft_area($draftitemid_di, $coursecontext->id, 'local_ildmeta', 'detailimage', $draftitemid_di);
+    file_prepare_draft_area($draftitemid_di, $coursecontext->id, 'local_metatiles', 'detailimage', $draftitemid_di);
 
     #$overimage = $DB->get_record($tbl, ['courseid' => $courseid])->overviewimage;
-    file_save_draft_area_files($fromform->overviewimage, $coursecontext->id, 'local_ildmeta', 'overviewimage', 0);
+    file_save_draft_area_files($fromform->overviewimage, $coursecontext->id, 'local_metatiles', 'overviewimage', 0);
 
     #$detailimage = $DB->get_record($tbl, ['courseid' => $courseid])->detailimage;
-    file_save_draft_area_files($fromform->detailimage, $coursecontext->id, 'local_ildmeta', 'detailimage', 0);
+    file_save_draft_area_files($fromform->detailimage, $coursecontext->id, 'local_metatiles', 'detailimage', 0);
 
     // first of all, check for additional lecturer fields
 
@@ -95,12 +95,12 @@ if ($mform->is_cancelled()) {
         $DB->update_record($tbl, $addlect);
 
 
-        // add empty fields in ildmeta_additional
+        // add empty fields in metatiles_additional
         // new logic required due to delete options...
 
         //get last lecturer id
 
-        $record_lect_last = $DB->get_record_sql("SELECT * FROM {ildmeta_additional} WHERE courseid = ? ORDER BY id DESC", array('courseid' => $courseid));
+        $record_lect_last = $DB->get_record_sql("SELECT * FROM {metatiles_additional} WHERE courseid = ? ORDER BY id DESC", array('courseid' => $courseid));
 
         //$i = substr($record_lect_last->name, -1) + 1;
         $i = explode("_", $record_lect_last->name)[2] + 1;
@@ -123,11 +123,11 @@ if ($mform->is_cancelled()) {
             }
             $i++;
         }
-        // if additional lecturer the user will be redirected to the ildmeta.php for further editing
-        $url = new moodle_url('/local/ildmeta/pages/ildmeta.php', array('courseid' => $courseid));
+        // if additional lecturer the user will be redirected to the metatiles.php for further editing
+        $url = new moodle_url('/local/metatiles/pages/metatiles.php', array('courseid' => $courseid));
     } else {
         // otherweise he will be forwarded to the detailpage.php
-        $url = new moodle_url('/blocks/ildmetaselect/detailpage.php', array('id' => $courseid));
+        $url = new moodle_url('/blocks/metatilesselect/detailpage.php', array('id' => $courseid));
     }
 
 
@@ -193,8 +193,8 @@ if ($mform->is_cancelled()) {
             $lecturer->$key = $fromform->$key;
 
             $draftlecturer = file_get_submitted_draft_itemid($key);
-            file_prepare_draft_area($draftlecturer, $coursecontext->id, 'local_ildmeta', $key, 0);
-            file_save_draft_area_files($draftlecturer, $coursecontext->id, 'local_ildmeta', $key, 0);
+            file_prepare_draft_area($draftlecturer, $coursecontext->id, 'local_metatiles', $key, 0);
+            file_save_draft_area_files($draftlecturer, $coursecontext->id, 'local_metatiles', $key, 0);
         }
         if (strpos($key, '_editor')) {
             $lecturer->$key = $fromform->$key['text'];
@@ -277,13 +277,13 @@ if ($mform->is_cancelled()) {
 					      AND contextid = :contextid 
 						  AND filename != :filename 
 						  AND itemid = 0';
-		$params = array('component' => 'local_ildmeta', 'contextid' => $coursecontext->id, 'filename' => '.');
+		$params = array('component' => 'local_metatiles', 'contextid' => $coursecontext->id, 'filename' => '.');
 		$files = $DB->get_records_sql($sql, $params);
 		//print_object($files);
 		foreach ($files as $file) {
 			$draftitemid = file_get_submitted_draft_itemid($file->filearea);
-			//file_save_draft_area_files($draftlecturer, $coursecontext->id, 'local_ildmeta', $key, 0);
-			file_prepare_draft_area($draftitemid, $coursecontext->id, 'local_ildmeta', $file->filearea, 0);
+			//file_save_draft_area_files($draftlecturer, $coursecontext->id, 'local_metatiles', $key, 0);
+			file_prepare_draft_area($draftitemid, $coursecontext->id, 'local_metatiles', $file->filearea, 0);
 			$lectname = $file->filearea;
 			$new->$lectname = $draftitemid;
 		}

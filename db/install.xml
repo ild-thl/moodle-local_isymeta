@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="local/ildmeta/db" VERSION="20200623" COMMENT="XMLDB file for Moodle local/ildmeta"
+<XMLDB PATH="local/metatiles/db" VERSION="20200623" COMMENT="XMLDB file for Moodle local/metatiles"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
   <TABLES>
-    <TABLE NAME="ildmeta" COMMENT="ildmeta">
+    <TABLE NAME="metatiles" COMMENT="metatiles">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
@@ -34,7 +34,7 @@
         <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="ildmeta_additional" COMMENT="Default comment for the table, please edit me">
+    <TABLE NAME="metatiles_additional" COMMENT="Default comment for the table, please edit me">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
