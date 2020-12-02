@@ -21,9 +21,9 @@ $string['courselanguage'] = 'Kurssprache';
 $string['university'] = 'Anbietende Hochschulen';
 $string['processingtime'] = 'Bearbeitungszeit';
 $string['starttime'] = 'Kursbeginn';
-$string['teasertext'] = 'Was erwartet Sie in diesem Kurs?';
+$string['teasertext'] = 'Was erwartet Dich in diesem Kurs?';
 $string['targetgroup'] = 'Zielgruppe';
-$string['learninggoals'] = 'Was können Sie in diesem Kurs lernen?';
+$string['learninggoals'] = 'Was kannst Du in diesem Kurs lernen?';
 $string['structure'] = 'Gliederung';
 
 
@@ -33,7 +33,7 @@ $string['lecturer_type'] = 'Bitte wählen:';
 $string['lecturer_type_0'] = 'Autor*in';
 $string['lecturer_type_1'] = 'Anbieter*in';
 $string['detailslecturerimage'] = 'Bild des Dozenten Anbieters';
-$string['detailsmorelecturer'] = 'Weitere Autoren*innen';
+$string['detailsmorelecturer'] = 'Dozent*innen/Autoren*innen';
 $string['certificateofachievement'] = 'Bescheinigung der Teilnahme';
 $string['videocode'] = 'Youtube-Link';
 $string['license'] = 'Lizenz';
@@ -45,8 +45,8 @@ $string['noindexcourse_no'] = 'Nein';
 $string['noindexcourse_limited'] = 'Nur Kurskachel';
 
 
-$string['text_university'] = 'Liste wird aus Nutzerprofilfelder-Liste namens "universities" gespeist.';
-$string['text_subjectarea'] = 'Liste wird aus Nutzerprofilfelder-Liste namens "subjectareas" gespeist.';
+$string['text_university'] = 'Liste wird temporär aus Nutzerprofilfelder-Liste namens "subjectareas" gespeist.';
+$string['text_subjectarea'] = 'Liste wird temporär aus Nutzerprofilfelder-Liste namens "formats" gespeist.';
 $string['text_processingtime'] = 'Bitte nur in ganzen Stunden als Ganzzahl angeben';
 
 $string['lecturer_delete'] = 'Soll der ausgewählte Eintrag wirklich gelöscht werden?';

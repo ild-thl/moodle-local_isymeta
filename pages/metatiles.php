@@ -127,7 +127,7 @@ if ($mform->is_cancelled()) {
         $url = new moodle_url('/local/metatiles/pages/metatiles.php', array('courseid' => $courseid));
     } else {
         // otherweise he will be forwarded to the detailpage.php
-        $url = new moodle_url('/blocks/metatilesselect/detailpage.php', array('id' => $courseid));
+        $url = new moodle_url('/blocks/metatiles/detailpage.php', array('id' => $courseid));
     }
 
 
