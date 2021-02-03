@@ -4,7 +4,7 @@
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
   <TABLES>
-    <TABLE NAME="ildmeta" COMMENT="ildmeta">
+    <TABLE NAME="ildmeta" COMMENT="Table for metas">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
@@ -25,6 +25,7 @@
         <FIELD NAME="learninggoals" TYPE="text" LENGTH="120" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="structure" TYPE="text" LENGTH="120" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="detailslecturer" TYPE="text" LENGTH="120" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="sponsor" TYPE="text" LENGTH="120" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="detailsmorelecturer" TYPE="text" LENGTH="120" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="license" TYPE="char" LENGTH="120" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="tags" TYPE="char" LENGTH="120" NOTNULL="true" SEQUENCE="false"/>
@@ -34,12 +35,22 @@
         <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="ildmeta_additional" COMMENT="Default comment for the table, please edit me">
+    <TABLE NAME="ildmeta_additional" COMMENT="Table for lecturers">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="value" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="ildmeta_sponsors" COMMENT="Table for sponsors">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="sponsorimage" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="sponsorlink" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>

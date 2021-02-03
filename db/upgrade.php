@@ -4,13 +4,36 @@ function xmldb_local_ildmeta_upgrade($oldversion) {
      global $DB;
      $dbman = $DB->get_manager();
 
+    if($oldversion < 2021020314) {
+        $table = new xmldb_table('ildmeta_sponsors');
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('sponsorimage', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('sponsorlink', XMLDB_TYPE_CHAR, '120', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('courseid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        $meta_table = new xmldb_table('ildmeta');
+        $field = new xmldb_field('sponsor', XMLDB_TYPE_CHAR, '120', null, XMLDB_NOTNULL, null, null);
+        
+        if (!$dbman->field_exists($meta_table, $field)) {
+            $dbman->add_field($meta_table, $field);
+        }
+
+
+        upgrade_plugin_savepoint(true, 2021020314, 'local', 'ildmeta');
+    }
+
     if ($oldversion < 2020120901) {
         $table = new xmldb_table('ildmeta');
         $field = new xmldb_field('processingtime', XMLDB_TYPE_CHAR, '120', null, XMLDB_NOTNULL, null, null);
 
         $dbman->change_field_type($table, $field, $continue=true, $feedback=true);
 
-        upgrade_plugin_savepoint(true, 2020120901, 'local', 'ildmeta');
+        upgrade_plugin_savepoint(true, 2020120909, 'local', 'ildmeta');
     }
     //     upgrade_plugin_savepoint(true, 2020062301, 'local', 'ildmeta');
 

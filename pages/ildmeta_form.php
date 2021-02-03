@@ -13,6 +13,7 @@ class ildmeta_form extends moodleform
 
         $lecturer = $this->_customdata['lecturer'];
         $max_lecturer = $this->_customdata['max_lecturer'];
+        $max_sponsor = $this->_customdata['max_sponsor'];
         $courseid = $this->_customdata['courseid'];
 
 
@@ -174,14 +175,58 @@ class ildmeta_form extends moodleform
             }
         }
 
-        $mform->addElement('html', '<hr>');
-
-        $mform->addElement('text', 'additional_lecturer', 'Zusätzliche Felder');
+        $mform->addElement('text', 'additional_lecturer', 'weitere...');
         $mform->setDefault('additional_lecturer', 0);
         $mform->setType('additional_lecturer', PARAM_INT);
         $mform->addRule('additional_lecturer', 'Bitte eine Zahl angeben', 'numeric', '', 'client');
-        $mform->addElement('static', 'text_additional_lecturer', '', 'Bitte die Anzahl der zusätzlich benötigten Felder zum Anlegen weiterer Autor*innen und Anbieter*innen angeben.');
-        $this->add_action_buttons($cancel = false, $submitlabel = 'Felder hinzufügen');
+        $this->add_action_buttons($cancel = false, $submitlabel = 'Autoren*innen oder Anbieter*innen hinzufügen');
+
+        $mform->addElement('html', '<hr>');
+
+
+
+        
+
+        $mform->addElement('html', '<h2>Fördernde</h2>');
+        $i = 1;
+        
+        // above $i will be used here!
+        if (empty($sponsor)) {
+
+            while ($i <= $max_lecturer) {
+
+                // Bild Fördernde
+                $mform->addElement('filemanager', 'sponsor_image_' . $i, get_string('sponsor_image', 'local_ildmeta'), null, $filemanageropts);
+
+                // Details Anbieter*innen / Autor*innen
+                $mform->addElement('editor', 'sponsor_link_' . $i, get_string('sponsor_link', 'local_ildmeta'), null, $editoropts);
+                $mform->setType('sponsor_link', PARAM_RAW);
+
+                $url = new moodle_url('/local/ildmeta/pages/ildmeta_delete_sponsor.php', array('courseid' => $courseid, 'id' => $i));
+
+                $mform->addElement('html', html_writer::link($url, 'Eingabefeld entfernen'));
+
+                $mform->addElement('html', '<h>');
+
+                $i++;
+            }
+        }
+
+        $mform->addElement('text', 'additional_sponsor', 'weitere...');
+        $mform->setDefault('additional_sponsor', 0);
+        $mform->setType('additional_sponsor', PARAM_INT);
+        $mform->addRule('additional_sponsor', 'Bitte eine Zahl angeben', 'numeric', '', 'client');
+        $this->add_action_buttons($cancel = false, $submitlabel = 'Fördernde hinzufügen');
+
+        $mform->addElement('html', '<hr>');
+
+
+
+
+
+
+
+
 
         $mform->addElement('html', '<h2>Weitere Informationen</h2>');
 
