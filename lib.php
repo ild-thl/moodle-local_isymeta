@@ -2,7 +2,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-function local_metatiles_extend_settings_navigation($settingsnav, $context) {
+function local_ildmeta_extend_settings_navigation($settingsnav, $context) {
     global $CFG, $PAGE;
 
     // Only add this settings item on non-site course pages.
@@ -16,14 +16,14 @@ function local_metatiles_extend_settings_navigation($settingsnav, $context) {
     }
 
     if ($settingnode = $settingsnav->find('courseadmin', navigation_node::TYPE_COURSE)) {
-        $strfoo = get_string('pluginname', 'local_metatiles');
-        $url = new moodle_url('/local/metatiles/pages/metatiles.php', array('courseid' => $PAGE->course->id));
+        $strfoo = get_string('pluginname', 'local_ildmeta');
+        $url = new moodle_url('/local/ildmeta/pages/ildmeta.php', array('courseid' => $PAGE->course->id));
         $foonode = navigation_node::create(
             $strfoo,
             $url,
             navigation_node::NODETYPE_LEAF,
-            'metatiles',
-            'metatiles',
+            'ildmeta',
+            'ildmeta',
             new pix_icon('t/addcontact', $strfoo)
         );
         if ($PAGE->url->compare($url, URL_MATCH_BASE)) {
@@ -33,7 +33,7 @@ function local_metatiles_extend_settings_navigation($settingsnav, $context) {
     }
 }
 
-function local_metatiles_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options=array()) {
+function local_ildmeta_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options=array()) {
 
     global $DB;
     if ($context->contextlevel != CONTEXT_COURSE) {
@@ -51,7 +51,7 @@ function local_metatiles_pluginfile($course, $cm, $context, $filearea, $args, $f
     } else {
         $filepath = '/'.implode('/', $args).'/';
     }
-    $file = $fs->get_file($context->id, 'local_metatiles', $filearea, $itemid, $filepath, $filename);
+    $file = $fs->get_file($context->id, 'local_ildmeta', $filearea, $itemid, $filepath, $filename);
     if (!$file) {
         return false;
     }

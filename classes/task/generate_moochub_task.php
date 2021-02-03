@@ -1,6 +1,6 @@
 <?php
 
-namespace local_metatiles\task;
+namespace local_ildmeta\task;
 
 use context_system;
 use context_course;
@@ -9,7 +9,7 @@ use moodle_url;
 class generate_moochub_task extends \core\task\scheduled_task {
  
     public function get_name() {
-        return get_string('generate_moochub_task', 'local_metatiles');
+        return get_string('generate_moochub_task', 'local_ildmeta');
     }
      
     public function execute() {
@@ -28,14 +28,14 @@ class generate_moochub_task extends \core\task\scheduled_task {
 
 		$data_entry = array();
 
-		$products = $DB->get_records('metatiles');
+		$products = $DB->get_records('ildmeta');
 		foreach ($products as $product) {
 			if ($product->noindexcourse == 0 && $DB->record_exists('course', array('id' => $product->courseid))) {
 				$data_entry = array();
 				$data_entry['type'] = 'courses';
-				$data_entry['id'] = 'openvhb'.$product->courseid;
+				$data_entry['id'] = 'fs'.$product->courseid;
 				$data_entry['attributes'] = array();
-				$data_entry['attributes']['url'] = $CFG->wwwroot . '/blocks/metatiles/detailpage.php?id=' . $product->courseid;
+				$data_entry['attributes']['url'] = $CFG->wwwroot . '/blocks/ildmetaselect/detailpage.php?id=' . $product->courseid;
 
 				$universities = $DB->get_record('user_info_field', array('shortname' => 'universities'));
 				$subjectareas = $DB->get_record('user_info_field', array('shortname' => 'subjectareas'));
@@ -49,7 +49,7 @@ class generate_moochub_task extends \core\task\scheduled_task {
 				$fs = get_file_storage();
 				$fileurl = '';
 				$context = context_course::instance($product->courseid);
-				$files = $fs->get_area_files($context->id, 'local_metatiles', 'overviewimage', 0);
+				$files = $fs->get_area_files($context->id, 'local_ildmeta', 'overviewimage', 0);
 				$fileurl = '';
 				foreach ($files as $file) {
 					if ($file->get_filename() !== '.') {
