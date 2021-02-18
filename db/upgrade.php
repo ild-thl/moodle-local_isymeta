@@ -4,12 +4,13 @@ function xmldb_local_ildmeta_upgrade($oldversion) {
      global $DB;
      $dbman = $DB->get_manager();
 
-    if($oldversion < 2021020314) {
+    if($oldversion < 2021020404) {
         $table = new xmldb_table('ildmeta_sponsors');
         $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
-        $table->add_field('sponsorimage', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
-        $table->add_field('sponsorlink', XMLDB_TYPE_CHAR, '120', null, XMLDB_NOTNULL, null, null);
         $table->add_field('courseid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('name', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('value', XMLDB_TYPE_TEXT, null, null, null, null, null);
+
         $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
 
         if (!$dbman->table_exists($table)) {
@@ -17,14 +18,23 @@ function xmldb_local_ildmeta_upgrade($oldversion) {
         }
 
         $meta_table = new xmldb_table('ildmeta');
-        $field = new xmldb_field('sponsor', XMLDB_TYPE_CHAR, '120', null, XMLDB_NOTNULL, null, null);
-        
-        if (!$dbman->field_exists($meta_table, $field)) {
-            $dbman->add_field($meta_table, $field);
+        // $fieldx = new xmldb_field('sponsor', XMLDB_TYPE_CHAR, '120', null, XMLDB_NOTNULL, null, null);
+        $fieldy = new xmldb_field('detailssponsor', XMLDB_TYPE_CHAR, '120', null, XMLDB_NOTNULL, null, null);
+        $fieldz = new xmldb_field('detailsmoresponsor', XMLDB_TYPE_CHAR, '120', null, XMLDB_NOTNULL, null, null);
+
+        if (!$dbman->field_exists($meta_table, $fieldx)) {
+            $dbman->add_field($meta_table, $fieldx);
         }
 
+        if (!$dbman->field_exists($meta_table, $fieldy)) {
+            $dbman->add_field($meta_table, $fieldy);
+        }
 
-        upgrade_plugin_savepoint(true, 2021020314, 'local', 'ildmeta');
+        if (!$dbman->field_exists($meta_table, $fieldz)) {
+            $dbman->add_field($meta_table, $fieldz);
+        }
+
+        upgrade_plugin_savepoint(true, 2021020404, 'local', 'ildmeta');
     }
 
     if ($oldversion < 2020120901) {

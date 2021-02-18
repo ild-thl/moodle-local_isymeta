@@ -25,8 +25,9 @@
         <FIELD NAME="learninggoals" TYPE="text" LENGTH="120" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="structure" TYPE="text" LENGTH="120" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="detailslecturer" TYPE="text" LENGTH="120" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="sponsor" TYPE="text" LENGTH="120" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="detailssponsor" TYPE="text" LENGTH="120" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="detailsmorelecturer" TYPE="text" LENGTH="120" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="detailsmoresponsor" TYPE="text" LENGTH="120" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="license" TYPE="char" LENGTH="120" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="tags" TYPE="char" LENGTH="120" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="certificateofachievement" TYPE="text" LENGTH="120" NOTNULL="true" SEQUENCE="false"/>
@@ -49,6 +50,7 @@
     <TABLE NAME="ildmeta_sponsors" COMMENT="Table for sponsors">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="sponsorimage" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="sponsorlink" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
       </FIELDS>

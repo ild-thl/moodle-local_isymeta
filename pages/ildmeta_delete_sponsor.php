@@ -25,7 +25,7 @@ $PAGE->set_heading(get_string('heading', 'local_ildmeta'));
 
 
 $tbl_meta = 'ildmeta';
-$tbl_lecturer = 'ildmeta_sponsors';
+$tbl_sponsor = 'ildmeta_sponsors';
 
 $url = new moodle_url('/local/ildmeta/pages/ildmeta_delete_sponsor.php', array('courseid' => $courseid, 'id' => $sponsor_id));
 $mform = new ildmeta_delete_sponsor_form($url);
@@ -45,7 +45,7 @@ if ($mform->is_cancelled()) {
         redirect($url);
     } else {
 
-        // first delete from ildmeta_additional
+        // first delete from ildmeta_sponsors
         $fields = $DB->get_records_sql('SELECT name FROM {ildmeta_sponsors} WHERE courseid = ? AND name LIKE ?', array('courseid' => $courseid, 'name' => '%' . $sponsor_id . ''));
 
         $error = false;
@@ -59,7 +59,7 @@ if ($mform->is_cancelled()) {
         }
 
         // then adjust the counter in ildmeta
-        $sql = "UPDATE {ildmeta} SET sponsor=sponsor-1 WHERE courseid = ?";
+        $sql = "UPDATE {ildmeta} SET detailssponsor=detailssponsor-1 WHERE courseid = ?";
         $params = array('courseid' => $courseid);
 
         if (!$DB->execute($sql, $params)) {

@@ -12,6 +12,7 @@ class ildmeta_form extends moodleform
         $mform = $this->_form; // Don't forget the underscore!
 
         $lecturer = $this->_customdata['lecturer'];
+        $sponsor = $this->_customdata['sponsor'];
         $max_lecturer = $this->_customdata['max_lecturer'];
         $max_sponsor = $this->_customdata['max_sponsor'];
         $courseid = $this->_customdata['courseid'];
@@ -117,7 +118,7 @@ class ildmeta_form extends moodleform
         
         // above $i will be used here!
         if (empty($lecturer)) {
-
+            
             while ($i <= $max_lecturer) {
 
                 // Anbieter*innen / Autor*innen
@@ -146,6 +147,7 @@ class ildmeta_form extends moodleform
             }
         } else {
             foreach($lecturer as $lect) {
+                
                 if(strpos($lect->name, 'type')) {
                     // Anbieter*innen / Autor*innen
                     $radioarray = array();
@@ -157,6 +159,7 @@ class ildmeta_form extends moodleform
                     }
                 }
                 if(strpos($lect->name, 'image')) {
+                    
                     // Bild Anbieter*innen / Autor*innen
                     $mform->addElement('filemanager', $lect->name, get_string('detailslecturer_image', 'local_ildmeta'), null, $filemanageropts);
                 }
@@ -185,22 +188,34 @@ class ildmeta_form extends moodleform
 
 
 
-        
 
-        $mform->addElement('html', '<h2>Fördernde</h2>');
+
+
+
+
+
+
+
+
+
+
+        $mform->addElement('html', '<h2>Förderung</h2>');
         $i = 1;
         
         // above $i will be used here!
         if (empty($sponsor)) {
+//  print_r($sponsor); die();
 
-            while ($i <= $max_lecturer) {
+            while ($i <= $max_sponsor) {
 
                 // Bild Fördernde
-                $mform->addElement('filemanager', 'sponsor_image_' . $i, get_string('sponsor_image', 'local_ildmeta'), null, $filemanageropts);
+                $mform->addElement('filemanager', 'detailssponsor_image_' . $i, get_string('sponsor_image', 'local_ildmeta'), null, $filemanageropts);
 
                 // Details Anbieter*innen / Autor*innen
-                $mform->addElement('editor', 'sponsor_link_' . $i, get_string('sponsor_link', 'local_ildmeta'), null, $editoropts);
-                $mform->setType('sponsor_link', PARAM_RAW);
+                $mform->addElement('text', 'detailssponsor_link_' . $i, get_string('sponsor_link', 'local_ildmeta'));
+                // $mform->setType('detailssponsor_link_'.$i, PARAM_TEXT);
+                // $mform->addElement('editor', 'sponsor_link_' . $i, get_string('sponsor_link', 'local_ildmeta'), null, $editoropts);
+                $mform->setType('detailssponsor_link', PARAM_TEXT);
 
                 $url = new moodle_url('/local/ildmeta/pages/ildmeta_delete_sponsor.php', array('courseid' => $courseid, 'id' => $i));
 
@@ -210,13 +225,39 @@ class ildmeta_form extends moodleform
 
                 $i++;
             }
+        } else {
+
+            foreach($sponsor as $spons) {
+// print_r($spons); die();
+                if(strpos($spons->name, 'image')) {
+                    // Bild Anbieter*innen / Autor*innen
+                    $mform->addElement('filemanager', $spons->name, get_string('sponsor_image', 'local_ildmeta'), null, $filemanageropts);
+                }
+                if(strpos($spons->name, 'link')) {
+                    // Details Anbieter*innen / Autor*innen
+
+                    // print_r($spons); die();
+
+                    $mform->addElement('text', $spons->name, get_string('sponsor_link', 'local_ildmeta'));
+                    $mform->setType('detailssponsor_link', PARAM_TEXT);
+
+                    $id = substr($spons->name, -1);
+                    $url = new moodle_url('/local/ildmeta/pages/ildmeta_delete_sponsor.php', array('courseid' => $courseid, 'id' => $id));
+                    $mform->addElement('html', html_writer::link($url, 'Eingabefeld entfernen'));
+                    $mform->addElement('html', '<h>');
+
+                    $i++;
+                }
+            }
         }
+    
+
 
         $mform->addElement('text', 'additional_sponsor', 'weitere...');
         $mform->setDefault('additional_sponsor', 0);
         $mform->setType('additional_sponsor', PARAM_INT);
         $mform->addRule('additional_sponsor', 'Bitte eine Zahl angeben', 'numeric', '', 'client');
-        $this->add_action_buttons($cancel = false, $submitlabel = 'Fördernde hinzufügen');
+        $this->add_action_buttons($cancel = false, $submitlabel = 'Förderer hinzufügen');
 
         $mform->addElement('html', '<hr>');
 
@@ -259,7 +300,7 @@ class ildmeta_form extends moodleform
 	// Funktioniert hier nicht. Falsche Stelle
 	function data_preprocessing(&$default_values) {
 		$lecturer = $this->_customdata['lecturer'];
-		print($lecturer);die();
+	
 		if ($this->current->instance) {
 			foreach ($lecturer as $lect) {
 				$draftitemid = file_get_submitted_draft_itemid($lect->name);
@@ -268,7 +309,18 @@ class ildmeta_form extends moodleform
 				$default_values[$lect->name] = $draftitemid;
 			}
 		}
+        
+        $sponsor = $this->_customdata['sponsor'];
 		
+		if ($this->current->instance) {
+			foreach ($sponsor as $spons) {
+				$draftitemid = file_get_submitted_draft_itemid($spons->name);
+				$context = context_course::instance($this->_customdata['courseid']);
+				file_prepare_draft_area($draftitemid, $context->id, 'local_ildmeta', $spons->name, 0);
+				$default_values[$spons->name] = $draftitemid;
+			}
+		}
+
 		// TODO overviewimage nicht vergessen
 
 	}

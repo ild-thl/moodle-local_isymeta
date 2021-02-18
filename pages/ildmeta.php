@@ -19,6 +19,7 @@ $tbl = 'ildmeta';
 
 // Dozenten Bilder
 $tbl_lecturer = 'ildmeta_additional';
+$tbl_sponsor = 'ildmeta_sponsors';
 
 $context = context_system::instance();
 
@@ -55,17 +56,28 @@ if (isset($record->detailslecturer)) {
     $max_lecturer = 2;
 }
 
-$records_lect = $DB->get_records($tbl_lecturer, array('courseid' => $courseid));
+if (isset($record->detailssponsor)) {
+    $max_sponsor = $record->detailssponsor;
+} else {
+    $max_sponsor = 2;
+}
 
-$customdata = array('filemanageropts' => $filemanageropts, 'editoropts' => $editoropts, 'max_lecturer' => $max_lecturer, 'courseid' => $courseid, 'lecturer' => $records_lect);
+$records_lect = $DB->get_records($tbl_lecturer, array('courseid' => $courseid));
+$records_spons = $DB->get_records($tbl_sponsor, array('courseid' => $courseid));
+
+$customdata = [
+    'filemanageropts' => $filemanageropts,
+    'editoropts' => $editoropts,
+    'max_lecturer' => $max_lecturer,
+    'max_sponsor' => $max_lecturer,
+    'courseid' => $courseid,
+    'lecturer' => $records_lect,
+    'sponsor' => $records_spons
+];
 
 $mform = new ildmeta_form($url . '?courseid=' . $courseid, $customdata);
 
 $itemid = 0;
-
-#$draftitemid = file_get_submitted_draft_itemid('overviewimage');
-#file_prepare_draft_area($draftitemid, $coursecontext->id, 'local_ildmeta', 'overviewimage', $draftitemid);
-
 
 if ($mform->is_cancelled()) {
 
@@ -80,10 +92,8 @@ if ($mform->is_cancelled()) {
     $draftitemid_di = file_get_submitted_draft_itemid('detailimage');
     file_prepare_draft_area($draftitemid_di, $coursecontext->id, 'local_ildmeta', 'detailimage', $draftitemid_di);
 
-    #$overimage = $DB->get_record($tbl, ['courseid' => $courseid])->overviewimage;
     file_save_draft_area_files($fromform->overviewimage, $coursecontext->id, 'local_ildmeta', 'overviewimage', 0);
 
-    #$detailimage = $DB->get_record($tbl, ['courseid' => $courseid])->detailimage;
     file_save_draft_area_files($fromform->detailimage, $coursecontext->id, 'local_ildmeta', 'detailimage', 0);
 
     // first of all, check for additional lecturer fields
@@ -91,7 +101,14 @@ if ($mform->is_cancelled()) {
     if ($fromform->additional_lecturer > 0) {
         $addlect = new stdClass();
         $addlect->id = $record->id;
-        $addlect->detailslecturer = $fromform->additional_lecturer + $record->detailslecturer;
+        
+        if(empty($record->detailslecturer)) {
+            $reci = 0;
+        } else {
+            $reci = $record->detailslecturer;
+        }
+
+        $addlect->detailslecturer = $fromform->additional_lecturer + $reci;
         $DB->update_record($tbl, $addlect);
 
 
@@ -100,12 +117,12 @@ if ($mform->is_cancelled()) {
 
         //get last lecturer id
 
-        $record_lect_last = $DB->get_record_sql("SELECT * FROM {ildmeta_additional} WHERE courseid = ? ORDER BY id DESC", array('courseid' => $courseid));
+        $record_lect_last = $DB->get_record_sql("SELECT * FROM {ildmeta_additional} WHERE courseid = ? ORDER BY id DESC", array('courseid' => $courseid), true);
 
-        //$i = substr($record_lect_last->name, -1) + 1;
         $i = explode("_", $record_lect_last->name)[2] + 1;
 
         $maxi = ($i - 1) + $fromform->additional_lecturer;
+
 
         while ($i <= $maxi) {
             $str1 = "lecturer_type_" . $i;
@@ -130,6 +147,44 @@ if ($mform->is_cancelled()) {
         $url = new moodle_url('/blocks/ildmetaselect/detailpage.php', array('id' => $courseid));
     }
 
+
+    if ($fromform->additional_sponsor > 0) {
+        $addspons = new stdClass();
+        $addspons->id = $record->id;
+        $addspons->detailssponsor = $fromform->additional_sponsor + $record->detailssponsor;
+        $DB->update_record($tbl, $addspons);
+
+        // add empty fields in ildmeta_additional
+
+        //get last lecturer id
+
+        $record_spons_last = $DB->get_record_sql("SELECT * FROM {ildmeta_sponsors} WHERE courseid = ? ORDER BY id DESC", array('courseid' => $courseid));
+
+        $i = explode("_", $record_spons_last->name)[2] + 1;
+
+        $maxi2 = ($i - 1) + $fromform->additional_sponsor;
+
+        while ($i <= $maxi2) {
+            $str4 = "detailssponsor_image_" . $i;
+            $str5 = "detailssponsor_link_" . $i;
+
+            $fields2 = array($str4, $str5);
+
+            foreach ($fields2 as $f) {
+                $ins2 = new stdClass();
+                $ins2->courseid = $courseid;
+                $ins2->name = $f;
+                $ins2->value = '';
+                $DB->insert_record($tbl_sponsor, $ins2);
+            }
+            $i++;
+        }
+        // if additional lecturer the user will be redirected to the ildmeta.php for further editing
+        $url = new moodle_url('/local/ildmeta/pages/ildmeta.php', array('courseid' => $courseid));
+    } else {
+        // otherweise he will be forwarded to the detailpage.php
+        $url = new moodle_url('/blocks/ildmetaselect/detailpage.php', array('id' => $courseid));
+    }
 
     $todb = new stdClass;
     $todb->courseid = $courseid;
@@ -156,8 +211,6 @@ if ($mform->is_cancelled()) {
 
     $todb->tags = $fromform->tags;
 
-// !
-
     // if course is not in db yet
     if (!$DB->get_record($tbl, array('courseid' => $course_id))) {
 
@@ -182,21 +235,22 @@ if ($mform->is_cancelled()) {
     }
 
     // Get lecturer editor + filemanager
-
     $lecturer = new stdClass();
 
     foreach ($fromform as $key => $value) {
-        if (strpos($key, '_type')) {
+       
+        if (strpos($key, 'lecturer_type') !== false) {
+            
             $lecturer->$key = $fromform->$key;
         }
-        if (strpos($key, '_image')) {
+        if (strpos($key, 'detailslecturer_image') !== false) {
             $lecturer->$key = $fromform->$key;
 
             $draftlecturer = file_get_submitted_draft_itemid($key);
             file_prepare_draft_area($draftlecturer, $coursecontext->id, 'local_ildmeta', $key, 0);
             file_save_draft_area_files($draftlecturer, $coursecontext->id, 'local_ildmeta', $key, 0);
         }
-        if (strpos($key, '_editor')) {
+        if (strpos($key, 'detailslecturer_editor') !== false) {
             $lecturer->$key = $fromform->$key['text'];
         }
     }
@@ -208,11 +262,9 @@ if ($mform->is_cancelled()) {
         $lectodb->name = $key;
         $lectodb->value = $value;
 
-
         if (!$DB->get_record($tbl_lecturer, array('name' => $lectodb->name, 'courseid' => $courseid))) {
             $DB->insert_record($tbl_lecturer, $lectodb);
         } else {
-
             $primkey = $DB->get_record($tbl_lecturer, array('courseid' => $courseid, 'name' => $lectodb->name));
 
             $lectodb->id = $primkey->id;
@@ -221,6 +273,45 @@ if ($mform->is_cancelled()) {
         }
 
     }
+
+        // Get sponsor editor + filemanager
+
+        $sponsor = new stdClass();
+        
+        foreach ($fromform as $key => $value) {
+
+            if (strpos($key, 'detailssponsor_image') !== false) {
+                
+                $sponsor->$key = $fromform->$key;
+    
+                $draftsponsor = file_get_submitted_draft_itemid($key);
+                file_prepare_draft_area($draftsponsor, $coursecontext->id, 'local_ildmeta', $key, 0);
+                file_save_draft_area_files($draftsponsor, $coursecontext->id, 'local_ildmeta', $key, 0);
+            }
+            if (strpos($key, 'detailssponsor_link') !== false) {
+                $sponsor->$key = $fromform->$key;  
+            }
+            
+        }
+       
+        foreach ($sponsor as $key => $value) {
+            $sponstodb = new stdClass();
+            $sponstodb->courseid = $courseid;
+            $sponstodb->name = $key;
+            $sponstodb->value = $value;
+    
+            if (!$DB->get_record($tbl_sponsor, array('name' => $sponstodb->name, 'courseid' => $courseid))) {
+                $DB->insert_record($tbl_sponsor, $sponstodb);
+            } else {
+    
+                $primkey = $DB->get_record($tbl_sponsor, array('courseid' => $courseid, 'name' => $sponstodb->name));
+    
+                $sponstodb->id = $primkey->id;
+    
+                $DB->update_record($tbl_sponsor, $sponstodb);
+            }
+    
+        }
 
     // after database redirect to detailpage
     // $url defined after check for additional lecturer
@@ -231,12 +322,13 @@ if ($mform->is_cancelled()) {
     $getdb = $DB->get_record($tbl, array('courseid' => $course_id));
 
     $getlect = $DB->get_records($tbl_lecturer, array('courseid' => $courseid));
-
+    $getspons = $DB->get_records($tbl_sponsor, array('courseid' => $courseid));
 
     if ($getdb != null) {
         $new = new stdClass;
         $new->coursetitle = $getdb->coursetitle;
         $new->lecturer = $getdb->lecturer;
+        $new->sponsor = $getdb->sponsor;
         $new->overviewimage = $getdb->overviewimage;
         $new->detailimage = $getdb->detailimage;
         $new->university = $getdb->university;
@@ -250,17 +342,16 @@ if ($mform->is_cancelled()) {
         $new->learninggoals['text'] = $getdb->learninggoals;
         $new->structure['text'] = $getdb->structure;
         $new->additional_lecturer = '0';
+        $new->additional_sponsor = '0'; //test
         $new->certificateofachievement['text'] = $getdb->certificateofachievement;
         $new->license = $getdb->license;
         $new->videocode = $getdb->videocode;
         $new->tags = $getdb->tags;
 
-
         if (!empty($getlect)) {
 
             foreach ($getlect as $lec) {
-                if (strpos($lec->name, '_editor')) {
-                    echo $lec_name . "<br>";
+                if (strpos($lec->name, 'detailslecturer_editor') !== false) {
                     $key = $lec->name;
                     $new->$key['text'] = $lec->value;
                 } else {
@@ -270,23 +361,54 @@ if ($mform->is_cancelled()) {
             }
 
         }
-		
+
 		$sql = 'SELECT filearea 
 					    FROM {files} 
 					 WHERE component = :component 
 					      AND contextid = :contextid 
 						  AND filename != :filename 
 						  AND itemid = 0';
+           
 		$params = array('component' => 'local_ildmeta', 'contextid' => $coursecontext->id, 'filename' => '.');
+        
 		$files = $DB->get_records_sql($sql, $params);
-		//print_object($files);
+
 		foreach ($files as $file) {
 			$draftitemid = file_get_submitted_draft_itemid($file->filearea);
-			//file_save_draft_area_files($draftlecturer, $coursecontext->id, 'local_ildmeta', $key, 0);
 			file_prepare_draft_area($draftitemid, $coursecontext->id, 'local_ildmeta', $file->filearea, 0);
 			$lectname = $file->filearea;
 			$new->$lectname = $draftitemid;
+        }
+        
+        if (!empty($getspons)) {
+            foreach ($getspons as $spons) {
+                if (strpos($spons->name, 'detailssponsor_link') !== false) {
+                    $key = $spons->name;
+                    $new->$key = $spons->value;
+                } else {
+                    $key = $spons->name;
+                    $new->$key = $spons->value;
+                }
+            }
+        }
+		
+		$sql2 = 'SELECT filearea 
+					    FROM {files} 
+					 WHERE component = :component 
+					      AND contextid = :contextid 
+						  AND filename != :filename 
+						  AND itemid = 0';
+		$params2 = array('component' => 'local_ildmeta', 'contextid' => $coursecontext->id, 'filename' => '.');
+		$files2 = $DB->get_records_sql($sql2, $params2);
+
+		foreach ($files2 as $file) {
+			$draftitemid = file_get_submitted_draft_itemid($file->filearea);
+			file_prepare_draft_area($draftitemid, $coursecontext->id, 'local_ildmeta', $file->filearea, 0);
+			$sponsname = $file->filearea;
+			$new->$sponsname = $draftitemid;
+           
 		}
+
         $mform->set_data($new);
 
     } else {
@@ -307,26 +429,25 @@ if ($mform->is_cancelled()) {
         $new->learninggoals = '';
         $new->structure = '';
         $new->detailslecturer = 2;
+        $new->detailssponsor = 2;
         $new->detailsmorelecturer = '';
         $new->detailslecturerimage = '';
+        $new->detailsmoresponsor = '';
+        $new->detailssponsorimage = '';
         $new->additional_lecturer = 2;
+        $new->additional_sponsor = 2;
         $new->certificateofachievement = '';
         $new->license = 0;
         $new->videocode = '';
         $new->tags = '';
 
-
+        
         $DB->insert_record($tbl, $new);
     }
 
-
     echo $OUTPUT->header();
-    $toform = array('additional_lecturer' => 2);
-    $mform->display($toform);
-
-//$mform->display();
-
-//$cluster = $DB->get_records($tbl);
+    $toform = ['additional_lecturer' => 2, 'additional_sponsor' => 2];
+    $mform->display();
 
     echo $OUTPUT->footer();
 }
