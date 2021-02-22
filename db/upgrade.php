@@ -22,10 +22,6 @@ function xmldb_local_ildmeta_upgrade($oldversion) {
         $fieldy = new xmldb_field('detailssponsor', XMLDB_TYPE_CHAR, '120', null, XMLDB_NOTNULL, null, null);
         $fieldz = new xmldb_field('detailsmoresponsor', XMLDB_TYPE_CHAR, '120', null, XMLDB_NOTNULL, null, null);
 
-        if (!$dbman->field_exists($meta_table, $fieldx)) {
-            $dbman->add_field($meta_table, $fieldx);
-        }
-
         if (!$dbman->field_exists($meta_table, $fieldy)) {
             $dbman->add_field($meta_table, $fieldy);
         }
