@@ -1,6 +1,6 @@
-# moodle-block_ildmeta
+# moodle-block_isymeta
 Adds course tiles, filter, search and course detail pages.
 
-    git clone https://github.com/ild-thl/moodle-block_metatiles.git ildmeta
+    git clone https://github.com/ild-thl/moodle-block_isymetaselect.git isymeta
 
-This moodle extension is dependend of [moodle-block_metatiles](https://github.com/ild-thl/moodle-block_metatiles).
+This moodle extension is dependend of [moodle-block_isymeta](https://github.com/ild-thl/moodle-block_isymetaselect).
