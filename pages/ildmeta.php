@@ -1,7 +1,7 @@
 <?php
 require_once('../../../config.php');
 require_once('../lib.php');
-require_once('isymeta_form.php');
+require_once('ildmeta_form.php');
 defined('MOODLE_INTERNAL') || die();
 
 // Prevent access for students/guests
@@ -10,24 +10,24 @@ defined('MOODLE_INTERNAL') || die();
 $courseid = optional_param('courseid', array(), PARAM_INT);
 $coursecontext = context_course::instance($courseid);
 
-if (!has_capability('local/isymeta:allowaccess', $coursecontext)) redirect(new moodle_url('/'));
+if (!has_capability('local/ildmeta:allowaccess', $coursecontext)) redirect(new moodle_url('/'));
 
-$url = new moodle_url('/local/isymeta/pages/isymeta.php');
+$url = new moodle_url('/local/ildmeta/pages/ildmeta.php');
 require_login();
 
-$tbl = 'isymeta';
+$tbl = 'ildmeta';
 
 // Dozenten Bilder
-$tbl_lecturer = 'isymeta_additional';
-$tbl_sponsor = 'isymeta_sponsors';
+$tbl_lecturer = 'ildmeta_additional';
+$tbl_sponsor = 'ildmeta_sponsors';
 
 $context = context_system::instance();
 
 $PAGE->set_pagelayout('admin');
 $PAGE->set_context($context);
 $PAGE->set_url($url);
-$PAGE->set_title(get_string('title', 'local_isymeta'));
-$PAGE->set_heading(get_string('heading', 'local_isymeta'));
+$PAGE->set_title(get_string('title', 'local_ildmeta'));
+$PAGE->set_heading(get_string('heading', 'local_ildmeta'));
 
 $course_id = optional_param('courseid', 0, PARAM_INT);
 
@@ -63,7 +63,7 @@ if (isset($record->detailssponsor)) {
 }
 
 $records_lect = $DB->get_records($tbl_lecturer, array('courseid' => $courseid));
-$records_spons = $DB->get_records($tbl_sponsor, array('courseid' => $courseid)); //todo
+$records_spons = $DB->get_records($tbl_sponsor, array('courseid' => $courseid));
 
 $customdata = [
     'filemanageropts' => $filemanageropts,
@@ -75,7 +75,7 @@ $customdata = [
     'sponsor' => $records_spons
 ];
 
-$mform = new isymeta_form($url . '?courseid=' . $courseid, $customdata);
+$mform = new ildmeta_form($url . '?courseid=' . $courseid, $customdata);
 
 $itemid = 0;
 
@@ -87,14 +87,14 @@ if ($mform->is_cancelled()) {
 } else if ($fromform = $mform->get_data()) {
 
     $draftitemid = file_get_submitted_draft_itemid('overviewimage');
-    file_prepare_draft_area($draftitemid, $coursecontext->id, 'local_isymeta', 'overviewimage', $draftitemid);
+    file_prepare_draft_area($draftitemid, $coursecontext->id, 'local_ildmeta', 'overviewimage', $draftitemid);
 
     $draftitemid_di = file_get_submitted_draft_itemid('detailimage');
-    file_prepare_draft_area($draftitemid_di, $coursecontext->id, 'local_isymeta', 'detailimage', $draftitemid_di);
+    file_prepare_draft_area($draftitemid_di, $coursecontext->id, 'local_ildmeta', 'detailimage', $draftitemid_di);
 
-    file_save_draft_area_files($fromform->overviewimage, $coursecontext->id, 'local_isymeta', 'overviewimage', 0);
+    file_save_draft_area_files($fromform->overviewimage, $coursecontext->id, 'local_ildmeta', 'overviewimage', 0);
 
-    file_save_draft_area_files($fromform->detailimage, $coursecontext->id, 'local_isymeta', 'detailimage', 0);
+    file_save_draft_area_files($fromform->detailimage, $coursecontext->id, 'local_ildmeta', 'detailimage', 0);
 
     // first of all, check for additional lecturer fields
 
@@ -112,12 +112,12 @@ if ($mform->is_cancelled()) {
         $DB->update_record($tbl, $addlect);
 
 
-        // add empty fields in isymeta_additional
+        // add empty fields in ildmeta_additional
         // new logic required due to delete options...
 
         //get last lecturer id
 
-        $record_lect_last = $DB->get_record_sql("SELECT * FROM {isymeta_additional} WHERE courseid = ? ORDER BY id DESC", array('courseid' => $courseid), true);
+        $record_lect_last = $DB->get_record_sql("SELECT * FROM {ildmeta_additional} WHERE courseid = ? ORDER BY id DESC", array('courseid' => $courseid), true);
 
         $i = explode("_", $record_lect_last->name)[2] + 1;
 
@@ -140,11 +140,11 @@ if ($mform->is_cancelled()) {
             }
             $i++;
         }
-        // if additional lecturer the user will be redirected to the isymeta.php for further editing
-        $url = new moodle_url('/local/isymeta/pages/isymeta.php', array('courseid' => $courseid));
+        // if additional lecturer the user will be redirected to the ildmeta.php for further editing
+        $url = new moodle_url('/local/ildmeta/pages/ildmeta.php', array('courseid' => $courseid));
     } else {
         // otherweise he will be forwarded to the detailpage.php
-        $url = new moodle_url('/blocks/isymetaselect/detailpage.php', array('id' => $courseid));
+        $url = new moodle_url('/blocks/ildmetaselect/detailpage.php', array('id' => $courseid));
     }
 
 
@@ -154,11 +154,11 @@ if ($mform->is_cancelled()) {
         $addspons->detailssponsor = $fromform->additional_sponsor + $record->detailssponsor;
         $DB->update_record($tbl, $addspons);
 
-        // add empty fields in isymeta_additional
+        // add empty fields in ildmeta_additional
 
         //get last lecturer id
 
-        $record_spons_last = $DB->get_record_sql("SELECT * FROM {isymeta_sponsors} WHERE courseid = ? ORDER BY id DESC", array('courseid' => $courseid));
+        $record_spons_last = $DB->get_record_sql("SELECT * FROM {ildmeta_sponsors} WHERE courseid = ? ORDER BY id DESC", array('courseid' => $courseid));
 
         $i = explode("_", $record_spons_last->name)[2] + 1;
 
@@ -179,31 +179,28 @@ if ($mform->is_cancelled()) {
             }
             $i++;
         }
-        // if additional lecturer the user will be redirected to the isymeta.php for further editing
-        $url = new moodle_url('/local/isymeta/pages/isymeta.php', array('courseid' => $courseid));
+        // if additional lecturer the user will be redirected to the ildmeta.php for further editing
+        $url = new moodle_url('/local/ildmeta/pages/ildmeta.php', array('courseid' => $courseid));
     } else {
         // otherweise he will be forwarded to the detailpage.php
-        $url = new moodle_url('/blocks/isymetaselect/coursedetails.php', array('id' => $courseid));
+        $url = new moodle_url('/blocks/ildmetaselect/detailpage.php', array('id' => $courseid));
     }
 
     $todb = new stdClass;
     $todb->courseid = $courseid;
     $todb->overviewimage = $draftitemid;
     $todb->coursetitle = $fromform->coursetitle;
-    if(isset($todb->meta3)) {
-        $todb->meta3 = $fromform->meta3; // Dozent*in
-    }
-   
+    $todb->lecturer = $fromform->lecturer;
     if(isset($fromform->noindexcourse)){
         $todb->noindexcourse = $fromform->noindexcourse;
     }
     $todb->overviewimage = $draftitemid;
     $todb->detailimage = $fromform->detailimage;
-    $todb->meta2 = implode(",", $fromform->meta2);
-    $todb->meta6 = $fromform->meta6;
+    $todb->university = implode(",", $fromform->university);
+    $todb->subjectarea = $fromform->subjectarea;
     $todb->courselanguage = $fromform->courselanguage;
-    $todb->meta4 = $fromform->meta4;
-    $todb->meta5 = $fromform->meta5;
+    $todb->processingtime = $fromform->processingtime;
+    $todb->starttime = $fromform->starttime;
     $todb->teasertext = $fromform->teasertext['text'];
     $todb->targetgroup = $fromform->targetgroup['text'];
     $todb->learninggoals = $fromform->learninggoals['text'];
@@ -238,27 +235,27 @@ if ($mform->is_cancelled()) {
     }
 
     // Get lecturer editor + filemanager
-    $lecturer_editor = new stdClass();
+    $lecturer = new stdClass();
 
     foreach ($fromform as $key => $value) {
        
         if (strpos($key, 'lecturer_type') !== false) {
             
-            $lecturer_editor->$key = $fromform->$key;
+            $lecturer->$key = $fromform->$key;
         }
         if (strpos($key, 'detailslecturer_image') !== false) {
-            $lecturer_editor->$key = $fromform->$key;
+            $lecturer->$key = $fromform->$key;
 
             $draftlecturer = file_get_submitted_draft_itemid($key);
-            file_prepare_draft_area($draftlecturer, $coursecontext->id, 'local_isymeta', $key, 0);
-            file_save_draft_area_files($draftlecturer, $coursecontext->id, 'local_isymeta', $key, 0);
+            file_prepare_draft_area($draftlecturer, $coursecontext->id, 'local_ildmeta', $key, 0);
+            file_save_draft_area_files($draftlecturer, $coursecontext->id, 'local_ildmeta', $key, 0);
         }
         if (strpos($key, 'detailslecturer_editor') !== false) {
-            $lecturer_editor->$key = $fromform->$key['text'];
+            $lecturer->$key = $fromform->$key['text'];
         }
     }
 
-    foreach ($lecturer_editor as $key => $value) {
+    foreach ($lecturer as $key => $value) {
 
         $lectodb = new stdClass();
         $lectodb->courseid = $courseid;
@@ -288,8 +285,8 @@ if ($mform->is_cancelled()) {
                 $sponsor->$key = $fromform->$key;
     
                 $draftsponsor = file_get_submitted_draft_itemid($key);
-                file_prepare_draft_area($draftsponsor, $coursecontext->id, 'local_isymeta', $key, 0);
-                file_save_draft_area_files($draftsponsor, $coursecontext->id, 'local_isymeta', $key, 0);
+                file_prepare_draft_area($draftsponsor, $coursecontext->id, 'local_ildmeta', $key, 0);
+                file_save_draft_area_files($draftsponsor, $coursecontext->id, 'local_ildmeta', $key, 0);
             }
             if (strpos($key, 'detailssponsor_link') !== false) {
                 $sponsor->$key = $fromform->$key;  
@@ -334,12 +331,12 @@ if ($mform->is_cancelled()) {
         $new->sponsor = $getdb->sponsor;
         $new->overviewimage = $getdb->overviewimage;
         $new->detailimage = $getdb->detailimage;
-        $new->meta2 = $getdb->meta2;
+        $new->university = $getdb->university;
         $new->noindexcourse = $getdb->noindexcourse;
-        $new->meta6 = $getdb->meta6;
+        $new->subjectarea = $getdb->subjectarea;
         $new->courselanguage = $getdb->courselanguage;
-        $new->meta4 = $getdb->meta4;
-        $new->meta5 = $getdb->meta5;
+        $new->processingtime = $getdb->processingtime;
+        $new->starttime = $getdb->starttime;
         $new->teasertext['text'] = $getdb->teasertext;
         $new->targetgroup['text'] = $getdb->targetgroup;
         $new->learninggoals['text'] = $getdb->learninggoals;
@@ -372,13 +369,13 @@ if ($mform->is_cancelled()) {
 						  AND filename != :filename 
 						  AND itemid = 0';
            
-		$params = array('component' => 'local_isymeta', 'contextid' => $coursecontext->id, 'filename' => '.');
+		$params = array('component' => 'local_ildmeta', 'contextid' => $coursecontext->id, 'filename' => '.');
         
 		$files = $DB->get_records_sql($sql, $params);
 
 		foreach ($files as $file) {
 			$draftitemid = file_get_submitted_draft_itemid($file->filearea);
-			file_prepare_draft_area($draftitemid, $coursecontext->id, 'local_isymeta', $file->filearea, 0);
+			file_prepare_draft_area($draftitemid, $coursecontext->id, 'local_ildmeta', $file->filearea, 0);
 			$lectname = $file->filearea;
 			$new->$lectname = $draftitemid;
         }
@@ -401,12 +398,12 @@ if ($mform->is_cancelled()) {
 					      AND contextid = :contextid 
 						  AND filename != :filename 
 						  AND itemid = 0';
-		$params2 = array('component' => 'local_isymeta', 'contextid' => $coursecontext->id, 'filename' => '.');
+		$params2 = array('component' => 'local_ildmeta', 'contextid' => $coursecontext->id, 'filename' => '.');
 		$files2 = $DB->get_records_sql($sql2, $params2);
 
 		foreach ($files2 as $file) {
 			$draftitemid = file_get_submitted_draft_itemid($file->filearea);
-			file_prepare_draft_area($draftitemid, $coursecontext->id, 'local_isymeta', $file->filearea, 0);
+			file_prepare_draft_area($draftitemid, $coursecontext->id, 'local_ildmeta', $file->filearea, 0);
 			$sponsname = $file->filearea;
 			$new->$sponsname = $draftitemid;
            
@@ -422,11 +419,11 @@ if ($mform->is_cancelled()) {
         $new->lecturer = '';
         $new->noindexcourse = 0;
         $new->detailimage = '';
-        $new->meta2 = 0;
-        $new->meta6 = 0;
+        $new->university = 0;
+        $new->subjectarea = 0;
         $new->courselanguage = 0;
-        $new->meta4 = 0;
-        $new->meta5 = 0;
+        $new->processingtime = 0;
+        $new->starttime = 0;
         $new->teasertext = '';
         $new->targetgroup = '';
         $new->learninggoals = '';

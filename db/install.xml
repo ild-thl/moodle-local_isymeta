@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="local/isymeta/db" VERSION="20200623" COMMENT="XMLDB file for Moodle local/isymeta"
+<XMLDB PATH="local/ildmeta/db" VERSION="20200623" COMMENT="XMLDB file for Moodle local/ildmeta"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
   <TABLES>
-    <TABLE NAME="isymeta" COMMENT="Table for metas">
+    <TABLE NAME="ildmeta" COMMENT="Table for metas">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
@@ -12,13 +12,13 @@
         <FIELD NAME="videocode" TYPE="char" LENGTH="120" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="overviewimage" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="detailimage" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="meta5" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="starttime" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="coursetitle" TYPE="char" LENGTH="120" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="meta2" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="meta6" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="meta3" TYPE="char" LENGTH="120" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="university" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="subjectarea" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="lecturer" TYPE="char" LENGTH="120" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="courselanguage" TYPE="char" LENGTH="120" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="meta4" TYPE="float" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="processingtime" TYPE="float" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="accesstime" TYPE="char" LENGTH="120" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="teasertext" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="targetgroup" TYPE="text" LENGTH="120" NOTNULL="true" SEQUENCE="false"/>
@@ -36,7 +36,7 @@
         <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="isymeta_additional" COMMENT="Table for lecturers">
+    <TABLE NAME="ildmeta_additional" COMMENT="Table for lecturers">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
@@ -47,7 +47,7 @@
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="isymeta_sponsors" COMMENT="Table for sponsors">
+    <TABLE NAME="ildmeta_sponsors" COMMENT="Table for sponsors">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>

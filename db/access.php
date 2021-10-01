@@ -1,7 +1,7 @@
 <?php
 $capabilities = array(
 
-    'local/isymeta:allowaccess' => array(
+    'local/ildmeta:allowaccess' => array(
         'riskbitmask' => RISK_SPAM | RISK_CONFIG,
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
@@ -13,7 +13,7 @@ $capabilities = array(
         )
     ),
 
-    'local/isymeta:addinstance' => array(
+    'local/ildmeta:addinstance' => array(
         'riskbitmask' => RISK_SPAM | RISK_XSS,
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
@@ -25,7 +25,7 @@ $capabilities = array(
         ),
     ),
 
-    'local/isymeta:delete_lecturer' => array(
+    'local/ildmeta:delete_lecturer' => array(
         'riskbitmask' => RISK_SPAM | RISK_XSS,
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
@@ -37,7 +37,7 @@ $capabilities = array(
         ),
     ),
 
-    'local/isymeta:delete_sponsor' => array(
+    'local/ildmeta:delete_sponsor' => array(
         'riskbitmask' => RISK_SPAM | RISK_XSS,
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
@@ -49,7 +49,7 @@ $capabilities = array(
         ),
     ),
 
-    'local/isymeta:indexation' => array(
+    'local/ildmeta:indexation' => array(
         'riskbitmask' => RISK_SPAM | RISK_XSS,
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
