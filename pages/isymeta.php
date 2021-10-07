@@ -86,6 +86,10 @@ if ($mform->is_cancelled()) {
 
 } else if ($fromform = $mform->get_data()) {
 
+    $eventparams = ['context' => $coursecontext, 'courseid' => $course_id];
+    $event = \local_isymetaindex\event\meta_updated::create($eventparams);
+    $event->trigger();
+
     $draftitemid = file_get_submitted_draft_itemid('overviewimage');
     file_prepare_draft_area($draftitemid, $coursecontext->id, 'local_isymeta', 'overviewimage', $draftitemid);
 
