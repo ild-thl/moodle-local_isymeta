@@ -1,34 +1,107 @@
 <?php
 
-// defined('MOODLE_INTERNAL') || die;
+if ( $hassiteconfig ){
 
-// $settings->add(new admin_setting_heading(
-//             'headerconfig',
-//             get_string('headerconfig', 'local_isymeta'),
-//             get_string('descconfig', 'local_isymeta')
-//         ));
- 
-// $settings->add(new admin_setting_configcheckbox(
-//             'isymeta/Allow_HTML',
-//             get_string('labelallowhtml', 'local_isymeta'),
-//             get_string('descallowhtml', 'local_isymeta'),
-//             '0'
-//         ));
+    $settings = new admin_settingpage( 'local_isymeta', 'iSyMeta Meta-Settings' );
 
-// if ($hassiteconfig) {
-// 	$settings = new admin_settingpage( 'local_isymeta', 'Your Settings Page Title' );
-// 	$ADMIN->add( 'localplugins', $settings );
+    // Create 
+    $ADMIN->add( 'localplugins', $settings );
 
-// 	if ($ADMIN->fulltree) {
-//         $settings->add(new admin_setting_configcheckbox(
-//             'local_isymeta/pluginname',
-//             get_string('pluginname', 'local_isymeta'),
-//             get_string('pluginname', 'local_isymeta'),
-//             1
-//         ));
+    // DE
+    $settings->add( new admin_setting_configtext(
+        'local_isymeta/meta1_de', // ref
+        'Meta 1 - DE',
+        '',
+        'Zielgruppe',
+        PARAM_TEXT
+    ) );
 
-// 		$settings->add(new admin_setting_heading('local_isymeta/pluginname', '', get_string('pluginname', 'local_isymeta')));
-//     }
- 
-//     $ADMIN->add('localplugins', $settings);
-// }
+    $settings->add( new admin_setting_configtext(
+        'local_isymeta/meta2_de', // ref
+        'Meta 2 - DE',
+        '',
+        'Programm',
+        PARAM_TEXT
+    ) );
+
+    $settings->add( new admin_setting_configtext(
+        'local_isymeta/meta3_de', // ref
+        'Meta 3 - DE',
+        '',
+        'Autor/in',
+        PARAM_TEXT
+    ) );
+
+    $settings->add( new admin_setting_configtext(
+        'local_isymeta/meta4_de', // ref
+        'Meta 4 - DE',
+        '',
+        'Arbeitsaufwand',
+        PARAM_TEXT
+    ) );
+
+    $settings->add( new admin_setting_configtext(
+        'local_isymeta/meta5_de', // ref
+        'Meta 5 - DE',
+        '',
+        'Kursbeginn',
+        PARAM_TEXT
+    ) );
+
+    $settings->add( new admin_setting_configtext(
+        'local_isymeta/meta6_de', // ref
+        'Meta 6 - DE',
+        '',
+        'Format',
+        PARAM_TEXT
+    ) );
+
+    // EN
+    $settings->add( new admin_setting_configtext(
+        'local_isymeta/meta1_en', // ref
+        'Meta 1 - EN',
+        '',
+        'Target group',
+        PARAM_TEXT
+    ) );
+
+    $settings->add( new admin_setting_configtext(
+        'local_isymeta/meta2_en', // ref
+        'Meta 2 - EN',
+        '',
+        'Program',
+        PARAM_TEXT
+    ) );
+
+    $settings->add( new admin_setting_configtext(
+        'local_isymeta/meta3_en', // ref
+        'Meta 3 - EN',
+        '',
+        'Lecturer',
+        PARAM_TEXT
+    ) );
+
+    $settings->add( new admin_setting_configtext(
+        'local_isymeta/meta4_en', // ref
+        'Meta 4 - EN',
+        '',
+        'Workload',
+        PARAM_TEXT
+    ) );
+
+    $settings->add( new admin_setting_configtext(
+        'local_isymeta/meta5_en', // ref
+        'Meta 5 - EN',
+        '',
+        'Course start',
+        PARAM_TEXT
+    ) );
+
+    $settings->add( new admin_setting_configtext(
+        'local_isymeta/meta6_en', // ref
+        'Meta 6 - EN',
+        '',
+        'Format',
+        PARAM_TEXT
+    ) );
+}
