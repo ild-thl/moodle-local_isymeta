@@ -28,6 +28,8 @@ class isymeta_form extends moodleform
 
         $mform->addElement('html', '<h2>Meta: Übersichtsseite</h2>');
 
+        $mform->addElement('html', '<h2>Meta-Kachelinhalt</h2>');
+
         // Indexierung
         $context = context_system::instance();
 

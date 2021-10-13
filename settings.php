@@ -9,7 +9,7 @@ if ( $hassiteconfig ){
 
     // DE
     $settings->add( new admin_setting_configtext(
-        'local_isymeta/meta1_de', // ref
+        'local_isymeta/metastring1_de', // ref
         'Meta 1 - DE',
         '',
         'Zielgruppe',
@@ -17,7 +17,7 @@ if ( $hassiteconfig ){
     ) );
 
     $settings->add( new admin_setting_configtext(
-        'local_isymeta/meta2_de', // ref
+        'local_isymeta/metastring2_de', // ref
         'Meta 2 - DE',
         '',
         'Programm',
@@ -25,7 +25,7 @@ if ( $hassiteconfig ){
     ) );
 
     $settings->add( new admin_setting_configtext(
-        'local_isymeta/meta3_de', // ref
+        'local_isymeta/metastring3_de', // ref
         'Meta 3 - DE',
         '',
         'Autor/in',
@@ -33,7 +33,7 @@ if ( $hassiteconfig ){
     ) );
 
     $settings->add( new admin_setting_configtext(
-        'local_isymeta/meta4_de', // ref
+        'local_isymeta/metastring4_de', // ref
         'Meta 4 - DE',
         '',
         'Arbeitsaufwand',
@@ -41,7 +41,7 @@ if ( $hassiteconfig ){
     ) );
 
     $settings->add( new admin_setting_configtext(
-        'local_isymeta/meta5_de', // ref
+        'local_isymeta/metastring5_de', // ref
         'Meta 5 - DE',
         '',
         'Kursbeginn',
@@ -49,7 +49,7 @@ if ( $hassiteconfig ){
     ) );
 
     $settings->add( new admin_setting_configtext(
-        'local_isymeta/meta6_de', // ref
+        'local_isymeta/metastring6_de', // ref
         'Meta 6 - DE',
         '',
         'Format',
@@ -58,7 +58,7 @@ if ( $hassiteconfig ){
 
     // EN
     $settings->add( new admin_setting_configtext(
-        'local_isymeta/meta1_en', // ref
+        'local_isymeta/metastring1_en', // ref
         'Meta 1 - EN',
         '',
         'Target group',
@@ -66,7 +66,7 @@ if ( $hassiteconfig ){
     ) );
 
     $settings->add( new admin_setting_configtext(
-        'local_isymeta/meta2_en', // ref
+        'local_isymeta/metastring2_en', // ref
         'Meta 2 - EN',
         '',
         'Program',
@@ -74,7 +74,7 @@ if ( $hassiteconfig ){
     ) );
 
     $settings->add( new admin_setting_configtext(
-        'local_isymeta/meta3_en', // ref
+        'local_isymeta/metastring3_en', // ref
         'Meta 3 - EN',
         '',
         'Lecturer',
@@ -82,7 +82,7 @@ if ( $hassiteconfig ){
     ) );
 
     $settings->add( new admin_setting_configtext(
-        'local_isymeta/meta4_en', // ref
+        'local_isymeta/metastring4_en', // ref
         'Meta 4 - EN',
         '',
         'Workload',
@@ -90,7 +90,7 @@ if ( $hassiteconfig ){
     ) );
 
     $settings->add( new admin_setting_configtext(
-        'local_isymeta/meta5_en', // ref
+        'local_isymeta/metastring5_en', // ref
         'Meta 5 - EN',
         '',
         'Course start',
@@ -98,7 +98,7 @@ if ( $hassiteconfig ){
     ) );
 
     $settings->add( new admin_setting_configtext(
-        'local_isymeta/meta6_en', // ref
+        'local_isymeta/metastring6_en', // ref
         'Meta 6 - EN',
         '',
         'Format',
