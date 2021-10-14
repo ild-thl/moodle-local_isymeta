@@ -24,11 +24,43 @@ class isymeta_form extends moodleform
             'Englisch'
         ];
 
-        //$context  = context_module::instance($_GET['courseid']);
 
-        $mform->addElement('html', '<h2>Meta: Übersichtsseite</h2>');
 
-        $mform->addElement('html', '<h2>Meta-Kachelinhalt</h2>');
+
+
+
+
+
+
+
+        /*
+            Form elements for tile and detail page metas
+        */
+
+        $mform->addElement('html', '<h3>Meta-Kachelinhalt</h3>');
+
+        // Meta 1 None
+
+
+
+
+
+        // Meta 6 (Default: Format)
+        $universities = $DB->get_record('user_info_field', array('shortname' => 'isymeta_de_targetgroups'));
+        $select = $mform->addElement('select', 'meta2', get_string('meta2', 'local_isymeta'), explode("\n", $universities->param1));
+        $mform->setType('meta2', PARAM_RAW);
+        $select->setMultiple(true);
+        $mform->addElement('static', 'text_meta2', '', get_string('text_meta2', 'local_isymeta'));
+
+
+
+
+
+
+
+
+
+
 
         // Indexierung
         $context = context_system::instance();
@@ -38,13 +70,7 @@ class isymeta_form extends moodleform
             $mform->setType('index', PARAM_RAW);
         }
 
-        // Anbietende Unis
-        $universities = $DB->get_record('user_info_field', array('shortname' => 'isymeta_de_targetgroups'));
 
-        $select = $mform->addElement('select', 'meta2', get_string('meta2', 'local_isymeta'), explode("\n", $universities->param1));
-        $mform->setType('meta2', PARAM_RAW);
-        $select->setMultiple(true);
-        $mform->addElement('static', 'text_meta2', '', get_string('text_meta2', 'local_isymeta'));
 
         // Fachbereich/Wissensgebiet
         $meta6s = $DB->get_record('user_info_field', array('shortname' => 'isymeta_de_formats'));
@@ -66,6 +92,11 @@ class isymeta_form extends moodleform
         // Kurstitel
         $mform->addElement('text', 'coursetitle', get_string('coursetitle', 'local_isymeta'));
         $mform->setType('coursetitle', PARAM_TEXT);
+
+
+        $mform->addElement('html', '<h2>Meta: Übersichtsseite</h2>');
+
+
 
         // Dozent
         $mform->addElement('text', 'lecturer', get_string('lecturer', 'local_isymeta'));

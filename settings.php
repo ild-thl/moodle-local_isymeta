@@ -104,4 +104,14 @@ if ( $hassiteconfig ){
         'Format',
         PARAM_TEXT
     ) );
+
+
+    $setting = new admin_setting_confightmleditor(
+        'local_isymeta/meta1_selection',
+        'Meta 1 (Standard: Zielgruppe)',
+        'Syntax: (ID):(DE-String)|(EN-String)<br>Exaktes Format beibehalten. Wenn Einträge gelöscht werden sollen, komplette Zeile entfernen, ID (Zahl) der übrigen Einträge nicht anpassen. Neuer Eintrag in neue Zeile, ID (Zahl) hochzählen.',
+        '1:Zielgruppe 1|Target group 1<br>2:Zielgruppe 2|Target group 2<br>3:Zielgruppe 3|Target group 3');
+    $setting->set_force_ltr(true);
+    $settings->add($setting);
+
 }
