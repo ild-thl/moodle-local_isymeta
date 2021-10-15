@@ -207,6 +207,7 @@ if ($mform->is_cancelled()) {
     $todb->meta6 = $fromform->meta6;
     $todb->courselanguage = $fromform->courselanguage;
     $todb->meta4 = $fromform->meta4;
+    $todb->meta1 = $fromform->meta1;
     $todb->meta5 = $fromform->meta5;
     $todb->teasertext = $fromform->teasertext['text'];
     $todb->targetgroup = $fromform->targetgroup['text'];
@@ -334,8 +335,8 @@ if ($mform->is_cancelled()) {
     if ($getdb != null) {
         $new = new stdClass;
         $new->coursetitle = $getdb->coursetitle;
-        $new->lecturer = $getdb->lecturer;
-        $new->sponsor = $getdb->sponsor;
+        // $new->lecturer = $getdb->lecturer;
+        // $new->sponsor = $getdb->sponsor;
         $new->overviewimage = $getdb->overviewimage;
         $new->detailimage = $getdb->detailimage;
         $new->meta2 = $getdb->meta2;
@@ -343,6 +344,7 @@ if ($mform->is_cancelled()) {
         $new->meta6 = $getdb->meta6;
         $new->courselanguage = $getdb->courselanguage;
         $new->meta4 = $getdb->meta4;
+        $new->meta1 = $getdb->meta1;
         $new->meta5 = $getdb->meta5;
         $new->teasertext['text'] = $getdb->teasertext;
         $new->targetgroup['text'] = $getdb->targetgroup;
@@ -431,6 +433,7 @@ if ($mform->is_cancelled()) {
         $new->courselanguage = 0;
         $new->meta4 = 0;
         $new->meta5 = 0;
+        $new->meta1 = 0;
         $new->teasertext = '';
         $new->targetgroup = '';
         $new->learninggoals = '';

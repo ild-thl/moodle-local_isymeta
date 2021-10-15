@@ -1,8 +1,10 @@
 <?php
 
-//defined('MOODLE_INTERNAL') || die();
+defined('MOODLE_INTERNAL') || die();
 
-require_once("$CFG->libdir/formslib.php");
+require_once "$CFG->libdir/formslib.php";
+require_once '../../../blocks/isymetaselect/classes/metastring.php';
+require_once '../../../blocks/isymetaselect/classes/metaselection.php';
 
 class isymeta_form extends moodleform
 {
@@ -24,14 +26,8 @@ class isymeta_form extends moodleform
             'Englisch'
         ];
 
-
-
-
-
-
-
-
-
+        $metastring = new Metastring();
+        $metaselection = new Metaselection();
 
         /*
             Form elements for tile and detail page metas
@@ -39,28 +35,46 @@ class isymeta_form extends moodleform
 
         $mform->addElement('html', '<h3>Meta-Kachelinhalt</h3>');
 
-        // Meta 1 None
+        $mform->addElement('html', '<hr>');
 
+        // Meta 1 (Default: Zielgruppe)
+        $mform->addElement('select', 'meta1', $metastring->get(0), $metaselection->get_meta());
+        $mform->setType('meta1', PARAM_RAW);
 
-
-
-
-        // Meta 6 (Default: Format)
+        // Meta 2 (Default: Programm)
         $universities = $DB->get_record('user_info_field', array('shortname' => 'isymeta_de_targetgroups'));
-        $select = $mform->addElement('select', 'meta2', get_string('meta2', 'local_isymeta'), explode("\n", $universities->param1));
+        $select = $mform->addElement('select', 'meta2', $metastring->get(1), explode("\n", $universities->param1));
         $mform->setType('meta2', PARAM_RAW);
         $select->setMultiple(true);
         $mform->addElement('static', 'text_meta2', '', get_string('text_meta2', 'local_isymeta'));
 
+        // Meta 3 (Default: Autor/in)
+        $mform->addElement('text', 'lecturer', $metastring->get(2));
+        $mform->setType('lecturer', PARAM_TEXT);
 
+        // Meta 4 (Default: Arbeitsaufwand)
+        $mform->addElement('text', 'meta4', $metastring->get(3));
+        $mform->setType('meta4', PARAM_TEXT);
 
+        // Meta 5 (Default: Kursbeginn)
+        $mform->addElement('date_selector', 'meta5', $metastring->get(4));
 
+        // Meta 6 (Default: Format)
+        $meta6s = $DB->get_record('user_info_field', array('shortname' => 'isymeta_de_formats'));
+        $mform->addElement('select', 'meta6', $metastring->get(5), explode("\n", $meta6s->param1));
+        $mform->setType('meta6', PARAM_RAW);
+        $mform->addElement('static', 'text_meta6', '', get_string('text_meta6', 'local_isymeta'));
 
+        // Übersichtsbild
+        $mform->addElement('filemanager', 'overviewimage', get_string('overviewimage', 'local_isymeta'), null, $filemanageropts);
 
+        $mform->addElement('html', '<hr>');
 
+        /*
+            Form elements detail page
+        */
 
-
-
+        $mform->addElement('html', '<h3>Meta-Detailseite</h3>');
 
         // Indexierung
         $context = context_system::instance();
@@ -69,18 +83,6 @@ class isymeta_form extends moodleform
             $mform->addElement('select', 'noindexcourse', get_string('noindexcourse', 'local_isymeta'), array(get_string('noindexcourse_yes', 'local_isymeta'), get_string('noindexcourse_no', 'local_isymeta'), get_string('noindexcourse_limited', 'local_isymeta')));
             $mform->setType('index', PARAM_RAW);
         }
-
-
-
-        // Fachbereich/Wissensgebiet
-        $meta6s = $DB->get_record('user_info_field', array('shortname' => 'isymeta_de_formats'));
-
-        $mform->addElement('select', 'meta6', get_string('meta6', 'local_isymeta'), explode("\n", $meta6s->param1));
-        $mform->setType('meta6', PARAM_RAW);
-        $mform->addElement('static', 'text_meta6', '', get_string('text_meta6', 'local_isymeta'));
-
-        // Übersichtsbild
-        $mform->addElement('filemanager', 'overviewimage', get_string('overviewimage', 'local_isymeta'), null, $filemanageropts);
 
         // Detailbild
         $mform->addElement('filemanager', 'detailimage', get_string('detailimage', 'local_isymeta'), null, $filemanageropts);
@@ -93,29 +95,9 @@ class isymeta_form extends moodleform
         $mform->addElement('text', 'coursetitle', get_string('coursetitle', 'local_isymeta'));
         $mform->setType('coursetitle', PARAM_TEXT);
 
-
-        $mform->addElement('html', '<h2>Meta: Übersichtsseite</h2>');
-
-
-
-        // Dozent
-        $mform->addElement('text', 'lecturer', get_string('lecturer', 'local_isymeta'));
-        $mform->setType('lecturer', PARAM_TEXT);
-
         // Kurssprache
         $mform->addElement('select', 'courselanguage', get_string('courselanguage', 'local_isymeta'), $lang_list);
         $mform->setType('courselanguage', PARAM_RAW);
-
-        // Bearbeitungszeit in Stunden
-        $mform->addElement('text', 'meta4', get_string('meta4', 'local_isymeta'));
-        $mform->setType('meta4', PARAM_TEXT);
-        // $mform->addRule('meta4', get_string('text_meta4', 'local_isymeta'), 'numeric');
-        // $mform->addElement('static', 'text_meta4', '', get_string('text_meta4', 'local_isymeta'));
-
-        // Startzeit
-        $mform->addElement('date_selector', 'meta5', get_string('meta5', 'local_isymeta'));
-
-        $mform->addElement('html', '<h2>Meta: Detailseite</h2>');
 
         // Teasertext
         $mform->addElement('editor', 'teasertext', get_string('teasertext', 'local_isymeta'));
@@ -244,7 +226,7 @@ class isymeta_form extends moodleform
 
                 // Details Anbieter*innen / Autor*innen
                 $mform->addElement('text', 'detailssponsor_link_' . $i, get_string('sponsor_link', 'local_isymeta'));
-                // $mform->setType('detailssponsor_link_'.$i, PARAM_TEXT);
+                $mform->setType('detailssponsor_link_'.$i, PARAM_TEXT); //todo
                 // $mform->addElement('editor', 'sponsor_link_' . $i, get_string('sponsor_link', 'local_isymeta'), null, $editoropts);
                 $mform->setType('detailssponsor_link', PARAM_TEXT);
 
@@ -259,7 +241,7 @@ class isymeta_form extends moodleform
         } else {
 
             foreach($sponsor as $spons) {
-// print_r($spons); die();
+
                 if(strpos($spons->name, 'image')) {
                     // Bild Anbieter*innen / Autor*innen
                     $mform->addElement('filemanager', $spons->name, get_string('sponsor_image', 'local_isymeta'), null, $filemanageropts);

@@ -17,6 +17,7 @@
         <FIELD NAME="meta2" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="meta6" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="meta3" TYPE="char" LENGTH="120" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="meta1" TYPE="char" LENGTH="120" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="courselanguage" TYPE="char" LENGTH="120" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="meta4" TYPE="float" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="accesstime" TYPE="char" LENGTH="120" NOTNULL="true" SEQUENCE="false"/>
