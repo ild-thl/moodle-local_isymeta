@@ -51,6 +51,7 @@
     <TABLE NAME="isymeta_sponsors" COMMENT="Table for sponsors">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="sponsorimage" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="sponsorlink" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
