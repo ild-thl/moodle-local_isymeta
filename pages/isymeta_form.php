@@ -12,62 +12,97 @@ class isymeta_form extends moodleform
     {
         global $CFG, $DB;
 
-        // init helper classes
-        $metastring = new Metastring();
-        $metaselection = new Metaselection();
+        $metastring = new Metastring(); // helper class for i8n strings
+        $metaselection = new Metaselection(); // helper class for selection form
 
         $mform = $this->_form;
         $courseid = $this->_customdata['courseid'];
         $filemanageropts = $this->_customdata['filemanageropts'];
         $editoropts = $this->_customdata['editoropts'];
 
-
         // $lecturer_editor = $this->_customdata['lecturer'];
         // $sponsor = $this->_customdata['sponsor'];
         // $max_lecturer = $this->_customdata['max_lecturer'];
         // $max_sponsor = $this->_customdata['max_sponsor'];
         
+
+        /*
+            Form elements for overall metas
+        */
+
+        $mform->addElement('header', 'essentialsheader', 'Allgemeine Daten');
+
+        // Kurstitel
+        $mform->addElement('static', 'coursetitle_text', '', 'Originaltitel des Kurses: <strong>' . $DB->get_record('course', array('id' => $courseid))->fullname . '</strong>');
+        $mform->addElement('text', 'coursetitle', get_string('coursetitle', 'local_isymeta'));
+        $mform->setType('coursetitle', PARAM_TEXT);
+
+        // Indexierung
+        $mform->addElement('select', 'noindexcourse', 'Kurs sichtbar', array(get_string('noindexcourse_yes', 'local_isymeta'), get_string('noindexcourse_no', 'local_isymeta')));
+        $mform->setType('index', PARAM_RAW);
+
         /*
             Form elements for tile metas
         */
 
-        $mform->addElement('html', '<h3>Meta-Kachelinhalt</h3>');
-
-        $mform->addElement('html', '<hr>');
+        $mform->addElement('header', 'tilecontentheader', 'Kachelinhalt');
+        
+        // Tile Image
+        $mform->addElement('filemanager', 'overviewimage', get_string('overviewimage', 'local_isymeta'), null, $filemanageropts);
 
         // Meta 1 (Default: Zielgruppe)
-        $mform->addElement('select', 'meta1', $metastring->get(0), $metaselection->get_meta());
+        $mform->addElement('select', 'meta1', $metastring->get(0), $metaselection->get_meta(1));
         $mform->setType('meta1', PARAM_RAW);
 
         // Meta 2 (Default: Programm)
-        $universities = $DB->get_record('user_info_field', array('shortname' => 'isymeta_de_targetgroups'));
-        $select = $mform->addElement('select', 'meta2', $metastring->get(1), explode("\n", $universities->param1));
+        $mform->addElement('select', 'meta2', $metastring->get(1), $metaselection->get_meta(2));
         $mform->setType('meta2', PARAM_RAW);
-        $select->setMultiple(true);
-        $mform->addElement('static', 'text_meta2', '', get_string('text_meta2', 'local_isymeta'));
 
         // Meta 3 (Default: Autor/in)
-        $mform->addElement('text', 'lecturer', $metastring->get(2));
-        $mform->setType('lecturer', PARAM_TEXT);
+        $mform->addElement('text', 'meta3', $metastring->get(2));
+        $mform->setType('meta3', PARAM_TEXT);
 
-        // Meta 4 (Default: Arbeitsaufwand)
-        $mform->addElement('text', 'meta4', $metastring->get(3));
-        $mform->setType('meta4', PARAM_TEXT);
+        // // Meta 4 (Default: Arbeitsaufwand)
+        $mform->addElement('float', 'meta4', $metastring->get(3));
 
-        // Meta 5 (Default: Kursbeginn)
-        $mform->addElement('date_selector', 'meta5', $metastring->get(4));
+
+        $this->add_action_buttons();
+
+
+
+
+
+
+        // Meta 2 (Default: Programm)
+        // $universities = $DB->get_record('user_info_field', array('shortname' => 'isymeta_de_targetgroups'));
+        // $select = $mform->addElement('select', 'meta2', $metastring->get(1), explode("\n", $universities->param1));
+        // $mform->setType('meta2', PARAM_RAW);
+        // $select->setMultiple(true);
+        // $mform->addElement('static', 'text_meta2', '', get_string('text_meta2', 'local_isymeta'));
+
+
+
+
+
+        // // Meta 5 (Default: Kursbeginn)
+        // $mform->addElement('date_selector', 'meta5', $metastring->get(4));
 
         // Meta 6 (Default: Format)
-        $meta6s = $DB->get_record('user_info_field', array('shortname' => 'isymeta_de_formats'));
-        $mform->addElement('select', 'meta6', $metastring->get(5), explode("\n", $meta6s->param1));
-        $mform->setType('meta6', PARAM_RAW);
-        $mform->addElement('static', 'text_meta6', '', get_string('text_meta6', 'local_isymeta'));
+        // $meta6s = $DB->get_record('user_info_field', array('shortname' => 'isymeta_de_formats'));
+        // $mform->addElement('select', 'meta6', $metastring->get(5), explode("\n", $meta6s->param1));
+        // $mform->setType('meta6', PARAM_RAW);
+        // $mform->addElement('static', 'text_meta6', '', get_string('text_meta6', 'local_isymeta'));
 
         // Übersichtsbild
-        $mform->addElement('filemanager', 'overviewimage', get_string('overviewimage', 'local_isymeta'), null, $filemanageropts);
+        
+    }
 
-        $mform->addElement('html', '<hr>');
+    function validation($data, $files)
+    {
+        return array();
+    }
 
+}
         /*
             Form elements detail page
         */
@@ -89,9 +124,7 @@ class isymeta_form extends moodleform
 //         $mform->addElement('text', 'videocode', get_string('videocode', 'local_isymeta'));
 //         $mform->setType('videocode', PARAM_TEXT);
 
-//         // Kurstitel
-//         $mform->addElement('text', 'coursetitle', get_string('coursetitle', 'local_isymeta'));
-//         $mform->setType('coursetitle', PARAM_TEXT);
+
 
 //         // Kurssprache
 //         $mform->addElement('select', 'courselanguage', get_string('courselanguage', 'local_isymeta'), $lang_list);
@@ -301,13 +334,15 @@ class isymeta_form extends moodleform
 //         $mform->addElement('text', 'tags', get_string('tags', 'local_isymeta'));
 //         $mform->setType('tags', PARAM_TEXT);
 
-        $this->add_action_buttons();
+
 //     }
 
-    function validation($data, $files)
-    {
-        return array();
-    }
+//     function validation($data, $files)
+//     {
+//         return array();
+//     }
+
+// }
 // 	// Funktioniert hier nicht. Falsche Stelle
 // 	function data_preprocessing(&$default_values) {
 // 		$lecturer_editor = $this->_customdata['lecturer'];
@@ -334,7 +369,7 @@ class isymeta_form extends moodleform
 
 		// TODO overviewimage nicht vergessen
 
-	}
+	// }
 
 
-}
+

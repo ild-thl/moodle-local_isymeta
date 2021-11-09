@@ -15,7 +15,7 @@ $string['settings_coursemetas'] = 'Kursmetas bearbeiten – ISY Meta';
 $string['settings_global'] = 'globale Einstellungen – ISY Meta';
 
 // Form
-$string['overviewimage'] = 'Bild für die Übersicht';
+$string['overviewimage'] = 'Kachel-Grafik (Ratio 1∶1)';
 $string['detailimage'] = 'Bild für Detailseite (alternativ zum Youtube Video)';
 $string['coursetitle'] = 'Kurstitel';
 $string['lecturer'] = 'Dozent/Anbieter';
