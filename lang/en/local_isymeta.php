@@ -38,15 +38,18 @@ $string['detailslecturerimage'] = 'Bild des Dozenten Anbieters';
 $string['detailsmorelecturer'] = 'Dozent*innen/Autoren*innen';
 $string['sponsor_image'] = 'Logo';
 $string['sponsor_link'] = 'Website zur Verlinkung';
-$string['certificateofachievement'] = 'Bescheinigung der Teilnahme';
-$string['videocode'] = 'Youtube-Link';
+$string['certificateofachievement'] = 'Teilnahmebestätigung';
+$string['videocode'] = 'Youtube-Video-Code';
 $string['license'] = 'Lizenz';
 $string['tags'] = 'Schlagworte';
 $string['meta6'] = '"Formats"';
 $string['noindexcourse'] = 'Indexierung';
+$string['showtile'] = 'Kurskachel anzeigen';
 $string['noindexcourse_yes'] = 'Ja';
 $string['noindexcourse_no'] = 'Nein';
-$string['noindexcourse_limited'] = 'Nur Kurskachel';
+$string['supervised'] = 'Kurstyp';
+$string['supervised_yes'] = 'Betreuter Kurs';
+$string['supervised_no'] = 'Selbstlernkurs';
 
 
 $string['text_meta2'] = 'Nutzerprofilfelder-Liste: "isymeta_de_targetgroups" (bzw. _en_)';

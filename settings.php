@@ -108,22 +108,29 @@ if ( $hassiteconfig ){
             PARAM_TEXT
         ) );
 
-
         $setting = new admin_setting_confightmleditor(
             'local_isymeta/meta1_selection',
             'Meta 1 (Standard: Zielgruppe)',
             'Syntax: (ID):(DE-String)|(EN-String)<br>Exaktes Format beibehalten. Wenn Einträge gelöscht werden sollen, komplette Zeile entfernen, ID (Zahl) der übrigen Einträge nicht anpassen. Neuer Eintrag in neue Zeile, ID (Zahl) hochzählen.',
             '1:Zielgruppe 1|Target group 1<br>2:Zielgruppe 2|Target group 2<br>3:Zielgruppe 3|Target group 3');
+        $setting->set_force_ltr(true);
+        $settings->add($setting);
 
-        $setting = new admin_setting_confightmleditor(
+        $setting2 = new admin_setting_confightmleditor(
             'local_isymeta/meta2_selection',
             'Meta 2 (Standard: Programm)',
             'Syntax: (ID):(DE-String)|(EN-String)<br>Exaktes Format beibehalten. Wenn Einträge gelöscht werden sollen, komplette Zeile entfernen, ID (Zahl) der übrigen Einträge nicht anpassen. Neuer Eintrag in neue Zeile, ID (Zahl) hochzählen.',
             '1:Programm 1|Program 1<br>2:Programm 2|Program 2<br>3:Programm 3|Program 3');
-            
-        $setting->set_force_ltr(true);
-        $settings->add($setting);
+        $setting2->set_force_ltr(true);
+        $settings->add($setting2);
 
-        // \local_isymeta\helper::add_common_gateway_settings($settings, 'local_isymeta');
+        $setting3 = new admin_setting_confightmleditor(
+            'local_isymeta/meta6_selection',
+            'Meta 6 (Standard: Format)',
+            'Syntax: (ID):(DE-String)|(EN-String)<br>Exaktes Format beibehalten. Wenn Einträge gelöscht werden sollen, komplette Zeile entfernen, ID (Zahl) der übrigen Einträge nicht anpassen. Neuer Eintrag in neue Zeile, ID (Zahl) hochzählen.',
+            '1:Format 1|Format 1<br>2:Format 2|Format 2<br>3:Format 3|Format 3');
+        $setting3->set_force_ltr(true);
+        $settings->add($setting3);
+
     }
 }

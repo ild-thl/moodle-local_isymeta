@@ -4,11 +4,12 @@
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
   <TABLES>
-    <TABLE NAME="isymeta" COMMENT="Table for metas">
+    <TABLE NAME="isymeta" COMMENT="">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="noindexcourse" TYPE="char" LENGTH="120" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="supervised" TYPE="char" LENGTH="120" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="videocode" TYPE="char" LENGTH="120" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="overviewimage" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="detailimage" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
@@ -19,13 +20,14 @@
         <FIELD NAME="meta3" TYPE="char" LENGTH="120" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="meta1" TYPE="char" LENGTH="120" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="courselanguage" TYPE="char" LENGTH="120" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="meta4" TYPE="float" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="meta4" TYPE="text" LENGTH="120" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="accesstime" TYPE="char" LENGTH="120" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="teasertext" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="targetgroup" TYPE="text" LENGTH="120" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="learninggoals" TYPE="text" LENGTH="120" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="structure" TYPE="text" LENGTH="120" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="detailslecturer" TYPE="text" LENGTH="120" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="lecturer" SEQUENCE="false" NOTNULL="true" LENGTH="120" TYPE="char"/>
         <FIELD NAME="detailssponsor" TYPE="text" LENGTH="120" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="detailsmorelecturer" TYPE="text" LENGTH="120" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="detailsmoresponsor" TYPE="text" LENGTH="120" NOTNULL="true" SEQUENCE="false"/>
@@ -34,7 +36,7 @@
         <FIELD NAME="certificateofachievement" TYPE="text" LENGTH="120" NOTNULL="true" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key"/>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT=""/>
       </KEYS>
     </TABLE>
     <TABLE NAME="isymeta_additional" COMMENT="Table for lecturers">
@@ -48,13 +50,12 @@
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="isymeta_sponsors" COMMENT="Table for sponsors">
+    <TABLE NAME="isymeta_sponsors" COMMENT="">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="sponsorimage" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="sponsorlink" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="value" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
