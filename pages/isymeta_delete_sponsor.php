@@ -5,6 +5,10 @@ require_once('../lib.php');
 require_once('isymeta_delete_sponsor_form.php');
 defined('MOODLE_INTERNAL') || die();
 
+/*
+    Enables deletion of lecturers 
+*/
+
 $courseid = optional_param('courseid', array(), PARAM_INT);
 $sponsor_id = optional_param('id', array(), PARAM_INT);
 

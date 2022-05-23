@@ -2,6 +2,7 @@
 
 require_once("$CFG->libdir/formslib.php");
 
+// gets dynamically embedded in the main 'edit meta' form if needed - deletes lecturer
 class isymeta_delete_lecturer_form extends moodleform {
 
     function definition() {

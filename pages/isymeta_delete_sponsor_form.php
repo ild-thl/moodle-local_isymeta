@@ -2,6 +2,7 @@
 
 require_once("$CFG->libdir/formslib.php");
 
+// gets dynamically embedded in the main 'edit meta' form if needed - deletes sponsors
 class isymeta_delete_sponsor_form extends moodleform
 {
 //Add elements to form

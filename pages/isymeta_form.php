@@ -6,6 +6,10 @@ require_once "$CFG->libdir/formslib.php";
 require_once '../../../blocks/isymetaselect/classes/metastring.php';
 require_once '../../../blocks/isymetaselect/classes/metaselection.php';
 
+/*
+
+*/
+
 class isymeta_form extends moodleform
 {
     function definition()

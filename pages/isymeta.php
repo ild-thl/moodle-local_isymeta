@@ -24,6 +24,7 @@ $PAGE->set_url($url);
 $PAGE->set_title(get_string('title', 'local_isymeta'));
 $PAGE->set_heading(get_string('heading', 'local_isymeta'));
 
+// standard stack of options for file upload, restricted to one lecturer/sponsor image 
 $filemanageropts = [
     'subdirs' => 0,
     'maxbytes' => '0',
@@ -31,6 +32,7 @@ $filemanageropts = [
     'context' => $context
 ];
 
+// options for editor 
 $editoropts = [
     'subdirs' => 0,
     'maxbytes' => '100000',
@@ -41,8 +43,9 @@ $editoropts = [
 ];
 
 $tbl_sponsor = 'isymeta_sponsors';
-$records_spons = $DB->get_records($tbl_sponsor, array('courseid' => $courseid)); //todo
+$records_spons = $DB->get_records($tbl_sponsor, array('courseid' => $courseid));
 
+// two sponsor forms if no sponsors found
 if (isset($record->detailssponsor)) {
     $max_sponsor = $record->detailssponsor;
 } else {
@@ -53,7 +56,7 @@ if (isset($record->detailssponsor)) {
 $tbl_lecturer = 'isymeta_additional';
 $records_lect = $DB->get_records($tbl_lecturer, array('courseid' => $courseid));
 
-
+// two sponsor forms if no lecturers found
 if (isset($record->detailslecturer)) {
     $max_lecturer = $record->detailslecturer;
 } else {
@@ -90,6 +93,7 @@ if ($mform->is_cancelled()) {
     $todb->supervised       = $fromform->supervised;
     $todb->license          = $fromform->license;
     
+    // preparation of images by using helper functions
     $draftitemid = file_get_submitted_draft_itemid('overviewimage');
     file_prepare_draft_area($draftitemid, $coursecontext->id, 'local_isymeta', 'overviewimage', $draftitemid);
     file_save_draft_area_files($fromform->overviewimage, $coursecontext->id, 'local_isymeta', 'overviewimage', 0);
@@ -100,6 +104,7 @@ if ($mform->is_cancelled()) {
     file_save_draft_area_files($fromform->detailimage, $coursecontext->id, 'local_isymeta', 'detailimage', 0);
     $todb->detailimage    = $draftitemid_detailimage;
 
+    // all metas displayed on tiles or header of course detail page
     $todb->meta1            = $fromform->meta1;
     $todb->meta2            = $fromform->meta2;
     $todb->meta3            = $fromform->meta3;
@@ -110,17 +115,13 @@ if ($mform->is_cancelled()) {
     // Course detail page metas
     $todb->tags             = $fromform->tags; 
     $todb->videocode        = $fromform->videocode; 
-    $todb->teasertext       = $fromform->teasertext['text'];
+    $todb->teasertext       = $fromform->teasertext['text']; // ['text'] shows it's from an textarea editor
     $todb->targetgroup      = $fromform->targetgroup['text'];
     $todb->learninggoals    = $fromform->learninggoals['text'];
     $todb->structure        = $fromform->structure['text']; 
     $todb->certificateofachievement= $fromform->certificateofachievement['text']; 
 
-
-
-
-
-
+    // if course is not found, insert new metas to database by using default values otherwise, update
     if (!$record) {
         $DB->insert_record($tbl, $todb);
         // redirect($url, 'Metas erfolgreich gespeichert.', null, \core\output\notification::NOTIFY_SUCCESS);
@@ -152,10 +153,10 @@ if ($mform->is_cancelled()) {
 
         $record_lect_last = $DB->get_record_sql("SELECT * FROM {isymeta_additional} WHERE courseid = ? ORDER BY id DESC", array('courseid' => $courseid), true);
 
+        // prepare for following further extraction
         $i = explode("_", $record_lect_last->name)[2] + 1;
 
         $maxi = ($i - 1) + $fromform->additional_lecturer;
-
 
         while ($i <= $maxi) {
             $str1 = "lecturer_type_" . $i;
@@ -297,14 +298,6 @@ foreach ($lecturer as $key => $value) {
         }
 
     }
-
-
-
-
-
-
-
-
 
 
     redirect($url, 'Daten erfolgreich gespeichert', null, \core\output\notification::NOTIFY_SUCCESS);

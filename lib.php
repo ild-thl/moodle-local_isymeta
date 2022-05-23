@@ -2,6 +2,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+
+// make a edit option possible by extending moodles context navigation (course wise)
 function local_isymeta_extend_settings_navigation($settingsnav, $context) {
     global $CFG, $PAGE;
 
@@ -36,6 +38,7 @@ function local_isymeta_extend_settings_navigation($settingsnav, $context) {
     }
 }
 
+// Helper for handling files in moodles file system
 function local_isymeta_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options=array()) {
 
     global $DB;

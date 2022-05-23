@@ -4,6 +4,11 @@ defined('MOODLE_INTERNAL') || die;
 
 if ( $hassiteconfig ){
 
+    /*
+        WIP Method works fine but needs further testing
+        Alternative to user_info_field method
+    */
+
     $settings = new admin_settingpage( 'local_isymeta', 'iSyMeta Meta-Settings' );
     // $settings->add(new admin_setting_heading('paygw_paypal_settings', '', 'asddasd'));
 
