@@ -8,7 +8,7 @@ $capabilities = array(
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW,
-            'kursmanager' => CAP_ALLOW,
+            #'kursmanager' => CAP_ALLOW,
             'coursecreator' => CAP_ALLOW
         )
     ),
@@ -20,7 +20,7 @@ $capabilities = array(
         'archetypes' => array(
             'manager' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
-            'kursmanager' => CAP_ALLOW,
+            #'kursmanager' => CAP_ALLOW,
             'coursecreator' => CAP_ALLOW
         ),
     ),
@@ -32,7 +32,7 @@ $capabilities = array(
         'archetypes' => array(
             'manager' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
-            'kursmanager' => CAP_ALLOW,
+            #'kursmanager' => CAP_ALLOW,
             'coursecreator' => CAP_ALLOW
         ),
     ),
@@ -44,7 +44,7 @@ $capabilities = array(
         'archetypes' => array(
             'manager' => CAP_ALLOW,
             'editingteacher' => CAP_PROHIBIT,
-            'kursmanager' => CAP_PROHIBIT,
+            #'kursmanager' => CAP_PROHIBIT,
             'coursecreator' => CAP_PROHIBIT
         ),
     )

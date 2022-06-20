@@ -1,4 +1,4 @@
 <?php
 $plugin->component = 'local_ildmeta';
-$plugin->version = 2019060601;
+$plugin->version = 2022060518;
 $plugin->requires = 2010112400;

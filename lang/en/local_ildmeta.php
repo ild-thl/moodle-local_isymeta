@@ -1,55 +1,55 @@
 <?php
 
-// Todo -> Übersetzen
-
 defined('MOODLE_INTERNAL') || die();
 
-$string['generate_moochub_task'] = 'MOOCHUB Task';
-
+$string['audience'] = 'Bird/DC audience';
+$string['certificateofachievement'] = 'Certificate of attendance';
+$string['courseformat'] = 'Course format';
+$string['courselanguage'] = 'Course language';
+$string['courseprerequisites'] = 'Course prerequisites';
+$string['coursetitle'] = 'Course title';
+$string['coursetype'] = 'Course type';
+$string['detailimage'] = 'Image for detail page (alternative for Youtube video)';
+$string['detailslecturer'] = 'Profil description';
+$string['detailslecturer_image'] = 'Profil image';
+$string['detailsmorelecturer'] = 'More lecturer';
+$string['edit_vocabulary'] = 'Edit BIRD vocabulary';
+$string['edit_licenses'] = 'Edit licenses mapping to SPDX';
+$string['exporttobird'] = 'Export this course to Bird/DC';
+$string['exporttobird_desc'] = 'TODO: Explane what this option does.';
+$string['generate_moochub_task'] = 'MOOCHUB task';
+$string['generate_bird_task'] = 'MOOC to BIRD Task';
+$string['heading'] = 'Edit metadata';
+$string['learninggoals'] = 'What can you learn in this course?';
+$string['lecturer'] = 'Lecturer/Provider';
+$string['lecturer_delete'] = 'Do you really want to delete the selected entry?';
+$string['lecturer_delete_confirm'] = 'Confirm deletion';
+$string['lecturer_false'] = 'No';
+$string['lecturer_true'] = 'Ja, delete entry';
+$string['lecturer_type'] = 'Please choose:';
+$string['lecturer_type_0'] = 'Lecturer';
+$string['lecturer_type_1'] = 'Provider';
+$string['license'] = 'License';
+$string['noindexcourse'] = 'Indexing';
+$string['noindexcourse_limited'] = 'Only course tile';
+$string['noindexcourse_no'] = 'No';
+$string['noindexcourse_yes'] = 'Yes';
+$string['overviewimage'] = 'Image for overview';
 $string['pluginname'] = 'ILD Meta';
-$string['testtext'] = 'This is a Teststring';
-$string['heading'] = 'Metadaten bearbeiten';
-$string['heading_output'] = 'This is the Ouput Heading';
-$string['title'] = 'Metadaten bearbeiten';
-
-// Form
-$string['overviewimage'] = 'Bild für die Übersicht';
-$string['detailimage'] = 'Bild für Detailseite (alternativ zum Youtube Video)';
-$string['coursetitle'] = 'Kurstitel';
-$string['lecturer'] = 'Dozent/Anbieter';
-$string['courselanguage'] = 'Kurssprache';
-$string['university'] = 'Anbietende Hochschulen';
-$string['processingtime'] = 'Bearbeitungszeit';
-$string['starttime'] = 'Kursbeginn';
-$string['teasertext'] = 'Was erwartet Sie in diesem Kurs?';
-$string['targetgroup'] = 'Zielgruppe';
-$string['learninggoals'] = 'Was können Sie in diesem Kurs lernen?';
-$string['structure'] = 'Gliederung';
-
-
-$string['detailslecturer'] = 'Profilbeschreibung';
-$string['detailslecturer_image'] = 'Profilbild';
-$string['lecturer_type'] = 'Bitte wählen:';
-$string['lecturer_type_0'] = 'Autor*in';
-$string['lecturer_type_1'] = 'Anbieter*in';
-$string['detailslecturerimage'] = 'Bild des Dozenten Anbieters';
-$string['detailsmorelecturer'] = 'Weitere Autoren*innen';
-$string['certificateofachievement'] = 'Bescheinigung der Teilnahme';
-$string['videocode'] = 'Youtube-Link';
-$string['license'] = 'Lizenz';
-$string['tags'] = 'Schlagworte';
-$string['subjectarea'] = 'Fachbereich Wissensgebiet';
-$string['noindexcourse'] = 'Indexierung';
-$string['noindexcourse_yes'] = 'Ja';
-$string['noindexcourse_no'] = 'Nein';
-$string['noindexcourse_limited'] = 'Nur Kurskachel';
-
-
-$string['text_university'] = 'Liste wird aus Nutzerprofilfelder-Liste namens "universities" gespeist.';
-$string['text_subjectarea'] = 'Liste wird aus Nutzerprofilfelder-Liste namens "subjectareas" gespeist.';
-$string['text_processingtime'] = 'Bitte nur in ganzen Stunden als Ganzzahl angeben';
-
-$string['lecturer_delete'] = 'Soll der ausgewählte Eintrag wirklich gelöscht werden?';
-$string['lecturer_false'] = 'Nein';
-$string['lecturer_true'] = 'Ja, den Eintrag löschen';
-$string['lecturer_delete_confirm'] = 'Löschen bestätigen';
+$string['processingtime'] = 'Processing time';
+$string['selfpaced'] = 'Self paced course';
+$string['settings_descconfig'] = '<p>Description</p>';
+$string['settings_headerconfig'] = 'ILD Meta Settings';
+$string['starttime'] = 'Course start';
+$string['structure'] = 'Outline';
+$string['subjectarea'] = 'Subjectarea';
+$string['tags'] = 'Tags';
+$string['targetgroup'] = 'Targetgroup';
+$string['teasertext'] = 'What can you expect in this course?';
+$string['text_processingtime'] = 'Please only enter whole hours as an integer';
+$string['text_subjectarea'] = 'List is fed from user profile fields list named "subjectareas".';
+$string['text_university'] = 'List is fed from user profile fields list named "universities".';
+$string['title'] = 'Edit metadata';
+$string['university'] = 'Offering Universities';
+$string['videocode'] = 'Youtube link';
+$string['videolicense'] = 'Video licence';

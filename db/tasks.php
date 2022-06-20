@@ -11,5 +11,14 @@ $tasks = array(
 		'day' => '*',
 		'month' => '*',
 		'dayofweek' => '*'
+	),
+	array(
+		'classname' => 'local_ildmeta\task\generate_bird_task',
+		'blocking' => 0,
+		'minute' => '*',
+		'hour' => '*',
+		'day' => '*',
+		'month' => '*',
+		'dayofweek' => '*'
 	)
 );

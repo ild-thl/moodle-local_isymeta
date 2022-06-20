@@ -28,10 +28,10 @@ class ildmeta_form extends moodleform
 
         $mform->addElement('html', '<h2>Meta: Übersichtsseite</h2>');
 
-        // Indexierung
         $context = context_system::instance();
 
         if (has_capability('local/ildmeta:indexation', $context)) {
+            // Indexierung.
             $mform->addElement('select', 'noindexcourse', get_string('noindexcourse', 'local_ildmeta'), array(get_string('noindexcourse_yes', 'local_ildmeta'), get_string('noindexcourse_no', 'local_ildmeta'), get_string('noindexcourse_limited', 'local_ildmeta')));
             $mform->setType('index', PARAM_RAW);
         }
@@ -60,6 +60,15 @@ class ildmeta_form extends moodleform
         // Videocode
         $mform->addElement('text', 'videocode', get_string('videocode', 'local_ildmeta'));
         $mform->setType('videocode', PARAM_TEXT);
+
+        // Videolizenz
+        $licenses = $DB->get_records('license');
+        $licenseoptions = array_map(function ($license) {
+            return $license->fullname;
+        }, $licenses);
+        $mform->addElement('select', 'videolicense', get_string('videolicense', 'local_ildmeta'), $licenseoptions);
+        // Disabled if exporttobird is not set to 1 -> Yes.
+        $mform->disabledIf('videolicense', 'videocode', 'eq', '');
 
         // Kurstitel
         $mform->addElement('text', 'coursetitle', get_string('coursetitle', 'local_ildmeta'));
@@ -103,7 +112,7 @@ class ildmeta_form extends moodleform
         $mform->setType('structure', PARAM_RAW);
 
 
-                 /*
+        /*
                  * We need editor + filemanager for each lecturer.
                  * The data will be stored in the new table "mdl_ildmeta_additional" with "courseid", "name" and "value".
                  * ??? SURE ??? The "name" will be saved as reference in the table "mdl_ildmeta".
@@ -113,7 +122,7 @@ class ildmeta_form extends moodleform
 
         $mform->addElement('html', '<h2>Angaben zu Autoren*innen und Anbieter*innen</h2>');
         $i = 1;
-        
+
         // above $i will be used here!
         if (empty($lecturer)) {
 
@@ -144,8 +153,8 @@ class ildmeta_form extends moodleform
                 $i++;
             }
         } else {
-            foreach($lecturer as $lect) {
-                if(strpos($lect->name, 'type')) {
+            foreach ($lecturer as $lect) {
+                if (strpos($lect->name, 'type')) {
                     // Anbieter*innen / Autor*innen
                     $radioarray = array();
                     $radioarray[] = $mform->createElement('radio', $lect->name, '', get_string('lecturer_type_0', 'local_ildmeta'), 0);
@@ -155,11 +164,11 @@ class ildmeta_form extends moodleform
                         $mform->setDefault($lect->name, 1);
                     }
                 }
-                if(strpos($lect->name, 'image')) {
+                if (strpos($lect->name, 'image')) {
                     // Bild Anbieter*innen / Autor*innen
                     $mform->addElement('filemanager', $lect->name, get_string('detailslecturer_image', 'local_ildmeta'), null, $filemanageropts);
                 }
-                if(strpos($lect->name, 'editor')) {
+                if (strpos($lect->name, 'editor')) {
                     // Details Anbieter*innen / Autor*innen
                     $mform->addElement('editor', $lect->name, get_string('detailslecturer', 'local_ildmeta'), null, $editoropts);
                     $mform->setType('detailslecturer_editor', PARAM_RAW);
@@ -204,29 +213,75 @@ class ildmeta_form extends moodleform
         $mform->addElement('text', 'tags', get_string('tags', 'local_ildmeta'));
         $mform->setType('tags', PARAM_TEXT);
 
+
+        $mform->addElement('html', '<h2>Bird/DC Meatdaten</h2>');
+
+        // Export to bird.
+        $mform->addElement('selectyesno', 'exporttobird', get_string('exporttobird', 'local_ildmeta'));
+        $mform->addElement('static', 'exporttobird_desc', '', get_string('exporttobird_desc', 'local_ildmeta'));
+
+        // Get selection options from ildmeta_settings.
+        $records = $DB->get_records('ildmeta_settings');
+        $ildmeta_settings = reset($records);
+
+        // Kurstyp
+        $mform->addElement('select', 'coursetype', get_string('coursetype', 'local_ildmeta'), $this->selection_from_json($ildmeta_settings->coursetypes));
+        // Disabled if exporttobird is not set to 1 -> Yes.
+        $mform->disabledIf('coursetype', 'exporttobird', 'eq', '0');
+
+        // Kursformat
+        $mform->addElement('select', 'courseformat', get_string('courseformat', 'local_ildmeta'), $this->selection_from_json($ildmeta_settings->courseformats));
+        // Disabled if exporttobird is not set to 1 -> Yes.
+        $mform->disabledIf('courseformat', 'exporttobird', 'eq', '0');
+
+        // Selbstlernkurs?.
+        $mform->addElement('selectyesno', 'selfpaced', get_string('selfpaced', 'local_ildmeta'));
+        // Disabled if exporttobird is not set to 1 -> Yes.
+        $mform->disabledIf('selfpaced', 'exporttobird', 'eq', '0');
+
+        // Bird/DC-Zielgruppe.
+        $mform->addElement('select', 'audience', get_string('audience', 'local_ildmeta'), $this->selection_from_json($ildmeta_settings->audience));
+        // Disabled if exporttobird is not set to 1 -> Yes.
+        $mform->disabledIf('audience', 'exporttobird', 'eq', '0');
+
+        // Erforderliche Vorkenntnisse.
+        $mform->addElement('editor', 'courseprerequisites', get_string('courseprerequisites', 'local_ildmeta'));
+        $mform->setType('courseprerequisites', PARAM_RAW);
+        // Disabled if exporttobird is not set to 1 -> Yes.
+        $mform->disabledIf('courseprerequisites', 'exporttobird', 'eq', '0');
+
         $this->add_action_buttons();
+    }
+
+    function selection_from_json($json)
+    {
+        $options = array();
+        foreach (json_decode($json) as $value) {
+            $options[$value] = $value;
+        }
+        return $options;
     }
 
     function validation($data, $files)
     {
         return array();
     }
-	// Funktioniert hier nicht. Falsche Stelle
-	function data_preprocessing(&$default_values) {
-		$lecturer = $this->_customdata['lecturer'];
-		print($lecturer);die();
-		if ($this->current->instance) {
-			foreach ($lecturer as $lect) {
-				$draftitemid = file_get_submitted_draft_itemid($lect->name);
-				$context = context_course::instance($this->_customdata['courseid']);
-				file_prepare_draft_area($draftitemid, $context->id, 'local_ildmeta', $lect->name, 0);
-				$default_values[$lect->name] = $draftitemid;
-			}
-		}
-		
-		// TODO overviewimage nicht vergessen
+    // Funktioniert hier nicht. Falsche Stelle
+    function data_preprocessing(&$default_values)
+    {
+        $lecturer = $this->_customdata['lecturer'];
+        print($lecturer);
+        die();
+        if ($this->current->instance) {
+            foreach ($lecturer as $lect) {
+                $draftitemid = file_get_submitted_draft_itemid($lect->name);
+                $context = context_course::instance($this->_customdata['courseid']);
+                file_prepare_draft_area($draftitemid, $context->id, 'local_ildmeta', $lect->name, 0);
+                $default_values[$lect->name] = $draftitemid;
+            }
+        }
 
-	}
+        // TODO overviewimage nicht vergessen
 
-
+    }
 }

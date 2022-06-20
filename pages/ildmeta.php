@@ -71,7 +71,6 @@ if ($mform->is_cancelled()) {
 
     $redirectto = new moodle_url('/');
     redirect($redirectto);
-
 } else if ($fromform = $mform->get_data()) {
 
     $draftitemid = file_get_submitted_draft_itemid('overviewimage');
@@ -136,7 +135,7 @@ if ($mform->is_cancelled()) {
     $todb->overviewimage = $draftitemid;
     $todb->coursetitle = $fromform->coursetitle;
     $todb->lecturer = $fromform->lecturer;
-    if(isset($fromform->noindexcourse)){
+    if (isset($fromform->noindexcourse)) {
         $todb->noindexcourse = $fromform->noindexcourse;
     }
     $todb->overviewimage = $draftitemid;
@@ -153,16 +152,37 @@ if ($mform->is_cancelled()) {
     $todb->certificateofachievement = $fromform->certificateofachievement['text'];
     $todb->license = $fromform->license;
     $todb->videocode = $fromform->videocode;
+    if (isset($fromform->videolicense)) {
+        $todb->videolicense = $fromform->videolicense;
+    }
 
     $todb->tags = $fromform->tags;
 
-// !
+
+    // Bird/DC properties.
+    $todb->exporttobird = $fromform->exporttobird;
+    if (isset($fromform->coursetype)) {
+        $todb->coursetype = $fromform->coursetype;
+    }
+    if (isset($fromform->courseformat)) {
+        $todb->courseformat = $fromform->courseformat;
+    }
+    if (isset($fromform->selfpaced)) {
+        $todb->selfpaced = $fromform->selfpaced;
+    }
+    if (isset($fromform->audience)) {
+        $todb->audience = $fromform->audience;
+    }
+    if (isset($fromform->courseprerequisites)) {
+        $todb->courseprerequisites = $fromform->courseprerequisites['text'];
+    }
+    // !
 
     // if course is not in db yet
     if (!$DB->get_record($tbl, array('courseid' => $course_id))) {
 
         //if noindexcourse in todb is not set
-        if(!isset($todb->noindexcourse)){
+        if (!isset($todb->noindexcourse)) {
             //use the default value "no indexination"
             $todb->noindexcourse = 1;
         }
@@ -174,7 +194,7 @@ if ($mform->is_cancelled()) {
 
         $todb->id = $primkey->id;
         //if noindexcourse in todb is not set
-        if(!isset($todb->noindexcourse)){
+        if (!isset($todb->noindexcourse)) {
             //use the old value from the db
             $todb->noindexcourse = $primkey->noindexcourse;
         }
@@ -219,13 +239,11 @@ if ($mform->is_cancelled()) {
 
             $DB->update_record($tbl_lecturer, $lectodb);
         }
-
     }
 
     // after database redirect to detailpage
     // $url defined after check for additional lecturer
     redirect($url, 'Daten erfolgreich gespeichert', null, \core\output\notification::NOTIFY_SUCCESS);
-
 } else {
     // prefill forms from db
     $getdb = $DB->get_record($tbl, array('courseid' => $course_id));
@@ -253,14 +271,23 @@ if ($mform->is_cancelled()) {
         $new->certificateofachievement['text'] = $getdb->certificateofachievement;
         $new->license = $getdb->license;
         $new->videocode = $getdb->videocode;
+        $new->videolicense = $getdb->videolicense;
         $new->tags = $getdb->tags;
+
+        // Bird/DC properties.
+        $new->exporttobird = $getdb->exporttobird;
+        $new->coursetype = $getdb->coursetype;
+        $new->courseformat = $getdb->courseformat;
+        $new->selfpaced = $getdb->selfpaced;
+        $new->audience['text'] = $getdb->audience;
+        $new->courseprerequisites['text'] = $getdb->courseprerequisites;
 
 
         if (!empty($getlect)) {
 
             foreach ($getlect as $lec) {
                 if (strpos($lec->name, '_editor')) {
-                    echo $lec_name . "<br>";
+                    // echo $lec_name . "<br>";
                     $key = $lec->name;
                     $new->$key['text'] = $lec->value;
                 } else {
@@ -268,27 +295,25 @@ if ($mform->is_cancelled()) {
                     $new->$key = $lec->value;
                 }
             }
-
         }
-		
-		$sql = 'SELECT filearea 
-					    FROM {files} 
-					 WHERE component = :component 
-					      AND contextid = :contextid 
-						  AND filename != :filename 
-						  AND itemid = 0';
-		$params = array('component' => 'local_ildmeta', 'contextid' => $coursecontext->id, 'filename' => '.');
-		$files = $DB->get_records_sql($sql, $params);
-		//print_object($files);
-		foreach ($files as $file) {
-			$draftitemid = file_get_submitted_draft_itemid($file->filearea);
-			//file_save_draft_area_files($draftlecturer, $coursecontext->id, 'local_ildmeta', $key, 0);
-			file_prepare_draft_area($draftitemid, $coursecontext->id, 'local_ildmeta', $file->filearea, 0);
-			$lectname = $file->filearea;
-			$new->$lectname = $draftitemid;
-		}
-        $mform->set_data($new);
 
+        $sql = 'SELECT filearea
+					    FROM {files}
+					 WHERE component = :component
+					      AND contextid = :contextid
+						  AND filename != :filename
+						  AND itemid = 0';
+        $params = array('component' => 'local_ildmeta', 'contextid' => $coursecontext->id, 'filename' => '.');
+        $files = $DB->get_records_sql($sql, $params);
+        //print_object($files);
+        foreach ($files as $file) {
+            $draftitemid = file_get_submitted_draft_itemid($file->filearea);
+            //file_save_draft_area_files($draftlecturer, $coursecontext->id, 'local_ildmeta', $key, 0);
+            file_prepare_draft_area($draftitemid, $coursecontext->id, 'local_ildmeta', $file->filearea, 0);
+            $lectname = $file->filearea;
+            $new->$lectname = $draftitemid;
+        }
+        $mform->set_data($new);
     } else {
         $new = new stdClass;
         $new->courseid = $course_id;
@@ -313,7 +338,16 @@ if ($mform->is_cancelled()) {
         $new->certificateofachievement = '';
         $new->license = 0;
         $new->videocode = '';
+        $new->videolicense = 1;
         $new->tags = '';
+
+        // Bird/DC properties.
+        $new->exporttobird = 0;
+        $new->coursetype = null;
+        $new->courseformat = null;
+        $new->selfpaced = 0;
+        $new->audience = null;
+        $new->courseprerequisites = null;
 
 
         $DB->insert_record($tbl, $new);
@@ -324,9 +358,9 @@ if ($mform->is_cancelled()) {
     $toform = array('additional_lecturer' => 2);
     $mform->display($toform);
 
-//$mform->display();
+    //$mform->display();
 
-//$cluster = $DB->get_records($tbl);
+    //$cluster = $DB->get_records($tbl);
 
     echo $OUTPUT->footer();
 }
