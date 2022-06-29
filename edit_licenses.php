@@ -44,29 +44,27 @@ if (has_capability('moodle/site:config', $context)) {
     $mform = new local_ildmeta\output\form\edit_licenses_form();
 
     $licenses = $DB->get_records('license');
-    $spdx_licenses = $DB->get_records('ildmeta_spdx_licenses');
+    $spdxlicenses = $DB->get_records('ildmeta_spdx_licenses');
 
     if ($mform->is_cancelled()) {
         redirect($url);
     } else if ($data = $mform->get_data()) {
         foreach ($licenses as $license) {
-            $spdx_license = new \stdClass();
-            foreach ($spdx_licenses as $spdx) {
-                if ($spdx->moodle_license === $license->id) {
-                    $spdx_license = $spdx;
+            foreach ($spdxlicenses as $spdxlicense) {
+                if ($spdxlicense->moodle_license === $license->id) {
                     break;
                 }
             }
 
-            $spdx_license->moodle_license = $data->{"moodle_license_" . $license->id};
-            $spdx_license->spdx_shortname = $data->{"shortname_" . $license->id};
-            $spdx_license->spdx_fullname = $data->{"fullname_" . $license->id};
-            $spdx_license->spdx_url = $data->{"url_" . $license->id};
+            $spdxlicense->moodle_license = $data->{"moodle_license_" . $license->id};
+            $spdxlicense->spdx_shortname = $data->{"shortname_" . $license->id};
+            $spdxlicense->spdx_fullname = $data->{"fullname_" . $license->id};
+            $spdxlicense->spdx_url = $data->{"url_" . $license->id};
 
-            if (empty($spdx_license)) {
-                $DB->update_record('ildmeta_spdx_licenses', $spdx_license);
+            if (isset($spdxlicense->id)) {
+                $DB->update_record('ildmeta_spdx_licenses', $spdxlicense);
             } else {
-                $DB->insert_record('ildmeta_spdx_licenses', $spdx_license);
+                $DB->insert_record('ildmeta_spdx_licenses', $spdxlicense);
             }
         }
 
@@ -123,7 +121,7 @@ if (has_capability('moodle/site:config', $context)) {
     $toform["fullname_9"] = 'Creative Commons Attribution Share Alike 3.0 Germany';
     $toform["url_9"] = "https://spdx.org/licenses/CC-BY-SA-3.0-DE.html";
 
-    foreach ($spdx_licenses as $spdx) {
+    foreach ($spdxlicenses as $spdx) {
         $toform["moodle_license_" . $spdx->moodle_license] = $spdx->moodle_license;
         $toform["shortname_" . $spdx->moodle_license] = $spdx->spdx_shortname;
         $toform["fullname_" . $spdx->moodle_license] = $spdx->spdx_fullname;
