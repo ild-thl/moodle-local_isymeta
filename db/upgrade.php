@@ -41,7 +41,7 @@ function xmldb_local_ildmeta_upgrade($oldversion) {
         $courseformat = new xmldb_field('courseformat', XMLDB_TYPE_CHAR, '128', null, null, null, null, 'coursetype');
         $selfpaced = new xmldb_field('selfpaced', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, 0, 'courseformat');
         $audience = new xmldb_field('audience', XMLDB_TYPE_CHAR, '128', null, null, null, null, 'selfpaced');
-        $courseprerequisites = new xmldb_field('courseformat', XMLDB_TYPE_TEXT, '120', null, null, null, null, 'audience');
+        $courseprerequisites = new xmldb_field('courseprerequisites', XMLDB_TYPE_TEXT, null, null, null, null, null, 'audience');
 
         // Conditionally launch add field exporttobird.
         if (!$dbman->field_exists($table, $exporttobird)) {
@@ -132,6 +132,7 @@ function xmldb_local_ildmeta_upgrade($oldversion) {
         $coursetype = new xmldb_field('coursetype', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'exporttobird');
         $courseformat = new xmldb_field('courseformat', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'coursetype');
         $audience = new xmldb_field('audience', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'selfpaced');
+        $certificateofachievement = new xmldb_field('certificateofachievement', XMLDB_TYPE_TEXT, null, null, null, null, null, 'tags');
 
         // Conditionally rename field university to provider.
         if ($dbman->field_exists($ildmetatable, $university)) {
@@ -156,6 +157,9 @@ function xmldb_local_ildmeta_upgrade($oldversion) {
         if ($dbman->field_exists($ildmetatable, $audience)) {
             $dbman->change_field_type($ildmetatable,  $audience);
             $dbman->change_field_precision($ildmetatable,  $audience);
+        }
+        if ($dbman->field_exists($ildmetatable, $certificateofachievement)) {
+            $dbman->change_field_precision($ildmetatable,  $certificateofachievement);
         }
 
         // Delete ildmeta_settings table.
@@ -186,6 +190,99 @@ function xmldb_local_ildmeta_upgrade($oldversion) {
 
         // Ildmeta savepoint reached.
         upgrade_plugin_savepoint(true, 2022070419, 'local', 'ildmeta');
+    }
+
+    if ($oldversion < 2022070718) {
+        $ildmetatable = new xmldb_table('ildmeta');
+
+        // New Bird attributes.
+        $availableuntil = new xmldb_field('availableuntil', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'courseprerequisites');
+        $availablefrom = new xmldb_field('availablefrom', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'availableuntil');
+        $abstract = new xmldb_field('abstract', XMLDB_TYPE_TEXT, null, null, null, null, null, 'availablefrom');
+        $shortname = new xmldb_field('shortname', XMLDB_TYPE_CHAR, '100', null, null, null, null, 'abstract');
+
+        // Conditionally launch add field availableuntil.
+        if (!$dbman->field_exists($ildmetatable, $availableuntil)) {
+            $dbman->add_field($ildmetatable, $availableuntil);
+        }
+        // Conditionally launch add field availablefrom.
+        if (!$dbman->field_exists($ildmetatable, $availablefrom)) {
+            $dbman->add_field($ildmetatable, $availablefrom);
+        }
+        // Conditionally launch add field abstract.
+        if (!$dbman->field_exists($ildmetatable, $abstract)) {
+            $dbman->add_field($ildmetatable, $abstract);
+        }
+        // Conditionally launch add field shortname.
+        if (!$dbman->field_exists($ildmetatable, $shortname)) {
+            $dbman->add_field($ildmetatable, $shortname);
+        }
+
+        // Change filed constraint NOTNULL.
+        $videocode = new xmldb_field('videocode', XMLDB_TYPE_CHAR, '120', null, null, null, null, 'noindexcourse');
+        $videolicense = new xmldb_field('videolicense', XMLDB_TYPE_INTEGER, '10', null, null, null, 1, 'videocode');
+        $overviewimage = new xmldb_field('overviewimage', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'videolicense');
+        $detailimage = new xmldb_field('detailimage', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'overviewimage');
+        $targetgroup = new xmldb_field('targetgroup', XMLDB_TYPE_TEXT, null, null, null, null, null, 'teasertext');
+        $learninggoals = new xmldb_field('learninggoals', XMLDB_TYPE_TEXT, null, null, null, null, null, 'targetgroup');
+        $structure = new xmldb_field('structure', XMLDB_TYPE_TEXT, null, null, null, null, null, 'learninggoals');
+        $detailslecturer = new xmldb_field('detailslecturer', XMLDB_TYPE_TEXT, null, null, null, null, null, 'structure');
+        $detailsmorelecturer = new xmldb_field('detailsmorelecturer', XMLDB_TYPE_TEXT, null, null, null, null, null, 'detailslecturer');
+        $tags = new xmldb_field('tags', XMLDB_TYPE_CHAR, '120', null, null, null, null, 'detailsmorelecturer');
+        $certificateofachievement = new xmldb_field('certificateofachievement', XMLDB_TYPE_TEXT, null, null, null, null, null, 'tags');
+
+        // Conditionally update field constraints.
+        if ($dbman->field_exists($ildmetatable, $videocode)) {
+            $dbman->change_field_notnull($ildmetatable, $videocode);
+        }
+        if ($dbman->field_exists($ildmetatable, $videolicense)) {
+            $dbman->change_field_notnull($ildmetatable, $videolicense);
+        }
+        if ($dbman->field_exists($ildmetatable, $overviewimage)) {
+            $dbman->change_field_notnull($ildmetatable, $overviewimage);
+        }
+        if ($dbman->field_exists($ildmetatable, $detailimage)) {
+            $dbman->change_field_notnull($ildmetatable, $detailimage);
+        }
+        if ($dbman->field_exists($ildmetatable, $targetgroup)) {
+            $dbman->change_field_notnull($ildmetatable, $targetgroup);
+        }
+        if ($dbman->field_exists($ildmetatable, $learninggoals)) {
+            $dbman->change_field_notnull($ildmetatable, $learninggoals);
+        }
+        if ($dbman->field_exists($ildmetatable, $structure)) {
+            $dbman->change_field_notnull($ildmetatable, $structure);
+        }
+        if ($dbman->field_exists($ildmetatable, $detailslecturer)) {
+            $dbman->change_field_notnull($ildmetatable, $detailslecturer);
+        }
+        if ($dbman->field_exists($ildmetatable, $detailsmorelecturer)) {
+            $dbman->change_field_notnull($ildmetatable, $detailsmorelecturer);
+        }
+        if ($dbman->field_exists($ildmetatable, $tags)) {
+            $dbman->change_field_notnull($ildmetatable, $tags);
+        }
+        if ($dbman->field_exists($ildmetatable, $certificateofachievement)) {
+            $dbman->change_field_notnull($ildmetatable, $certificateofachievement);
+        }
+
+        // Define ildmeta_provider table to be added.
+        $providertable = new xmldb_table('ildmeta_provider');
+        $providertable->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $providertable->add_field('name_de', XMLDB_TYPE_CHAR, "128", null, XMLDB_NOTNULL, null, null);
+        $providertable->add_field('name_en', XMLDB_TYPE_CHAR, "128", null, null, null, null);
+        $providertable->add_field('url', XMLDB_TYPE_CHAR, "256", null, XMLDB_NOTNULL, null, null);
+
+        // Adding keys to table ildmeta_vocabulary.
+        $providertable->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+        // Conditionally add ildmeta_vocabulary table.
+        if (!$dbman->table_exists($providertable)) {
+            $dbman->create_table($providertable);
+        }
+
+        // Ildmeta savepoint reached.
+        upgrade_plugin_savepoint(true, 2022070718, 'local', 'ildmeta');
     }
 
     return true;
