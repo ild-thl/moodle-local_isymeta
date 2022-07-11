@@ -23,4 +23,4 @@ To edit vocabularies for coursetypes, courseformats, audineces, and subjectareas
 When you already have a version of this plugin installed and want to upgrade to this version, we suggest to reinstall the plugin completely, because the upgrade.php script is not yet updated to make all the necessary changes. When reimporting the sql data after reinstallation, beware that the property "university" was renamed to "provider".
     
 ## Dependencies
-This moodle plugin is required by [moodle-block_isymetaselect](https://github.com/ild-thl/moodle-block_isymetaselect).
+This moodle plugin is required by [moodle-block_isymetaselect (master branch)](https://github.com/ild-thl/moodle-block_isymetaselect/tree/master).
