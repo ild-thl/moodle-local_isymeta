@@ -24,17 +24,16 @@ require_once("$CFG->libdir/formslib.php");
  * Form to edit BIRD coursetypes.
  *
  * @package     local_ildmeta
+ * @author      Pascal Hürten <pascal.huerten@th-luebeck.de>
  * @copyright   2022 ILD TH Lübeck <dev.ild@th-luebeck.de>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class edit_licenses_form extends \moodleform
-{
+class edit_licenses_form extends \moodleform {
     /**
      * Form definition.
      * @return void
      */
-    public function definition()
-    {
+    public function definition() {
         global $DB;
 
         $mform = $this->_form;
@@ -61,8 +60,7 @@ class edit_licenses_form extends \moodleform
      *
      * @return object
      **/
-    public function get_data()
-    {
+    public function get_data() {
         $data = parent::get_data();
 
         if (empty($data)) {

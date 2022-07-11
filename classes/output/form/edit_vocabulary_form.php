@@ -24,23 +24,63 @@ require_once("$CFG->libdir/formslib.php");
  * Form to edit BIRD coursetypes.
  *
  * @package     local_ildmeta
+ * @author      Pascal Hürten <pascal.huerten@th-luebeck.de>
  * @copyright   2022 ILD TH Lübeck <dev.ild@th-luebeck.de>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class edit_vocabulary_form extends \moodleform
-{
+class edit_vocabulary_form extends \moodleform {
     /**
      * Form definition.
      * @return void
      */
-    public function definition()
-    {
+    public function definition() {
 
         $mform = $this->_form;
 
-        $mform->addElement('tags', 'coursetypes', get_string('coursetype', 'local_ildmeta'), array('itemtype' => 'ildmeta_settings', 'component' => 'local_ildmeta'));
-        $mform->addElement('tags', 'courseformats', get_string('courseformat', 'local_ildmeta'), array('itemtype' => 'ildmeta_settings', 'component' => 'local_ildmeta'));
-        $mform->addElement('tags', 'audience', get_string('audience', 'local_ildmeta'), array('itemtype' => 'ildmeta_settings', 'component' => 'local_ildmeta'));
+        // Provider.
+        // $mform->addElement(
+        //     'textarea',
+        //     'provider',
+        //     get_string('provider', 'local_ildmeta'),
+        //     'wrap="virtual" rows="10" cols="60"'
+        // );
+        // $mform->setType('provider', PARAM_RAW);
+
+        // Subjectarea.
+        $mform->addElement(
+            'textarea',
+            'subjectarea',
+            get_string('subjectarea', 'local_ildmeta'),
+            'wrap="virtual" rows="10" cols="60"'
+        );
+        $mform->setType('subjectarea', PARAM_RAW);
+
+        // Coursetypes.
+        $mform->addElement(
+            'textarea',
+            'coursetypes',
+            get_string('coursetype', 'local_ildmeta'),
+            'wrap="virtual" rows="10" cols="60"'
+        );
+        $mform->setType('coursetypes', PARAM_RAW);
+
+        // Courseformats.
+        $mform->addElement(
+            'textarea',
+            'courseformats',
+            get_string('courseformat', 'local_ildmeta'),
+            'wrap="virtual" rows="10" cols="60"'
+        );
+        $mform->setType('courseformats', PARAM_RAW);
+
+        // Audience.
+        $mform->addElement(
+            'textarea',
+            'audience',
+            get_string('audience', 'local_ildmeta'),
+            'wrap="virtual" rows="10" cols="60"'
+        );
+        $mform->setType('audience', PARAM_RAW);
 
         $this->add_action_buttons(true);
     }
@@ -50,8 +90,7 @@ class edit_vocabulary_form extends \moodleform
      *
      * @return object
      **/
-    public function get_data()
-    {
+    public function get_data() {
         $data = parent::get_data();
 
         if (empty($data)) {

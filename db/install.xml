@@ -1,38 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<XMLDB PATH="local/ildmeta/db" VERSION="20180808" COMMENT="XMLDB file for Moodle local/ildmeta" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd">
+<XMLDB PATH="local/ildmeta/db" VERSION="20220704" COMMENT="XMLDB file for Moodle local/ildmeta" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd">
   <TABLES>
     <TABLE NAME="ildmeta" COMMENT="ildmeta">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
         <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
         <FIELD NAME="noindexcourse" TYPE="char" LENGTH="120" NOTNULL="true" SEQUENCE="false" />
-        <FIELD NAME="videocode" TYPE="char" LENGTH="120" NOTNULL="true" SEQUENCE="false" />
-        <FIELD NAME="videolicense" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="1" SEQUENCE="false" />
-        <FIELD NAME="overviewimage" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
-        <FIELD NAME="detailimage" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="videocode" TYPE="char" LENGTH="120" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="videolicense" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="1" SEQUENCE="false" />
+        <FIELD NAME="overviewimage" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="detailimage" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
         <FIELD NAME="starttime" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
         <FIELD NAME="coursetitle" TYPE="char" LENGTH="120" NOTNULL="true" SEQUENCE="false" />
-        <FIELD NAME="university" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false" />
-        <FIELD NAME="subjectarea" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="provider" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="subjectarea" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
         <FIELD NAME="lecturer" TYPE="char" LENGTH="120" NOTNULL="true" SEQUENCE="false" />
         <FIELD NAME="courselanguage" TYPE="char" LENGTH="120" NOTNULL="true" SEQUENCE="false" />
         <FIELD NAME="processingtime" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
         <FIELD NAME="accesstime" TYPE="char" LENGTH="120" NOTNULL="true" SEQUENCE="false" />
         <FIELD NAME="teasertext" TYPE="text" NOTNULL="true" SEQUENCE="false" />
-        <FIELD NAME="targetgroup" TYPE="text" LENGTH="120" NOTNULL="true" SEQUENCE="false" />
-        <FIELD NAME="learninggoals" TYPE="text" LENGTH="120" NOTNULL="true" SEQUENCE="false" />
-        <FIELD NAME="structure" TYPE="text" LENGTH="120" NOTNULL="true" SEQUENCE="false" />
-        <FIELD NAME="detailslecturer" TYPE="text" LENGTH="120" NOTNULL="true" SEQUENCE="false" />
-        <FIELD NAME="detailsmorelecturer" TYPE="text" LENGTH="120" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="targetgroup" TYPE="text" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="learninggoals" TYPE="text" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="structure" TYPE="text" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="detailslecturer" TYPE="text" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="detailsmorelecturer" TYPE="text" NOTNULL="false" SEQUENCE="false" />
         <FIELD NAME="license" TYPE="char" LENGTH="120" NOTNULL="true" SEQUENCE="false" />
-        <FIELD NAME="tags" TYPE="char" LENGTH="120" NOTNULL="true" SEQUENCE="false" />
-        <FIELD NAME="certificateofachievement" TYPE="text" LENGTH="120" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="tags" TYPE="char" LENGTH="120" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="certificateofachievement" TYPE="text" NOTNULL="false" SEQUENCE="false" />
         <FIELD NAME="exporttobird" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
-        <FIELD NAME="coursetype" TYPE="char" LENGTH="128" NOTNULL="false" SEQUENCE="false" />
-        <FIELD NAME="courseformat" TYPE="char" LENGTH="128" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="coursetype" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="courseformat" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
         <FIELD NAME="selfpaced" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
-        <FIELD NAME="audience" TYPE="char" LENGTH="128" NOTNULL="false" SEQUENCE="false" />
-        <FIELD NAME="courseprerequisites" TYPE="text" LENGTH="120" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="audience" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="courseprerequisites" TYPE="text" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="availableuntil" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="availablefrom" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="abstract" TYPE="text" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="shortname" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false" />
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key" />
@@ -49,12 +53,22 @@
         <KEY NAME="primary" TYPE="primary" FIELDS="id" />
       </KEYS>
     </TABLE>
-    <TABLE NAME="ildmeta_settings" COMMENT="Default comment for the table, please edit me">
+    <TABLE NAME="ildmeta_provider" COMMENT="Definition of a Mooc Provider">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
-        <FIELD NAME="coursetypes" TYPE="char" LENGTH="512" NOTNULL="true" DEFAULT="[]" SEQUENCE="false" />
-        <FIELD NAME="courseformats" TYPE="char" LENGTH="512" NOTNULL="true" DEFAULT="[]" SEQUENCE="false" />
-        <FIELD NAME="audience" TYPE="char" LENGTH="512" NOTNULL="true" DEFAULT="[]" SEQUENCE="false" />
+        <FIELD NAME="name_de" TYPE="char" LENGTH="128" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="name_en" TYPE="char" LENGTH="128" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="url" TYPE="char" LENGTH="256" NOTNULL="true" SEQUENCE="false" />
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="ildmeta_vocabulary" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+        <FIELD NAME="title" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="terms" TYPE="text" NOTNULL="true" SEQUENCE="false" />
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id" />

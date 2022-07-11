@@ -26,33 +26,40 @@
 defined('MOODLE_INTERNAL') || die;
 
 if ($hassiteconfig) {
+    $modfolder = new admin_category(
+        'localildmetafolder',
+        new lang_string(
+            'pluginname',
+            'local_ildmeta'
+        )
+    );
+    $ADMIN->add('localplugins', $modfolder);
 
-	$modfolder = new admin_category(
-		'localildmetafolder',
-		new lang_string(
-			'pluginname',
-			'local_ildmeta'
-		)
-	);
-	$ADMIN->add('localplugins', $modfolder);
-
-	// $ADMIN->add('localildmetafolder', $settings);
-	$ADMIN->add(
-		'localildmetafolder',
-		new admin_externalpage(
-			'localildmeta_edit_vocabulary',
-			get_string('edit_vocabulary', 'local_ildmeta'),
-			$CFG->wwwroot . '/local/ildmeta/edit_vocabulary.php'
-		)
-	);
-	$ADMIN->add(
-		'localildmetafolder',
-		new admin_externalpage(
-			'localildmeta_edit_licenses',
-			get_string('edit_licenses', 'local_ildmeta'),
-			$CFG->wwwroot . '/local/ildmeta/edit_licenses.php'
-		)
-	);
+    // $ADMIN->add('localildmetafolder', $settings);
+    $ADMIN->add(
+        'localildmetafolder',
+        new admin_externalpage(
+            'localildmeta_edit_vocabulary',
+            get_string('edit_vocabulary', 'local_ildmeta'),
+            $CFG->wwwroot . '/local/ildmeta/edit_vocabulary.php'
+        )
+    );
+    $ADMIN->add(
+        'localildmetafolder',
+        new admin_externalpage(
+            'localildmeta_edit_provider',
+            get_string('edit_provider', 'local_ildmeta'),
+            $CFG->wwwroot . '/local/ildmeta/edit_provider.php'
+        )
+    );
+    $ADMIN->add(
+        'localildmetafolder',
+        new admin_externalpage(
+            'localildmeta_edit_licenses',
+            get_string('edit_licenses', 'local_ildmeta'),
+            $CFG->wwwroot . '/local/ildmeta/edit_licenses.php'
+        )
+    );
 }
 
 // Prevent Moodle from adding settings block in standard location.

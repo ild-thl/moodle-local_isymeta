@@ -18,6 +18,7 @@
  * Page for edditing BIRD vocabulary.
  *
  * @package     local_ildmeta
+ * @author      Pascal Hürten <pascal.huerten@th-luebeck.de>
  * @copyright   2022 ILD TH Lübeck <dev.ild@th-luebeck.de>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -29,56 +30,55 @@ require_login();
 
 $context = context_system::instance();
 
-if (has_capability('moodle/site:config', $context)) {
-    $PAGE->set_context($context);
-    $PAGE->set_url('/local/ildmeta/edit_vocabulary.php');
-    $PAGE->set_title(get_string('edit_vocabulary', 'local_ildmeta'));
-    $PAGE->set_heading(get_string('edit_vocabulary', 'local_ildmeta'));
-
-    // Inform moodle which menu entry currently is active!
-    admin_externalpage_setup('localildmeta_edit_vocabulary');
-
-    // Projekte.
-    $url = new moodle_url('/local/ildmeta/edit_vocabulary.php');
-
-    $mform = new local_ildmeta\output\form\edit_vocabulary_form();
-
-    $records = $DB->get_records('ildmeta_settings');
-    if (count($records) < 1) {
-        $default = [
-            'coursetypes' => '["Sprachkurs","Fachkurs","Propädeutik","Soft Skill","Professional Skill","Digital Skill","Academic Skills"]',
-            'courseformats' => '["Präsenz","Online Selbstlernkurs","Online","Blended Learning"]',
-            'audience' => '["Schüler*innen","Studieninteressierte","Studierende","Promotionsinteresse","PASCH-Schüler*innen","Lehrende","Eltern"]',
-        ];
-        $id = $DB->insert_record('ildmeta_settings', $default);
-        $settings = $DB->get_record('ildmeta_settings', array('id' => $id), '*', MUST_EXIST);
-    } else {
-        $settings = reset($records);
-    }
-
-    if ($mform->is_cancelled()) {
-        redirect($url);
-    } else if ($data = $mform->get_data()) {
-        $settings->coursetypes = json_encode($data->coursetypes);
-        $settings->courseformats = json_encode($data->courseformats);
-        $settings->audience = json_encode($data->audience);
-
-        $DB->update_record('ildmeta_settings', $settings);
-        redirect($url);
-    }
-
-    echo $OUTPUT->header();
-
-    $toform = [
-        'coursetypes' => json_decode($settings->coursetypes),
-        'courseformats' => json_decode($settings->courseformats),
-        'audience' => json_decode($settings->audience),
-    ];
-
-    $mform->set_data($toform);
-    $mform->display();
-
-    echo $OUTPUT->footer();
-} else {
+if (!has_capability('moodle/site:config', $context)) {
     redirect($CFG->wwwroot);
 }
+
+$PAGE->set_context($context);
+$url = new moodle_url('/local/ildmeta/edit_vocabulary.php');
+$PAGE->set_url($url);
+$PAGE->set_title(get_string('edit_vocabulary', 'local_ildmeta'));
+$PAGE->set_heading(get_string('edit_vocabulary', 'local_ildmeta'));
+
+// Inform moodle which menu entry currently is active!
+admin_externalpage_setup('localildmeta_edit_vocabulary');
+
+
+$mform = new local_ildmeta\output\form\edit_vocabulary_form();
+
+$vocabularies = $DB->get_records('ildmeta_vocabulary');
+if (empty($vocabularies)) {
+    // Fill database tables with default values.
+    include("./db/install.php");
+    xmldb_local_ildmeta_install();
+
+    $vocabularies = $DB->get_records('ildmeta_vocabulary');
+}
+
+if ($mform->is_cancelled()) {
+    redirect($url);
+} else if ($data = $mform->get_data()) {
+    foreach ($vocabularies as $vocabulary) {
+        if ($data->{$vocabulary->title}) {
+            $vocabulary->terms = $data->{$vocabulary->title};
+            $DB->update_record('ildmeta_vocabulary', $vocabulary);
+        }
+    }
+
+    redirect($url);
+}
+
+// Display page.
+echo $OUTPUT->header();
+
+
+$toform = array();
+
+foreach ($vocabularies as $vocabulary) {
+    $toform[$vocabulary->title] = $vocabulary->terms;
+}
+
+$mform->set_data($toform);
+$mform->display();
+
+echo $OUTPUT->footer();

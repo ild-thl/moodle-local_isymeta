@@ -18,6 +18,7 @@
  * Page for edditing SPDX licenses mapping.
  *
  * @package     local_ildmeta
+ * @author      Pascal Hürten <pascal.huerten@th-luebeck.de>
  * @copyright   2022 ILD TH Lübeck <dev.ild@th-luebeck.de>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

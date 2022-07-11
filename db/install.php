@@ -15,27 +15,89 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Post installation procedure for setting up defaults for ildmeta_settings and ildmeta_spdx_licenses.
+ * Post installation procedure for setting up defaults for ildmeta_vocabulary and ildmeta_spdx_licenses.
  *
  * @package     local_ildmeta
  * @copyright   2022 ILD TH Lübeck <dev.ild@th-luebeck.de>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-function xmldb_local_ildmeta_install()
-{
+function xmldb_local_ildmeta_install() {
     global $DB;
     $result = true;
 
-    if (empty($DB->get_records('ildmeta_settings'))) {
-        $default = [
-            'coursetypes' => '["Sprachkurs","Fachkurs","Propädeutik","Soft Skill","Professional Skill","Digital Skill","Academic Skills"]',
-            'courseformats' => '["Präsenz","Online Selbstlernkurs","Online","Blended Learning"]',
-            'audience' => '["Schüler*innen","Studieninteressierte","Studierende","Promotionsinteresse","PASCH-Schüler*innen","Lehrende","Eltern"]',
+    if (empty($DB->get_records('ildmeta_vocabulary'))) {
+        $coursetypes = [
+            'title' => 'coursetypes',
+            'terms' => json_encode([
+                ["de" => "Sprachkurs", "en" => "Language Course"],
+                ["de" => "Fachkurs", "en" => "Specialised Course"],
+                ["de" => "Propädeutik", "en" => "Propaedeutics"],
+                ["de" => "Soft Skill", "en" => "Soft Skill"],
+                ["de" => "Professional Skill", "en" => "Professional Skill"],
+                ["de" => "Digital Skill", "en" => "Digital Skill"],
+                ["de" => "Academic Skill", "en" => "Academic Skill"],
+            ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE),
         ];
-        $DB->insert_record('ildmeta_settings', $default);
+        $DB->insert_record('ildmeta_vocabulary', $coursetypes);
+
+        $courseformats = [
+            'title' => 'courseformats',
+            'terms' => json_encode([
+                ["de" => "Präsenz", "en" => "Face To Face"],
+                ["de" => "Online Selbstlernkurs", "en" => "Online Asynchronous"],
+                ["de" => "Online", "en" => "Online Synchronous"],
+                ["de" => "Blended Learning", "en" => "Blended Learning"],
+            ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE),
+        ];
+        $DB->insert_record('ildmeta_vocabulary', $courseformats);
+
+        $audience = [
+            'title' => 'audience',
+            'terms' => json_encode([
+                ["de" => "Schüler*innen", "en" => "Pupils"],
+                ["de" => "Studieninteressierte", "en" => "Prospective Students"],
+                ["de" => "Studierende", "en" => "Students"],
+                ["de" => "Promotionsinteresse", "en" => "Prospective Doctoral Candidates"],
+                ["de" => "PASCH-Schüler*innen", "en" => "PASCH-Pupils"],
+                ["de" => "Lehrende", "en" => "Teachers"],
+                ["de" => "Eltern", "en" => "Parents"],
+            ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE),
+        ];
+        $DB->insert_record('ildmeta_vocabulary', $audience);
+
+        // $provider = [
+        //     'title' => 'provider',
+        //     'terms' => json_encode([
+        //         ["de" => "oncampus", "en" => "oncampus"],
+        //         ["de" => "Technische Hochschule Lübeck", "en" => "Technical University Lübeck"],
+        //         ["de" => "RWTH Aachen Universität", "en" => "RWTH Aachen University"],
+        //     ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE),
+        // ];
+        // $DB->insert_record('ildmeta_vocabulary', $provider);
+
+        $subjectarea = [
+            'title' => 'subjectarea',
+            'terms' => json_encode([
+                ["de" => "Einstiegskurse", "en" => "Preparation Courses"],
+                ["de" => "Geistes- und Kulturwissenschaften", "en" => "Humanities and Cultural Studies"],
+                ["de" => "Gesundheitswissenschaften", "en" => "Health Care / Health Management"],
+                ["de" => "Informatik", "en" => "Computer Science"],
+                ["de" => "Ingenieurwissenschaften", "en" => "Engineering"],
+                ["de" => "Lehramt", "en" => "Teacher Education"],
+                ["de" => "Softskills", "en" => "Softskills"],
+                ["de" => "Medizin", "en" => "Medicine / Medical Science"],
+                ["de" => "Naturwissenschaften", "en" => "Natural Sciences"],
+                ["de" => "Rechtswissenschaft", "en" => "Law"],
+                ["de" => "Schlüsselqualifikationen", "en" => "Key Skills"],
+                ["de" => "Soziale Arbeit", "en" => "Social Work"],
+                ["de" => "Sozialwissenschaften", "en" => "Social Sciences"],
+                ["de" => "Sprachen", "en" => "Languages"],
+                ["de" => "Wirtschaftsinformatik", "en" => "Information Systems"],
+                ["de" => "Wirtschaftswissenschaften", "en" => "Economic Sciences"],
+            ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE),
+        ];
+        $DB->insert_record('ildmeta_vocabulary', $subjectarea);
     }
-
-
 
     if (empty($DB->get_records('ildmeta_spdx_licenses'))) {
         // Defaults.
