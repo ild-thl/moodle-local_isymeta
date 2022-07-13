@@ -17,7 +17,7 @@ To create a new provider access /local/ildmeta/edit_provider.php or go to Site a
 To edit vocabularies for coursetypes, courseformats, audineces, and subjectareas access /local/ildmeta/edit_vocabulary.php or got to Site administration -> Plugins -> Local Plugins -> ILD Meta -> Edit vocabulary. Here you can edit or delete existing terms. Make sure you use the correct json format to describe your data. You can add terms in diffrent languages by using the correct language code. See [list of language codes](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes).
 
 ## Installation
-    git clone https://github.com/ild-thl/moodle-block_isymetaselect.git ildmeta
+    git clone -b master https://github.com/ild-thl/moodle-block_isymetaselect.git ildmeta
 
 ## Upgrade
 When you already have a version of this plugin installed and want to upgrade to this version, we suggest to reinstall the plugin completely, because the upgrade.php script is not yet updated to make all the necessary changes. When reimporting the sql data after reinstallation, beware that the property "university" was renamed to "provider".
