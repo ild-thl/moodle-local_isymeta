@@ -362,9 +362,7 @@ if ($mform->is_cancelled()) {
 
 
         $toform->coursetitle = $course->fullname;
-        if (isset($course->summary)) {
-            $toform->teasertext['text'] = $course->summary;
-        }
+        $toform->teasertext['text'] = isset($course->summary) ? $course->summary : '';
         if (isset($course->startdate)) {
             $toform->starttime = $course->startdate;
         } else {
@@ -409,8 +407,9 @@ if ($mform->is_cancelled()) {
         $toform->availablefrom = null;
         $toform->availableuntil = null;
 
-
-        $toform->id = $DB->insert_record($tbl, $toform);
+        $todb = clone $toform;
+        $todb->teasertext = $toform->teasertext['text'];
+        $toform->id = $DB->insert_record($tbl, $todb);
     }
 
 
