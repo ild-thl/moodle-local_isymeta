@@ -284,6 +284,38 @@ function xmldb_local_ildmeta_upgrade($oldversion) {
         // Ildmeta savepoint reached.
         upgrade_plugin_savepoint(true, 2022070718, 'local', 'ildmeta');
     }
+ 
+    if ($oldversion < 2022110213) {
+        $ildmetatable = new xmldb_table('ildmeta');
+
+        // New Bird attributes.
+        $birdsubjectarea = new xmldb_field('birdsubjectarea', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, 0, 'exporttobird');
+
+        // Conditionally launch add field availableuntil.
+        if (!$dbman->field_exists($ildmetatable, $birdsubjectarea)) {
+            $dbman->add_field($ildmetatable, $birdsubjectarea);
+
+            $birdsubjectarea = [
+                'title' => 'birdsubjectarea',
+                'terms' => json_encode([
+                    ["de" => "Keine Angabe"],
+                    ["de" => "Agrar- und Forstwissenschaften"],
+                    ["de" => "Gesellschafts- und Sozialwissenschaften"],
+                    ["de" => "Ingenieurwissenschaften"],
+                    ["de" => "Kunst, Musik, Design"],
+                    ["de" => "Lehramt"],
+                    ["de" => "Mathematik, Naturwissenschaften"],
+                    ["de" => "Medizin, Gesundheitswissenschaften"],
+                    ["de" => "Sprach-, Kulturwissenschaften"],
+                    ["de" => "Wirtschaftswissenschaften, Rechtswissenschaften"],
+                ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE),
+            ];
+            $DB->insert_record('ildmeta_vocabulary', $birdsubjectarea);
+        }
+
+        // Ildmeta savepoint reached.
+        upgrade_plugin_savepoint(true, 2022110213, 'local', 'ildmeta');
+    }
 
     return true;
 }

@@ -55,6 +55,15 @@ class edit_vocabulary_form extends \moodleform {
         );
         $mform->setType('subjectarea', PARAM_RAW);
 
+        // Subjectarea.
+        $mform->addElement(
+            'textarea',
+            'birdsubjectarea',
+            get_string('birdsubjectarea', 'local_ildmeta'),
+            'wrap="virtual" rows="10" cols="60"'
+        );
+        $mform->setType('birdsubjectarea', PARAM_RAW);
+
         // Coursetypes.
         $mform->addElement(
             'textarea',

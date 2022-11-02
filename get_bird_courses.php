@@ -213,6 +213,10 @@ foreach ($metarecords as $meta) {
         'educationalFramework' => 'Bird Kurstyp',
         'targetName' => $vocabularies->coursetypes[$meta->coursetype],
     ];
+    $metaentry['attributes']['educationalAlignment'][1] = [
+        'educationalFramework' => 'HRK Fachrichtung',
+        'targetName' => $vocabularies->birdsubjectarea[$meta->birdsubjectarea],
+    ];
 
     // Erforderliche Vorraussetzungen.
     $metaentry['attributes']['coursePrerequisites'] = $meta->courseprerequisites;

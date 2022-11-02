@@ -311,6 +311,20 @@ class edit_metadata_form extends \moodleform {
         $mform->addElement('selectyesno', 'exporttobird', get_string('exporttobird', 'local_ildmeta'));
         $mform->addHelpButton('exporttobird', 'exporttobird', 'local_ildmeta');
 
+        // Bird-Fachbereich.
+        $mform->addElement('select', 'birdsubjectarea', get_string('birdsubjectarea', 'local_ildmeta'), $vocabularies->birdsubjectarea);
+        $mform->setType('birdsubjectarea', PARAM_RAW);
+        // Disabled if exporttobird is not set to 1 -> Yes.
+        $mform->disabledIf('birdsubjectarea', 'exporttobird', 'eq', '0');
+        $mform->addElement(
+            'static',
+            'birdsubjectarea_help',
+            '',
+            get_string('vocabulary_help', 'local_ildmeta')
+                . ' -> <a href="' . new moodle_url($vocabularysettings) . '" target="_blank">'
+                . get_string('vocabulary_to_settings', 'local_ildmeta') . '</a>'
+        );
+
         // Shortname. Required.
         $mform->addElement('text', 'shortname', get_string('shortname', 'local_ildmeta'), 'maxlength="100" size="25"');
         $mform->setType('shortname', PARAM_ALPHANUM);

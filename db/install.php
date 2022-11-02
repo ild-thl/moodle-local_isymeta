@@ -32,10 +32,10 @@ function xmldb_local_ildmeta_install() {
                 ["de" => "Sprachkurs", "en" => "Language Course"],
                 ["de" => "Fachkurs", "en" => "Specialised Course"],
                 ["de" => "Propädeutik", "en" => "Propaedeutics"],
-                ["de" => "Soft Skill", "en" => "Soft Skill"],
-                ["de" => "Professional Skill", "en" => "Professional Skill"],
-                ["de" => "Digital Skill", "en" => "Digital Skill"],
-                ["de" => "Academic Skill", "en" => "Academic Skill"],
+                ["de" => "Soft Skills", "en" => "Soft Skills"],
+                ["de" => "Professional Skills", "en" => "Professional Skills"],
+                ["de" => "Digital Skills", "en" => "Digital Skills"],
+                ["de" => "Academic Skills", "en" => "Academic Skills"],
             ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE),
         ];
         $DB->insert_record('ildmeta_vocabulary', $coursetypes);
@@ -44,9 +44,9 @@ function xmldb_local_ildmeta_install() {
             'title' => 'courseformats',
             'terms' => json_encode([
                 ["de" => "Präsenz", "en" => "Face To Face"],
-                ["de" => "Online Selbstlernkurs", "en" => "Online Asynchronous"],
-                ["de" => "Online", "en" => "Online Synchronous"],
-                ["de" => "Blended Learning", "en" => "Blended Learning"],
+                ["de" => "Online (Selbstlernkurs)", "en" => "Online Asynchronous"],
+                ["de" => "Online mit festen Online-Gruppenterminen", "en" => "Online Synchronous"],
+                ["de" => "Blended Learning mit festen Präsenz-Gruppenterminen", "en" => "Blended Learning"],
             ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE),
         ];
         $DB->insert_record('ildmeta_vocabulary', $courseformats);
@@ -64,16 +64,6 @@ function xmldb_local_ildmeta_install() {
             ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE),
         ];
         $DB->insert_record('ildmeta_vocabulary', $audience);
-
-        // $provider = [
-        //     'title' => 'provider',
-        //     'terms' => json_encode([
-        //         ["de" => "oncampus", "en" => "oncampus"],
-        //         ["de" => "Technische Hochschule Lübeck", "en" => "Technical University Lübeck"],
-        //         ["de" => "RWTH Aachen Universität", "en" => "RWTH Aachen University"],
-        //     ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE),
-        // ];
-        // $DB->insert_record('ildmeta_vocabulary', $provider);
 
         $subjectarea = [
             'title' => 'subjectarea',
@@ -97,6 +87,23 @@ function xmldb_local_ildmeta_install() {
             ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE),
         ];
         $DB->insert_record('ildmeta_vocabulary', $subjectarea);
+
+        $birdsubjectarea = [
+            'title' => 'birdsubjectarea',
+            'terms' => json_encode([
+                ["de" => "Keine Angabe"],
+                ["de" => "Agrar- und Forstwissenschaften"],
+                ["de" => "Gesellschafts- und Sozialwissenschaften"],
+                ["de" => "Ingenieurwissenschaften"],
+                ["de" => "Kunst, Musik, Design"],
+                ["de" => "Lehramt"],
+                ["de" => "Mathematik, Naturwissenschaften"],
+                ["de" => "Medizin, Gesundheitswissenschaften"],
+                ["de" => "Sprach-, Kulturwissenschaften"],
+                ["de" => "Wirtschaftswissenschaften, Rechtswissenschaften"],
+            ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE),
+        ];
+        $DB->insert_record('ildmeta_vocabulary', $birdsubjectarea);
     }
 
     if (empty($DB->get_records('ildmeta_spdx_licenses'))) {

@@ -184,6 +184,9 @@ if ($mform->is_cancelled()) {
 
     // Bird/DC properties.
     $todb->exporttobird = $fromform->exporttobird;
+    if (isset($fromform->birdsubjectarea)) {
+        $todb->birdsubjectarea = $fromform->birdsubjectarea;
+    }
     if (isset($fromform->shortname)) {
         $todb->shortname = $fromform->shortname;
     }
@@ -311,6 +314,7 @@ if ($mform->is_cancelled()) {
         $toform->tags = $getdb->tags;
 
         // Bird/DC properties.
+        $toform->birdsubjectarea = $getdb->birdsubjectarea;
         $toform->shortname = $getdb->shortname;
         $toform->abstract['text'] = $getdb->abstract;
         $toform->exporttobird = $getdb->exporttobird;
@@ -400,6 +404,7 @@ if ($mform->is_cancelled()) {
 
         // Bird/DC properties.
         $toform->exporttobird = 0;
+        $toform->birdsubjectarea = 0;
         $toform->shortname = $course->shortname;
         $toform->coursetype = null;
         $toform->courseformat = null;

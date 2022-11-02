@@ -58,8 +58,9 @@ class manager {
             $term = (array)$term;
             if (count($term) == 1 || !isset($term[$lang])) {
                 $result[] = reset($term);
+            } else {
+                $result[] = $term[$lang];
             }
-            $result[] = $term[$lang];
         }
 
         return $result;

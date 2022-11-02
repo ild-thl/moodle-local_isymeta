@@ -80,6 +80,7 @@ $string['shortname'] = 'Shortname';
 $string['starttime'] = 'Course start';
 $string['structure'] = 'Outline';
 $string['subjectarea'] = 'Subjectarea';
+$string['birdsubjectarea'] = 'HRK subjectarea';
 $string['vocabulary_help'] = 'The displayed vocabulary can be managed in the plugin settings.';
 $string['vocabulary_to_settings'] = 'To vocabulary settings';
 $string['tags'] = 'Tags';

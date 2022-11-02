@@ -80,6 +80,7 @@ $string['shortname'] = 'Kurzname';
 $string['starttime'] = 'Kursbeginn';
 $string['structure'] = 'Gliederung';
 $string['subjectarea'] = 'Fachbereich/Wissensgebiet';
+$string['birdsubjectarea'] = 'HRK Fachrichtung';
 $string['vocabulary_help'] = 'Das hier angezeigte Vokabular lässt sich in den Plugin-Einstellungen bearbeiten.';
 $string['vocabulary_to_settings'] = 'Zu den Vokabular-Einstellungen';
 $string['tags'] = 'Schlagworte';
