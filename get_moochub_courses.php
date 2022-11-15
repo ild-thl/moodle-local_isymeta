@@ -100,9 +100,7 @@ foreach ($metarecords as $meta) {
         $metaentry['attributes']['courseMode'] = 'MOOC';
         $metaentry['attributes']['url'] = $CFG->wwwroot . '/blocks/ildmetaselect/detailpage.php?id=' . $meta->courseid;
         // $meta_entry['attributes']['publisher']     = $meta->lecturer;
-        if ($meta->lecturer == '') {
-            mtrace($meta->courseid);
-        }
+
         $metaentry['attributes']['abstract'] = null;
         if ($meta->teasertext == '') {
             $metaentry['attributes']['description'] = null;
