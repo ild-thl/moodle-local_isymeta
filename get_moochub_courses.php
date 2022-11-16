@@ -33,7 +33,7 @@ $metas = [];
 $metaentry = [];
 $metarecords = $DB->get_records('ildmeta');
 
-$jsonlink = $CFG->httpswwwroot . '/local/ildmeta/get_moochub_courses.json';
+$jsonlink = $CFG->httpswwwroot . '/local/ildmeta/get_moochub_courses.php';
 
 $metaslinks = ['self' => $jsonlink, 'first' => $jsonlink, 'last' => $jsonlink];
 

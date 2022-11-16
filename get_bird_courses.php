@@ -226,6 +226,6 @@ foreach ($metarecords as $meta) {
 
 // Send Json response.
 header('Content-Type: application/json');
-
+$json = json_encode($metas, JSON_UNESCAPED_SLASHES);
 // If download flag is set trigger download on client browser.
 send_file($json, 'courses_bird.json', 0, 0, true, $download);
