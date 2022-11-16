@@ -33,7 +33,7 @@ $metas = [];
 $metaentry = [];
 $metarecords = $DB->get_records('ildmeta');
 
-$jsonlink = 'https://futurelearnlab.de/hub/courses_moochub.json';
+$jsonlink = $CFG->httpswwwroot . '/local/ildmeta/get_moochub_courses.json';
 
 $metaslinks = ['self' => $jsonlink, 'first' => $jsonlink, 'last' => $jsonlink];
 
@@ -180,13 +180,6 @@ foreach ($metarecords as $meta) {
 
 // Create json.
 $json = json_encode($metas, JSON_UNESCAPED_SLASHES);
-
-// Save json as a file in a public directory.
-$filedestination = $CFG->dirroot . '/courses_moochub.json';
-if ($fp = fopen($filedestination, 'w')) {
-    fwrite($fp, $json);
-    fclose($fp);
-}
 
 // Send Json response.
 header('Content-Type: application/json');

@@ -33,7 +33,7 @@ $metas = [];
 $metaentry = [];
 $metarecords = $DB->get_records('ildmeta');
 
-$jsonlink = 'https://futurelearnlab.de/hub/courses_bird.json';
+$jsonlink = $CFG->httpswwwroot . '/local/ildmeta/get_bird_courses.php';
 
 $metaslinks = ['self' => $jsonlink, 'first' => $jsonlink, 'last' => $jsonlink];
 
@@ -222,16 +222,6 @@ foreach ($metarecords as $meta) {
     $metaentry['attributes']['coursePrerequisites'] = $meta->courseprerequisites;
 
     $metas['data'][] = $metaentry;
-}
-
-// Create json.
-$json = json_encode($metas, JSON_UNESCAPED_SLASHES);
-
-// Save json as a file in a public directory.
-$filedestination = $CFG->dirroot . '/courses_bird.json';
-if ($fp = fopen($filedestination, 'w')) {
-    fwrite($fp, $json);
-    fclose($fp);
 }
 
 // Send Json response.
