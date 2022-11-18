@@ -211,8 +211,12 @@ if ($mform->is_cancelled()) {
     if (isset($fromform->availablefrom)) {
         $todb->availablefrom = $fromform->availablefrom;
     }
-    if (isset($fromform->availableuntil)) {
-        $todb->availableuntil = $fromform->availableuntil;
+    if (isset($fromform->expires) && $fromform->expires) {
+        if (isset($fromform->availableuntil)) {
+            $todb->availableuntil = $fromform->availableuntil;
+        }
+    } else {
+        $todb->availableuntil = null;
     }
 
     // If course is not in db yet.
@@ -325,6 +329,11 @@ if ($mform->is_cancelled()) {
         $toform->courseprerequisites['text'] = $getdb->courseprerequisites;
         $toform->availablefrom = $getdb->availablefrom;
         $toform->availableuntil = $getdb->availableuntil;
+        if (isset($getdb->availableuntil) && $getdb->availableuntil) {
+            $toform->expires = 1;
+        } else {
+            $toform->expires = 0;
+        }
 
 
         if (!empty($getlect)) {

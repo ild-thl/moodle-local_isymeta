@@ -392,10 +392,21 @@ class edit_metadata_form extends \moodleform {
         // Disabled if exporttobird is not set to 1 -> Yes.
         $mform->disabledIf('availablefrom', 'exporttobird', 'eq', '0');
 
+        // Wether the course has an expiration date.
+        $expireoptions = array(
+            1 => get_string('expires_yes', 'local_ildmeta'),
+            0 => get_string('expires_no', 'local_ildmeta'),
+        );
+        $mform->addElement('select', 'expires', get_string('expires', 'local_ildmeta'), $expireoptions);
+        $mform->addHelpButton('expires', 'expires', 'local_ildmeta');
+
         // Available until. Required in BirdCourse.
         $mform->addElement('date_selector', 'availableuntil', get_string('availableuntil', 'local_ildmeta'));
+        $mform->setDefault('expires', 1);
         // Disabled if exporttobird is not set to 1 -> Yes.
         $mform->disabledIf('availableuntil', 'exporttobird', 'eq', '0');
+        // Disabled if exporttobird is not set to 1 -> Yes.
+        $mform->disabledIf('availableuntil', 'expires', 'eq', '0');
 
         // TODO: Required in BirdAcademy, and missing here: City, Country.
 
