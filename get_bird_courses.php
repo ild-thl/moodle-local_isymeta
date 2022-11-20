@@ -217,6 +217,18 @@ foreach ($metarecords as $meta) {
         'educationalFramework' => 'HRK Fachrichtung',
         'targetName' => $vocabularies->birdsubjectarea[$meta->birdsubjectarea],
     ];
+    if (isset($meta->languagelevels)) {
+        $metaentry['attributes']['educationalLevel'][0] = [
+            'name' => $vocabularies->languagelevels[$meta->languagelevels],
+        ]; 
+    } else {
+        $metaentry['attributes']['educationalLevel'] = []; 
+    }
+    if (isset($meta->languagesubject)) {
+        $metaentry['attributes']['course_languagecourse_subject'] = $vocabularies->languagesubject[$meta->languagesubject]; 
+    } else {
+        $metaentry['attributes']['course_languagecourse_subject'] = null; 
+    }
 
     // Erforderliche Vorraussetzungen.
     $metaentry['attributes']['coursePrerequisites'] = $meta->courseprerequisites;

@@ -100,14 +100,6 @@ class edit_metadata_form extends \moodleform {
         // Fachbereich/Wissensgebiet. Required.
         $mform->addElement('select', 'subjectarea', get_string('subjectarea', 'local_ildmeta'), $vocabularies->subjectarea);
         $mform->setType('subjectarea', PARAM_RAW);
-        $mform->addElement(
-            'static',
-            'subjectarea_help',
-            '',
-            get_string('vocabulary_help', 'local_ildmeta')
-                . ' -> <a href="' . new moodle_url($vocabularysettings) . '" target="_blank">'
-                . get_string('vocabulary_to_settings', 'local_ildmeta') . '</a>'
-        );
         // $mform->addRule('subjectarea', get_string('required'), 'required', null, 'client');
 
         // Kurssprache. Required.
@@ -305,25 +297,17 @@ class edit_metadata_form extends \moodleform {
         $mform->addElement('text', 'tags', get_string('tags', 'local_ildmeta'));
         $mform->setType('tags', PARAM_TEXT);
 
-        $mform->addElement('html', '<h2>Bird/DC Meatdaten</h2>');
+        $mform->addElement('html', '<h2>' . get_string('birdmetadata', 'local_ildmeta') . '</h2>');
 
         // Export to bird.
         $mform->addElement('selectyesno', 'exporttobird', get_string('exporttobird', 'local_ildmeta'));
         $mform->addHelpButton('exporttobird', 'exporttobird', 'local_ildmeta');
 
         // Bird-Fachbereich.
-        $mform->addElement('select', 'birdsubjectarea', get_string('birdsubjectarea', 'local_ildmeta'), $vocabularies->birdsubjectarea);
+        $mform->addElement('select', 'birdsubjectarea', get_string('subjectareabird', 'local_ildmeta'), $vocabularies->birdsubjectarea);
         $mform->setType('birdsubjectarea', PARAM_RAW);
         // Disabled if exporttobird is not set to 1 -> Yes.
         $mform->disabledIf('birdsubjectarea', 'exporttobird', 'eq', '0');
-        $mform->addElement(
-            'static',
-            'birdsubjectarea_help',
-            '',
-            get_string('vocabulary_help', 'local_ildmeta')
-                . ' -> <a href="' . new moodle_url($vocabularysettings) . '" target="_blank">'
-                . get_string('vocabulary_to_settings', 'local_ildmeta') . '</a>'
-        );
 
         // Shortname. Required.
         $mform->addElement('text', 'shortname', get_string('shortname', 'local_ildmeta'), 'maxlength="100" size="25"');
@@ -341,27 +325,22 @@ class edit_metadata_form extends \moodleform {
         $mform->addElement('select', 'coursetype', get_string('coursetype', 'local_ildmeta'), $vocabularies->coursetypes);
         // Disabled if exporttobird is not set to 1 -> Yes.
         $mform->disabledIf('coursetype', 'exporttobird', 'eq', '0');
-        $mform->addElement(
-            'static',
-            'coursetype_help',
-            '',
-            get_string('vocabulary_help', 'local_ildmeta')
-                . ' -> <a href="' . new moodle_url($vocabularysettings) . '" target="_blank">'
-                . get_string('vocabulary_to_settings', 'local_ildmeta') . '</a>'
-        );
 
         // Kursformat.
         $mform->addElement('select', 'courseformat', get_string('courseformat', 'local_ildmeta'), $vocabularies->courseformats);
         // Disabled if exporttobird is not set to 1 -> Yes.
         $mform->disabledIf('courseformat', 'exporttobird', 'eq', '0');
-        $mform->addElement(
-            'static',
-            'courseformat_help',
-            '',
-            get_string('vocabulary_help', 'local_ildmeta')
-                . ' -> <a href="' . new moodle_url($vocabularysettings) . '" target="_blank">'
-                . get_string('vocabulary_to_settings', 'local_ildmeta') . '</a>'
-        );
+        // Language course type.
+        $mform->addElement('select', 'languagesubject', get_string('languagesubject', 'local_ildmeta'), $vocabularies->languagesubject);
+        // Disabled if exporttobird is not set to 1 -> Yes.
+        $mform->disabledIf('languagesubject', 'exporttobird', 'eq', '0');
+        $mform->disabledIf('languagesubject', 'coursetype', 'neq', '0');
+
+        // Language course level goals.
+        $mform->addElement('select', 'languagelevels', get_string('languagelevels', 'local_ildmeta'), $vocabularies->languagelevels);
+        // Disabled if exporttobird is not set to 1 -> Yes.
+        $mform->disabledIf('languagelevels', 'exporttobird', 'eq', '0');
+        $mform->disabledIf('languagelevels', 'coursetype', 'neq', '0');
 
         // Selbstlernkurs.
         $mform->addElement('selectyesno', 'selfpaced', get_string('selfpaced', 'local_ildmeta'));
@@ -372,14 +351,6 @@ class edit_metadata_form extends \moodleform {
         $mform->addElement('select', 'audience', get_string('audience', 'local_ildmeta'), $vocabularies->audience);
         // Disabled if exporttobird is not set to 1 -> Yes.
         $mform->disabledIf('audience', 'exporttobird', 'eq', '0');
-        $mform->addElement(
-            'static',
-            'audience_help',
-            '',
-            get_string('vocabulary_help', 'local_ildmeta')
-                . ' -> <a href="' . new moodle_url($vocabularysettings) . '" target="_blank">'
-                . get_string('vocabulary_to_settings', 'local_ildmeta') . '</a>'
-        );
 
         // Erforderliche Vorkenntnisse.
         $mform->addElement('editor', 'courseprerequisites', get_string('courseprerequisites', 'local_ildmeta'));
@@ -450,10 +421,6 @@ class edit_metadata_form extends \moodleform {
         $errors = array();
 
         if ($data['exporttobird']) {
-            // Requires shortname.
-            if (!isset($data['shortname']) || empty($data['shortname'])) {
-                $errors['shortname'] = get_string('required');
-            }
             // Requires abstract.
             if (!isset($data['abstract']['text']) || empty($data['abstract']['text'])) {
                 $errors['abstract'] = get_string('required');

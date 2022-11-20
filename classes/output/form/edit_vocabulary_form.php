@@ -37,15 +37,6 @@ class edit_vocabulary_form extends \moodleform {
 
         $mform = $this->_form;
 
-        // Provider.
-        // $mform->addElement(
-        //     'textarea',
-        //     'provider',
-        //     get_string('provider', 'local_ildmeta'),
-        //     'wrap="virtual" rows="10" cols="60"'
-        // );
-        // $mform->setType('provider', PARAM_RAW);
-
         // Subjectarea.
         $mform->addElement(
             'textarea',
@@ -59,7 +50,7 @@ class edit_vocabulary_form extends \moodleform {
         $mform->addElement(
             'textarea',
             'birdsubjectarea',
-            get_string('birdsubjectarea', 'local_ildmeta'),
+            get_string('subjectareabird', 'local_ildmeta'),
             'wrap="virtual" rows="10" cols="60"'
         );
         $mform->setType('birdsubjectarea', PARAM_RAW);
@@ -90,6 +81,26 @@ class edit_vocabulary_form extends \moodleform {
             'wrap="virtual" rows="10" cols="60"'
         );
         $mform->setType('audience', PARAM_RAW);
+
+        // Audience.
+        $mform->addElement(
+            'textarea',
+            'languagesubject',
+            get_string('languagesubject', 'local_ildmeta'),
+            'wrap="virtual" rows="10" cols="60"'
+        );
+        $mform->setType('languagesubject', PARAM_RAW);
+
+        // Audience.
+        $mform->addElement(
+            'textarea',
+            'languagelevels',
+            get_string('languagelevels', 'local_ildmeta'),
+            'wrap="virtual" rows="10" cols="60"'
+        );
+        $mform->setType('languagelevels', PARAM_RAW);
+
+        $mform->addElement('submit', 'resetdefaultvocabulary', get_string('resetdefaultvocabulary', 'local_ildmeta'));
 
         $this->add_action_buttons(true);
     }

@@ -23,6 +23,8 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use local_ildmeta\manager;
+
 defined('MOODLE_INTERNAL') || die;
 
 if ($hassiteconfig) {
@@ -35,15 +37,33 @@ if ($hassiteconfig) {
     );
     $ADMIN->add('localplugins', $modfolder);
 
-    // $ADMIN->add('localildmetafolder', $settings);
-    $ADMIN->add(
-        'localildmetafolder',
-        new admin_externalpage(
-            'localildmeta_edit_vocabulary',
-            get_string('edit_vocabulary', 'local_ildmeta'),
-            $CFG->wwwroot . '/local/ildmeta/edit_vocabulary.php'
-        )
-    );
+    $settingspage = new admin_settingpage('managelocalildmeta', new lang_string('managelocalildmeta', 'local_ildmeta'));
+
+    if ($ADMIN->fulltree) {
+        $settingspage->add(new admin_setting_configcheckbox(
+            'local_ildmeta/usecustomvocabulary',
+            new lang_string('usecustomvocabulary', 'local_ildmeta'),
+            new lang_string('usecustomvocabulary_desc', 'local_ildmeta'),
+            0
+        ));
+
+        if (!get_config('local_ildmeta', 'usecustomvocabulary')) {
+            manager::set_default_vocabulary();
+        }
+    }
+
+    $ADMIN->add('localildmetafolder', $settingspage);
+
+    if (get_config('local_ildmeta', 'usecustomvocabulary')) {
+        $ADMIN->add(
+            'localildmetafolder',
+            new admin_externalpage(
+                'localildmeta_edit_vocabulary',
+                get_string('edit_vocabulary', 'local_ildmeta'),
+                $CFG->wwwroot . '/local/ildmeta/edit_vocabulary.php'
+            )
+        );
+    }
     $ADMIN->add(
         'localildmetafolder',
         new admin_externalpage(

@@ -25,6 +25,7 @@
 
 require_once(__DIR__ . '/../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
+use local_ildmeta\manager;
 
 require_login();
 
@@ -58,10 +59,14 @@ if (empty($vocabularies)) {
 if ($mform->is_cancelled()) {
     redirect($url);
 } else if ($data = $mform->get_data()) {
-    foreach ($vocabularies as $vocabulary) {
-        if ($data->{$vocabulary->title}) {
-            $vocabulary->terms = $data->{$vocabulary->title};
-            $DB->update_record('ildmeta_vocabulary', $vocabulary);
+    if (isset($data->resetdefaultvocabulary)) {
+        manager::set_default_vocabulary();
+    } else {
+        foreach ($vocabularies as $vocabulary) {
+            if ($data->{$vocabulary->title}) {
+                $vocabulary->terms = $data->{$vocabulary->title};
+                $DB->update_record('ildmeta_vocabulary', $vocabulary);
+            }
         }
     }
 

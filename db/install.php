@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+use local_ildmeta\manager;
+
 /**
  * Post installation procedure for setting up defaults for ildmeta_vocabulary and ildmeta_spdx_licenses.
  *
@@ -26,84 +28,7 @@ function xmldb_local_ildmeta_install() {
     $result = true;
 
     if (empty($DB->get_records('ildmeta_vocabulary'))) {
-        $coursetypes = [
-            'title' => 'coursetypes',
-            'terms' => json_encode([
-                ["de" => "Sprachkurs", "en" => "Language Course"],
-                ["de" => "Fachkurs", "en" => "Specialised Course"],
-                ["de" => "Propädeutik", "en" => "Propaedeutics"],
-                ["de" => "Soft Skills", "en" => "Soft Skills"],
-                ["de" => "Professional Skills", "en" => "Professional Skills"],
-                ["de" => "Digital Skills", "en" => "Digital Skills"],
-                ["de" => "Academic Skills", "en" => "Academic Skills"],
-            ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE),
-        ];
-        $DB->insert_record('ildmeta_vocabulary', $coursetypes);
-
-        $courseformats = [
-            'title' => 'courseformats',
-            'terms' => json_encode([
-                ["de" => "Präsenz", "en" => "Face To Face"],
-                ["de" => "Online (Selbstlernkurs)", "en" => "Online Asynchronous"],
-                ["de" => "Online mit festen Online-Gruppenterminen", "en" => "Online Synchronous"],
-                ["de" => "Blended Learning mit festen Präsenz-Gruppenterminen", "en" => "Blended Learning"],
-            ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE),
-        ];
-        $DB->insert_record('ildmeta_vocabulary', $courseformats);
-
-        $audience = [
-            'title' => 'audience',
-            'terms' => json_encode([
-                ["de" => "Schüler*innen", "en" => "Pupils"],
-                ["de" => "Studieninteressierte", "en" => "Prospective Students"],
-                ["de" => "Studierende", "en" => "Students"],
-                ["de" => "Promotionsinteresse", "en" => "Prospective Doctoral Candidates"],
-                ["de" => "PASCH-Schüler*innen", "en" => "PASCH-Pupils"],
-                ["de" => "Lehrende", "en" => "Teachers"],
-                ["de" => "Eltern", "en" => "Parents"],
-            ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE),
-        ];
-        $DB->insert_record('ildmeta_vocabulary', $audience);
-
-        $subjectarea = [
-            'title' => 'subjectarea',
-            'terms' => json_encode([
-                ["de" => "Einstiegskurse", "en" => "Preparation Courses"],
-                ["de" => "Geistes- und Kulturwissenschaften", "en" => "Humanities and Cultural Studies"],
-                ["de" => "Gesundheitswissenschaften", "en" => "Health Care / Health Management"],
-                ["de" => "Informatik", "en" => "Computer Science"],
-                ["de" => "Ingenieurwissenschaften", "en" => "Engineering"],
-                ["de" => "Lehramt", "en" => "Teacher Education"],
-                ["de" => "Softskills", "en" => "Softskills"],
-                ["de" => "Medizin", "en" => "Medicine / Medical Science"],
-                ["de" => "Naturwissenschaften", "en" => "Natural Sciences"],
-                ["de" => "Rechtswissenschaft", "en" => "Law"],
-                ["de" => "Schlüsselqualifikationen", "en" => "Key Skills"],
-                ["de" => "Soziale Arbeit", "en" => "Social Work"],
-                ["de" => "Sozialwissenschaften", "en" => "Social Sciences"],
-                ["de" => "Sprachen", "en" => "Languages"],
-                ["de" => "Wirtschaftsinformatik", "en" => "Information Systems"],
-                ["de" => "Wirtschaftswissenschaften", "en" => "Economic Sciences"],
-            ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE),
-        ];
-        $DB->insert_record('ildmeta_vocabulary', $subjectarea);
-
-        $birdsubjectarea = [
-            'title' => 'birdsubjectarea',
-            'terms' => json_encode([
-                ["de" => "Keine Angabe"],
-                ["de" => "Agrar- und Forstwissenschaften"],
-                ["de" => "Gesellschafts- und Sozialwissenschaften"],
-                ["de" => "Ingenieurwissenschaften"],
-                ["de" => "Kunst, Musik, Design"],
-                ["de" => "Lehramt"],
-                ["de" => "Mathematik, Naturwissenschaften"],
-                ["de" => "Medizin, Gesundheitswissenschaften"],
-                ["de" => "Sprach-, Kulturwissenschaften"],
-                ["de" => "Wirtschaftswissenschaften, Rechtswissenschaften"],
-            ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE),
-        ];
-        $DB->insert_record('ildmeta_vocabulary', $birdsubjectarea);
+        manager::set_default_vocabulary();
     }
 
     if (empty($DB->get_records('ildmeta_spdx_licenses'))) {

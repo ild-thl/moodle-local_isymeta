@@ -284,7 +284,7 @@ function xmldb_local_ildmeta_upgrade($oldversion) {
         // Ildmeta savepoint reached.
         upgrade_plugin_savepoint(true, 2022070718, 'local', 'ildmeta');
     }
- 
+
     if ($oldversion < 2022110213) {
         $ildmetatable = new xmldb_table('ildmeta');
 
@@ -295,26 +295,80 @@ function xmldb_local_ildmeta_upgrade($oldversion) {
         if (!$dbman->field_exists($ildmetatable, $birdsubjectarea)) {
             $dbman->add_field($ildmetatable, $birdsubjectarea);
 
-            $birdsubjectarea = [
-                'title' => 'birdsubjectarea',
-                'terms' => json_encode([
-                    ["de" => "Keine Angabe"],
-                    ["de" => "Agrar- und Forstwissenschaften"],
-                    ["de" => "Gesellschafts- und Sozialwissenschaften"],
-                    ["de" => "Ingenieurwissenschaften"],
-                    ["de" => "Kunst, Musik, Design"],
-                    ["de" => "Lehramt"],
-                    ["de" => "Mathematik, Naturwissenschaften"],
-                    ["de" => "Medizin, Gesundheitswissenschaften"],
-                    ["de" => "Sprach-, Kulturwissenschaften"],
-                    ["de" => "Wirtschaftswissenschaften, Rechtswissenschaften"],
-                ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE),
-            ];
-            $DB->insert_record('ildmeta_vocabulary', $birdsubjectarea);
+            if (!$DB->record_exists('ildmeta_vocabulary', array('title' => 'birdsubjectarea'))) {
+                $birdsubjectarea = [
+                    'title' => 'birdsubjectarea',
+                    'terms' => json_encode([
+                        ["de" => "Keine Angabe"],
+                        ["de" => "Agrar- und Forstwissenschaften"],
+                        ["de" => "Gesellschafts- und Sozialwissenschaften"],
+                        ["de" => "Ingenieurwissenschaften"],
+                        ["de" => "Kunst, Musik, Design"],
+                        ["de" => "Lehramt"],
+                        ["de" => "Mathematik, Naturwissenschaften"],
+                        ["de" => "Medizin, Gesundheitswissenschaften"],
+                        ["de" => "Sprach-, Kulturwissenschaften"],
+                        ["de" => "Wirtschaftswissenschaften, Rechtswissenschaften"],
+                    ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE),
+                ];
+                $DB->insert_record('ildmeta_vocabulary', $birdsubjectarea);
+            }
         }
 
         // Ildmeta savepoint reached.
         upgrade_plugin_savepoint(true, 2022110213, 'local', 'ildmeta');
+    }
+
+    if ($oldversion < 2022111916) {
+        $ildmetatable = new xmldb_table('ildmeta');
+
+        // New Bird attributes.
+        $languagelevels = new xmldb_field('languagelevels', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'courseformat');
+        $languagesubject = new xmldb_field('languagesubject', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'languagelevels');
+
+        // Conditionally launch add field availableuntil.
+        if (!$dbman->field_exists($ildmetatable, $languagelevels)) {
+            $dbman->add_field($ildmetatable, $languagelevels);
+
+            if (!$DB->record_exists('ildmeta_vocabulary', array('title' => 'languagelevels'))) {
+                $languagelevels = [
+                    'title' => 'languagelevels',
+                    'terms' => json_encode([
+                        ["de" => "A1"],
+                        ["de" => "A2"],
+                        ["de" => "B1"],
+                        ["de" => "B1.1"],
+                        ["de" => "B1.2"],
+                        ["de" => "B2"],
+                        ["de" => "B2.1"],
+                        ["de" => "B2.2"],
+                        ["de" => "C1"],
+                        ["de" => "C2"],
+                    ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE),
+                ];
+                $DB->insert_record('ildmeta_vocabulary', $languagelevels);
+            }
+        }
+
+        if (!$dbman->field_exists($ildmetatable, $languagesubject)) {
+            $dbman->add_field($ildmetatable, $languagesubject);
+
+            if (!$DB->record_exists('ildmeta_vocabulary', array('title' => 'languagesubject'))) {
+                $languagesubject = [
+                    'title' => 'languagesubject',
+                    'terms' => json_encode([
+                        ["de" => "allgemeinsprachlich"],
+                        ["de" => "Prüfungsvorbereitung"],
+                        ["de" => "Fachsprache"],
+                        ["de" => "spezielle sprachliche Fertigkeiten"],
+                    ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE),
+                ];
+                $DB->insert_record('ildmeta_vocabulary', $languagesubject);
+            }
+        }
+
+        // Ildmeta savepoint reached.
+        upgrade_plugin_savepoint(true, 2022111916, 'local', 'ildmeta');
     }
 
     return true;

@@ -196,6 +196,17 @@ if ($mform->is_cancelled()) {
     if (isset($fromform->coursetype)) {
         $todb->coursetype = $fromform->coursetype;
     }
+    if (isset($fromform->coursetype) && $fromform->coursetype == 0) {
+        if (isset($fromform->languagelevels)) {
+            $todb->languagelevels = $fromform->languagelevels;
+        }
+        if (isset($fromform->languagesubject)) {
+            $todb->languagesubject = $fromform->languagesubject;
+        }
+    } else {
+        $todb->languagelevels = null;
+        $todb->languagesubject = null;
+    }
     if (isset($fromform->courseformat)) {
         $todb->courseformat = $fromform->courseformat;
     }
@@ -323,6 +334,8 @@ if ($mform->is_cancelled()) {
         $toform->abstract['text'] = $getdb->abstract;
         $toform->exporttobird = $getdb->exporttobird;
         $toform->coursetype = $getdb->coursetype;
+        $toform->languagesubject = $getdb->languagesubject;
+        $toform->languagelevels = $getdb->languagelevels;
         $toform->courseformat = $getdb->courseformat;
         $toform->selfpaced = $getdb->selfpaced;
         $toform->audience = $getdb->audience;
@@ -416,6 +429,8 @@ if ($mform->is_cancelled()) {
         $toform->birdsubjectarea = 0;
         $toform->shortname = $course->shortname;
         $toform->coursetype = null;
+        $toform->languagelevels = null;
+        $toform->languagesubject = null;
         $toform->courseformat = null;
         $toform->selfpaced = 0;
         $toform->audience = null;
