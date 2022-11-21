@@ -98,7 +98,8 @@ foreach ($metarecords as $meta) {
     }
 
     $metaentry['attributes']['courseCode'] = 'futurelearnlab' . $meta->courseid;
-    $metaentry['attributes']['courseMode'] = ['MOOC'];
+    // $metaentry['attributes']['courseMode'] = ['MOOC'];
+    $metaentry['attributes']['courseMode'] = 'MOOC';
 
     $metaentry['attributes']['url'] = $CFG->wwwroot . '/blocks/ildmetaselect/detailpage.php?id=' . $meta->courseid;
     if (isset($meta->teasertext) && !empty($meta->teasertext)) {
@@ -140,7 +141,7 @@ foreach ($metarecords as $meta) {
 
     $duration = null;
     if (isset($meta->processingtime) && !empty($meta->processingtime)) {
-        $duration .= 'P' . $meta->processingtime . 'H';
+        $duration = 'PT' . $meta->processingtime . 'H';
         $metaentry['attributes']['duration'] = $duration;
     } else {
         $metaentry['attributes']['duration'] = null;
@@ -213,10 +214,14 @@ foreach ($metarecords as $meta) {
 
     // Selbstlerkurs.
     // $metaentry['attributes']['courseMode'][] = $meta->selfpaced ? 'Asynchronous' : 'Synchronous';
-    $metaentry['attributes']['courseMode'][] = $meta->selfpaced ? 'Selbstlernkurs' : 'Betreuter Kurs';
+    // $metaentry['attributes']['courseMode'][] = $meta->selfpaced ? 'Selbstlernkurs' : 'Betreuter Kurs';
+    $metaentry['attributes']['selfpaced'] = $meta->selfpaced ? 'Selbstlernkurs' : 'Betreuter Kurs';
 
     // Kursformat.
-    $metaentry['attributes']['courseMode'][] = $vocabularies->courseformats[$meta->courseformat];
+    // $metaentry['attributes']['courseMode'][] = $vocabularies->courseformats[$meta->courseformat];
+    $metaentry['attributes']['lectureType'] = $vocabularies->courseformats[$meta->courseformat];
+    
+
 
     // Audience.
     $metaentry['attributes']['audience'] = [$vocabularies->audience[$meta->audience]];
