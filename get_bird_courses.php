@@ -83,11 +83,6 @@ foreach ($metarecords as $meta) {
         }
     }
 
-    $duration = null;
-    if (!$meta->processingtime == null) {
-        $duration .= 'P' . $meta->processingtime . 'H';
-    }
-
     $metaentry = [];
     $metaentry['type'] = 'courses';
     // ID has to be an integer, for compatibility with the BirdCourse-Format
@@ -142,16 +137,24 @@ foreach ($metarecords as $meta) {
         }
     }
 
-    $metaentry['attributes']['availableUntil'] = null;
+
+    $duration = null;
+    if (isset($meta->processingtime) && !empty($meta->processingtime)) {
+        $duration .= 'P' . $meta->processingtime . 'H';
+        $metaentry['attributes']['duration'] = $duration;
+    } else {
+        $metaentry['attributes']['duration'] = null;
+    }
+
     if (isset($meta->availableuntil) && !empty($meta->availableuntil)) {
-        $metaentry['attributes']['availableUntil'] = $meta->availableuntil;
+        $metaentry['attributes']['availableUntil'] = date('c', $meta->availableuntil);
     } else {
         $metaentry['attributes']['availableUntil'] = null;
     }
 
     // AvailableFrom is no moochub attribute. Added for compatibility to BirdCourse.
     if (isset($meta->shortname) && !empty($meta->shortname)) {
-        $metaentry['attributes']['availableFrom'] = $meta->availablefrom;
+        $metaentry['attributes']['availableFrom'] = date('c', $meta->availablefrom);
     } else {
         $metaentry['attributes']['availableFrom'] = null;
     }
@@ -197,7 +200,7 @@ foreach ($metarecords as $meta) {
         $metaentry['attributes']['courseLicenses'][0]['id'] = 'Proprietary';
         $metaentry['attributes']['courseLicenses'][0]['url'] = null;
     }
-    
+
     $provider = $providers[$meta->provider];
 
     $metaentry['attributes']['moocProvider']['name'] = $provider['name'];

@@ -84,11 +84,6 @@ foreach ($metarecords as $meta) {
             $video = $meta->videocode;
         }
 
-        $duration = null;
-        if (!$meta->processingtime == null) {
-            $duration .= 'P' . $meta->processingtime . 'H';
-        }
-
         $course = get_course($meta->courseid);
 
         $metaentry = [];
@@ -125,8 +120,20 @@ foreach ($metarecords as $meta) {
             $metaentry['attributes']['image']['licenses'][0]['url'] = 'https://creativecommons.org/licenses/by/4.0';
         }
 
-        // $meta_entry['attributes']['duration'] = $duration;
-        $metaentry['attributes']['availableUntil'] = null;
+
+        $duration = null;
+        if (isset($meta->processingtime) && !empty($meta->processingtime)) {
+            $duration .= 'P' . $meta->processingtime . 'H';
+            $metaentry['attributes']['duration'] = $duration;
+        } else {
+            $metaentry['attributes']['duration'] = null;
+        }
+
+        if (isset($meta->availableuntil) && !empty($meta->availableuntil)) {
+            $metaentry['attributes']['availableUntil'] = date('c', $meta->availableuntil);
+        } else {
+            $metaentry['attributes']['availableUntil'] = null;
+        }
 
         // $lecturer = explode(', ', $meta->lecturer);
         // $meta_entry['attributes']['instructors'] = [];
