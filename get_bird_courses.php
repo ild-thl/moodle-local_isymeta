@@ -43,7 +43,7 @@ $metas['links'] = $metaslinks;
 $records = $DB->get_records('ildmeta_vocabulary');
 $vocabularies = new \stdClass();
 foreach ($records as $vocabulary) {
-    $vocabularies->{$vocabulary->title} = manager::filter_vocabulary_lang($vocabulary, current_language());
+    $vocabularies->{$vocabulary->title} = manager::filter_vocabulary_lang($vocabulary, 'de');
 }
 
 // Get list of providers.
