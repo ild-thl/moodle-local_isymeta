@@ -212,7 +212,8 @@ foreach ($metarecords as $meta) {
     // Bird attributes.
 
     // Selbstlerkurs.
-    $metaentry['attributes']['courseMode'][] = $meta->selfpaced ? 'Asynchronous' : 'Synchronous';
+    // $metaentry['attributes']['courseMode'][] = $meta->selfpaced ? 'Asynchronous' : 'Synchronous';
+    $metaentry['attributes']['courseMode'][] = $meta->selfpaced ? 'Selbstlernkurs' : 'Betreuter Kurs';
 
     // Kursformat.
     $metaentry['attributes']['courseMode'][] = $vocabularies->courseformats[$meta->courseformat];
