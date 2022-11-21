@@ -174,18 +174,21 @@ foreach ($metarecords as $meta) {
     if (trim($meta->videocode) == '') {
         $metaentry['attributes']['video'] = null;
     } else {
-        $metaentry['attributes']['video'] = array();
-        $metaentry['attributes']['video']['url'] = trim($meta->videocode);
-
         if (!empty($meta->videolicense)) {
             $license = $DB->get_record('license', array('id' => $meta->videolicense), '*', IGNORE_MISSING);
             if (isset($license) && !empty($license) && $license->shortname != 'unknown') {
+                // Only set video if video license is known.
+                $metaentry['attributes']['video'] = array();
+                $metaentry['attributes']['video']['url'] = trim($meta->videocode);
+
                 $spdxlicense = $DB->get_record('ildmeta_spdx_licenses', array('moodle_license' => $license->id), '*', MUST_EXIST);
                 $metaentry['attributes']['video']['licenses'] = array();
                 $metaentry['attributes']['video']['licenses'][0]['id'] = $spdxlicense->spdx_shortname;
                 $metaentry['attributes']['video']['licenses'][0]['url'] = $spdxlicense->spdx_url;
                 $metaentry['attributes']['video']['licenses'][0]['name'] = $spdxlicense->spdx_fullname;
             }
+        } else {
+            $metaentry['attributes']['video'] = null;
         }
     }
 
