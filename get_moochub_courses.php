@@ -162,9 +162,18 @@ foreach ($metarecords as $meta) {
             $metaentry['attributes']['video']['licenses'][0]['url'] = null;
         }
 
-        $metaentry['attributes']['courseLicenses'] = [];
-        $metaentry['attributes']['courseLicenses'][0]['id'] = 'Proprietary';
-        $metaentry['attributes']['courseLicenses'][0]['url'] = null;
+        $license = $DB->get_record('license', array('id' => $meta->license), '*', IGNORE_MISSING);
+        if (isset($license) && !empty($license) && $license->shortname != 'unknown') {
+            $spdxlicense = $DB->get_record('ildmeta_spdx_licenses', array('moodle_license' => $license->id), '*', MUST_EXIST);
+            $metaentry['attributes']['courseLicenses'] = array();
+            $metaentry['attributes']['courseLicenses'][0]['id'] = $spdxlicense->spdx_shortname;
+            $metaentry['attributes']['courseLicenses'][0]['url'] = $spdxlicense->spdx_url;
+            $metaentry['attributes']['courseLicenses'][0]['name'] = $spdxlicense->spdx_fullname;
+        } else {
+            $metaentry['attributes']['courseLicenses'] = [];
+            $metaentry['attributes']['courseLicenses'][0]['id'] = 'Proprietary';
+            $metaentry['attributes']['courseLicenses'][0]['url'] = null;
+        }
 
         $provider = $providers[$meta->provider];
 
