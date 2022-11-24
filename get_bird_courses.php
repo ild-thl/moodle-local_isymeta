@@ -17,10 +17,10 @@
 /**
  * Script that generates course data in json format meant for an export to bird and saves it to a file.
  *
- * @package local_ildmeta
- * @authorPascal Hürten <pascal.huerten@th-luebeck.de>
- * @copyright 2022 ILD TH Lübeck <dev.ild@th-luebeck.de>
- * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     local_ildmeta
+ * @author      Pascal Hürten <pascal.huerten@th-luebeck.de>
+ * @copyright   2022 ILD TH Lübeck <dev.ild@th-luebeck.de>
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 require_once(__DIR__ . '/../../config.php');
@@ -154,7 +154,7 @@ foreach ($metarecords as $meta) {
     }
 
     // AvailableFrom is no moochub attribute. Added for compatibility to BirdCourse.
-    if (isset($meta->shortname) && !empty($meta->shortname)) {
+    if (isset($meta->availablefrom) && !empty($meta->availablefrom)) {
         $metaentry['attributes']['availableFrom'] = date('c', $meta->availablefrom);
     } else {
         $metaentry['attributes']['availableFrom'] = null;
