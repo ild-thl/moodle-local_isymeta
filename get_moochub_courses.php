@@ -185,7 +185,11 @@ foreach ($metarecords as $meta) {
         $provider = $providers[$meta->provider];
 
         $metaentry['attributes']['moocProvider']['name'] = $provider['name'];
-        $metaentry['attributes']['moocProvider']['url'] = $provider['url'];
+        $urlwithprotocol = $provider['url'];
+        if (strpos($provider['url'], 'http') === false) {
+            $urlwithprotocol = 'https://' . $provider['url'];
+        }
+        $metaentry['attributes']['moocProvider']['url'] = $urlwithprotocol;
         $metaentry['attributes']['moocProvider']['logo'] = $provider['logo'];
 
         $metaentry['attributes']['access'] = ['free'];
