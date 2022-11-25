@@ -30,13 +30,11 @@ use local_ildmeta\manager;
 $download = optional_param('download', false, PARAM_BOOL);
 
 $metas = [];
-$metaentry = [];
 $metarecords = $DB->get_records('ildmeta');
 
+// Create Links for pagination as proposed by the JSON:API schema.
 $jsonlink = $CFG->httpswwwroot . '/local/ildmeta/get_moochub_courses.php';
-
 $metaslinks = ['self' => $jsonlink, 'first' => $jsonlink, 'last' => $jsonlink];
-
 $metas['links'] = $metaslinks;
 
 // Get vocabularies from ildmeta_vocabulary for dropdown selection fields.
@@ -49,19 +47,47 @@ foreach ($records as $vocabulary) {
 // Get list of providers.
 $providers = manager::get_providers('de');
 
+// Create a json entry for every course, that is supposed to be shared.
 foreach ($metarecords as $meta) {
-
+    // Skip courses that are not supposed to be exported or a course record does not exist.
     if ($meta->noindexcourse != 0 || !$DB->record_exists('course', array('id' => $meta->courseid))) {
         continue;
     }
 
+    $metaentry = [];
+    $metaentry['type'] = 'courses';
+    // Create an ID by adding the moodle course id to the host name of the current moodle site.
+    $metaentry['id'] =  parse_url($CFG->wwwroot, PHP_URL_HOST) . $meta->courseid;
+    $metaentry['attributes'] = [];
+    $metaentry['attributes']['name'] = $meta->coursetitle;
+    $metaentry['attributes']['courseCode'] = null;
+    $metaentry['attributes']['courseMode'] = 'MOOC';
+    $metaentry['attributes']['url'] = $CFG->wwwroot . '/blocks/ildmetaselect/detailpage.php?id=' . $meta->courseid;
+    if (isset($meta->teasertext) && !empty($meta->teasertext)) {
+        $metaentry['attributes']['description'] = $meta->teasertext;
+    } else {
+        $metaentry['attributes']['description'] = null;
+    }
+    $metaentry['attributes']['abstract'] = null;
+
+    // Set teaching language.
+    // TODO: Enable selection of multiple teaching languages.
+    // TODO: Add more languages and manage them like the other vocabularies.
+    $langlist = [
+        'de-DE',
+        'en-US'
+    ];
+    $metaentry['attributes']['languages'] = [$langlist[$meta->courselanguage]];
+    
+    $metaentry['attributes']['startDate'] = date('c', $meta->starttime);
+    $metaentry['attributes']['endDate'] = null;
+
+    // Get overview image from filestorage.
+    // If no custom image ist set in ildmeta, then use the course image instead.
     $fs = get_file_storage();
     $context = context_course::instance($meta->courseid);
     $fileurl = '';
     $imagefile = null;
-
-    // Get url of overview image.
-    // If no custom image ist set in ildmeta, then use the course image instead.
     if (isset($meta->overviewimage)) {
         $files = $fs->get_area_files($context->id, 'local_ildmeta', 'overviewimage', 0);
     } else {
@@ -83,29 +109,8 @@ foreach ($metarecords as $meta) {
         }
     }
 
-    $metaentry = [];
-    $metaentry['type'] = 'courses';
-    $metaentry['id'] = 'futurelearnlab' . $meta->courseid;
-    $metaentry['attributes'] = [];
-    $metaentry['attributes']['name'] = $meta->coursetitle;
-    $metaentry['attributes']['courseCode'] = 'futurelearnlab' . $meta->courseid;
-    $metaentry['attributes']['courseMode'] = 'MOOC';
-    $metaentry['attributes']['url'] = $CFG->wwwroot . '/blocks/ildmetaselect/detailpage.php?id=' . $meta->courseid;
-    // $meta_entry['attributes']['publisher']     = $meta->lecturer;
-
-    $metaentry['attributes']['abstract'] = null;
-    if ($meta->teasertext == '') {
-        $metaentry['attributes']['description'] = null;
-    } else {
-        $metaentry['attributes']['description'] = $meta->teasertext;
-    }
-
-    $metaentry['attributes']['languages'] = ['de-DE'];
-    date_default_timezone_set("UTC");
-    $metaentry['attributes']['startDate'] = date('c', $meta->starttime);
-    $metaentry['attributes']['endDate'] = null;
-
-    if (trim((string)$fileurl) == '') {
+    // Set image metadata.
+    if (!isset($fileurl) || empty((string)$fileurl)) {
         $metaentry['attributes']['image'] = null;
     } else {
         $metaentry['attributes']['image'] = array();
@@ -126,7 +131,10 @@ foreach ($metarecords as $meta) {
         }
     }
 
+    // TODO: Add option to describe learning objectives for a course.
+    // $metaentry['attributes']['learningObjectives'] = [];
 
+    // Set duration by converting amount of hours to ISO 8601 duration.
     $duration = null;
     if (isset($meta->processingtime) && !empty($meta->processingtime)) {
         $duration = 'PT' . $meta->processingtime . 'H';
@@ -141,22 +149,22 @@ foreach ($metarecords as $meta) {
         $metaentry['attributes']['availableUntil'] = null;
     }
 
+    // Set instructors.
     $lecturer = explode(', ', $meta->lecturer);
-
     $metaentry['attributes']['instructors'] = array();
     for ($i = 0; $i < count($lecturer); $i++) {
-
         if ($lecturer[$i] != '') {
             $metaentry['attributes']['instructors'][$i] = new \stdClass;
             $metaentry['attributes']['instructors'][$i]->name = $lecturer[$i];
         }
     }
 
-        $metaentry['attributes']['video'] = null;
-        if (isset($meta->videocode) && !empty(trim($meta->videolicense))) {
-            $license = $DB->get_record('license', array('id' => $meta->videolicense), '*', IGNORE_MISSING);
-            if (isset($license) && !empty($license) && $license->shortname != 'unknown') {
-                // Only set video if video license is known.
+    // Set video.
+    $metaentry['attributes']['video'] = null;
+    if (isset($meta->videocode) && !empty(trim($meta->videolicense))) {
+        $license = $DB->get_record('license', array('id' => $meta->videolicense), '*', IGNORE_MISSING);
+        // Only set video if video license is known.
+        if (isset($license) && !empty($license) && $license->shortname != 'unknown') {
             $metaentry['attributes']['video'] = array();
             $metaentry['attributes']['video']['url'] = trim($meta->videocode);
 
@@ -169,6 +177,7 @@ foreach ($metarecords as $meta) {
         }
     }
 
+    // Set course license.
     $license = $DB->get_record('license', array('id' => $meta->license), '*', IGNORE_MISSING);
     if (isset($license) && !empty($license) && $license->shortname != 'unknown') {
         $spdxlicense = $DB->get_record('ildmeta_spdx_licenses', array('moodle_license' => $license->id), '*', MUST_EXIST);
@@ -183,16 +192,18 @@ foreach ($metarecords as $meta) {
         $metaentry['attributes']['courseLicenses'][0]['url'] = null;
     }
 
+    // Set course provider.
     $provider = $providers[$meta->provider];
-
     $metaentry['attributes']['moocProvider']['name'] = $provider['name'];
     $urlwithprotocol = $provider['url'];
+    // Make sure the provider url includes a protocol, add https if missing.
     if (strpos($provider['url'], 'http') === false) {
         $urlwithprotocol = 'https://' . $provider['url'];
     }
     $metaentry['attributes']['moocProvider']['url'] = $urlwithprotocol;
     $metaentry['attributes']['moocProvider']['logo'] = $provider['logo'];
 
+    // Set access to "free". Currently there is no option to track paid courses.
     $metaentry['attributes']['access'] = ['free'];
 
     $metas['data'][] = $metaentry;

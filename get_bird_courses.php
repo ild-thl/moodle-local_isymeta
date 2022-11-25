@@ -30,13 +30,11 @@ use local_ildmeta\manager;
 $download = optional_param('download', false, PARAM_BOOL);
 
 $metas = [];
-$metaentry = [];
 $metarecords = $DB->get_records('ildmeta');
 
+// Create Links for pagination as proposed by the JSON:API schema.
 $jsonlink = $CFG->httpswwwroot . '/local/ildmeta/get_bird_courses.php';
-
 $metaslinks = ['self' => $jsonlink, 'first' => $jsonlink, 'last' => $jsonlink];
-
 $metas['links'] = $metaslinks;
 
 // Get vocabularies from ildmeta_vocabulary for dropdown selection fields.
@@ -49,19 +47,57 @@ foreach ($records as $vocabulary) {
 // Get list of providers.
 $providers = manager::get_providers('de');
 
+// Create a json entry for every course, that is supposed to be shared.
 foreach ($metarecords as $meta) {
     // Skip courses that are not supposed to be exported to bird or a course record does not exist.
     if ($meta->exporttobird == false || !$DB->record_exists('course', array('id' => $meta->courseid))) {
         continue;
     }
 
+    $metaentry = [];
+    $metaentry['type'] = 'courses';
+    // ID has to be an integer, for compatibility with the BirdCourse-Format
+    $metaentry['id'] = $meta->courseid;
+    $metaentry['attributes'] = [];
+    $metaentry['attributes']['name'] = $meta->coursetitle;
+    // If a shortname was set, use it for the default moochub attribute courseCode.
+    if (isset($meta->shortname) && !empty($meta->shortname)) {
+        $metaentry['attributes']['courseCode'] = $meta->shortname;
+    } else {
+        $metaentry['attributes']['courseCode'] = null;
+    }
+
+    $metaentry['attributes']['courseMode'] = 'MOOC';
+    $metaentry['attributes']['url'] = $CFG->wwwroot . '/blocks/ildmetaselect/detailpage.php?id=' . $meta->courseid;
+    if (isset($meta->teasertext) && !empty($meta->teasertext)) {
+        $metaentry['attributes']['description'] = $meta->teasertext;
+    } else {
+        $metaentry['attributes']['description'] = null;
+    }
+    if (isset($meta->abstract) && !empty($meta->abstract)) {
+        $metaentry['attributes']['abstract'] = $meta->abstract;
+    } else {
+        $metaentry['attributes']['abstract'] = null;
+    }
+
+    // Set teaching language.
+    // TODO: Enable selection of multiple teaching languages.
+    // TODO: Add more languages and manage them like the other vocabularies.
+    $langlist = [
+        'de-DE',
+        'en-US'
+    ];
+    $metaentry['attributes']['languages'] = [$langlist[$meta->courselanguage]];
+
+    $metaentry['attributes']['startDate'] = date('c', $meta->starttime);
+    $metaentry['attributes']['endDate'] = null;
+
+    // Get overview image from filestorage.
+    // If no custom image ist set in ildmeta, then use the course image instead.
     $fs = get_file_storage();
     $context = context_course::instance($meta->courseid);
     $fileurl = '';
     $imagefile = null;
-
-    // Get url of overview image.
-    // If no custom image ist set in ildmeta, then use the course image instead.
     if (isset($meta->overviewimage)) {
         $files = $fs->get_area_files($context->id, 'local_ildmeta', 'overviewimage', 0);
     } else {
@@ -83,42 +119,8 @@ foreach ($metarecords as $meta) {
         }
     }
 
-    $metaentry = [];
-    $metaentry['type'] = 'courses';
-    // ID has to be an integer, for compatibility with the BirdCourse-Format
-    $metaentry['id'] = $meta->courseid;
-    $metaentry['attributes'] = [];
-    $metaentry['attributes']['name'] = $meta->coursetitle;
-
-    // Shortname is no moochub attribute. Added for compatibility to BirdCourse.
-    if (isset($meta->shortname) && !empty($meta->shortname)) {
-        $metaentry['attributes']['shortname'] = $meta->shortname;
-    } else {
-        $metaentry['attributes']['shortname'] = null;
-    }
-
-    $metaentry['attributes']['courseCode'] = 'futurelearnlab' . $meta->courseid;
-    // $metaentry['attributes']['courseMode'] = ['MOOC'];
-    $metaentry['attributes']['courseMode'] = 'MOOC';
-
-    $metaentry['attributes']['url'] = $CFG->wwwroot . '/blocks/ildmetaselect/detailpage.php?id=' . $meta->courseid;
-    if (isset($meta->teasertext) && !empty($meta->teasertext)) {
-        $metaentry['attributes']['description'] = $meta->teasertext;
-    } else {
-        $metaentry['attributes']['description'] = null;
-    }
-    if (isset($meta->abstract) && !empty($meta->abstract)) {
-        $metaentry['attributes']['abstract'] = $meta->abstract;
-    } else {
-        $metaentry['attributes']['abstract'] = null;
-    }
-
-    $metaentry['attributes']['languages'] = ['de-DE'];
-    date_default_timezone_set("UTC");
-    $metaentry['attributes']['startDate'] = date('c', $meta->starttime);
-    $metaentry['attributes']['endDate'] = null;
-
-    if (trim((string)$fileurl) == '') {
+    // Set image metadata.
+    if (!isset($fileurl) || empty((string)$fileurl)) {
         $metaentry['attributes']['image'] = null;
     } else {
         $metaentry['attributes']['image'] = array();
@@ -139,7 +141,10 @@ foreach ($metarecords as $meta) {
         }
     }
 
+    // TODO: Add option to describe learning objectives for a course.
+    // $metaentry['attributes']['learningObjectives'] = [];
 
+    // Set duration by converting amount of hours to ISO 8601 duration.
     $duration = null;
     if (isset($meta->processingtime) && !empty($meta->processingtime)) {
         $duration = 'PT' . $meta->processingtime . 'H';
@@ -161,22 +166,22 @@ foreach ($metarecords as $meta) {
         $metaentry['attributes']['availableFrom'] = null;
     }
 
+    // Set instructors.
     $lecturer = explode(', ', $meta->lecturer);
-
     $metaentry['attributes']['instructors'] = array();
     for ($i = 0; $i < count($lecturer); $i++) {
-
         if ($lecturer[$i] != '') {
             $metaentry['attributes']['instructors'][$i] = new \stdClass;
             $metaentry['attributes']['instructors'][$i]->name = $lecturer[$i];
         }
     }
 
+    // Set video.
     $metaentry['attributes']['video'] = null;
     if (isset($meta->videocode) && !empty(trim($meta->videolicense))) {
         $license = $DB->get_record('license', array('id' => $meta->videolicense), '*', IGNORE_MISSING);
-        if (isset($license) && !empty($license) && $license->shortname != 'unknown') {
-            // Only set video if video license is known.
+        // Only set video if video license is known.
+        if (isset($license) && !empty($license) && $license->shortname != 'unknown') {   
             $metaentry['attributes']['video'] = array();
             $metaentry['attributes']['video']['url'] = trim($meta->videocode);
 
@@ -189,6 +194,7 @@ foreach ($metarecords as $meta) {
         }
     }
 
+    // Set course license.
     $license = $DB->get_record('license', array('id' => $meta->license), '*', IGNORE_MISSING);
     if (isset($license) && !empty($license) && $license->shortname != 'unknown') {
         $spdxlicense = $DB->get_record('ildmeta_spdx_licenses', array('moodle_license' => $license->id), '*', MUST_EXIST);
@@ -203,43 +209,45 @@ foreach ($metarecords as $meta) {
         $metaentry['attributes']['courseLicenses'][0]['url'] = null;
     }
 
+    // Set course provider.
     $provider = $providers[$meta->provider];
-
     $metaentry['attributes']['moocProvider']['name'] = $provider['name'];
     $urlwithprotocol = $provider['url'];
+    // Make sure the provider url includes a protocol, add https if missing.
     if (strpos($provider['url'], 'http') === false) {
         $urlwithprotocol = 'https://' . $provider['url'];
     }
     $metaentry['attributes']['moocProvider']['url'] = $urlwithprotocol;
     $metaentry['attributes']['moocProvider']['logo'] = $provider['logo'];
 
+    // Set access to "free". Currently there is no option to track paid courses.
     $metaentry['attributes']['access'] = ['free'];
 
-    // Bird attributes.
+    // Bird attributes that are not part of the moochub schema.
 
     // Selbstlerkurs.
-    // $metaentry['attributes']['courseMode'][] = $meta->selfpaced ? 'Asynchronous' : 'Synchronous';
-    // $metaentry['attributes']['courseMode'][] = $meta->selfpaced ? 'Selbstlernkurs' : 'Betreuter Kurs';
     $metaentry['attributes']['selfpaced'] = $meta->selfpaced ? 'Selbstlernkurs' : 'Betreuter Kurs';
 
     // Kursformat.
-    // $metaentry['attributes']['courseMode'][] = $vocabularies->courseformats[$meta->courseformat];
     $metaentry['attributes']['lectureType'] = $vocabularies->courseformats[$meta->courseformat];
-    
-
 
     // Audience.
     $metaentry['attributes']['audience'] = [$vocabularies->audience[$meta->audience]];
 
-    // Kurstyp.
+    // Educational alignment.
+    // Bird Kurstyp.
+    // TODO: Enable setting multiple course types per course.
     $metaentry['attributes']['educationalAlignment'][0] = [
         'educationalFramework' => 'Bird Kurstyp',
         'targetName' => $vocabularies->coursetypes[$meta->coursetype],
     ];
+    // HRK Fachrichtung.
     $metaentry['attributes']['educationalAlignment'][1] = [
         'educationalFramework' => 'HRK Fachrichtung',
         'targetName' => $vocabularies->birdsubjectarea[$meta->birdsubjectarea],
     ];
+    // Educational level.
+    // Language level goal.
     if (isset($meta->languagelevels)) {
         $metaentry['attributes']['educationalLevel'][0] = [
             'name' => $vocabularies->languagelevels[$meta->languagelevels],
@@ -247,6 +255,7 @@ foreach ($metarecords as $meta) {
     } else {
         $metaentry['attributes']['educationalLevel'] = []; 
     }
+    // Type of laguage course.
     if (isset($meta->languagesubject)) {
         $metaentry['attributes']['course_languagecourse_subject'] = $vocabularies->languagesubject[$meta->languagesubject]; 
     } else {
