@@ -116,9 +116,10 @@ foreach ($metarecords as $meta) {
             $license = $DB->get_record('license', array('shortname' => $imagefile->get_license()), '*', MUST_EXIST);
             if (isset($license) && !empty($license) && $license->shortname != 'unknown') {
                 $spdxlicense = $DB->get_record('ildmeta_spdx_licenses', array('moodle_license' => $license->id), '*', MUST_EXIST);
+                $spdxurl = !empty($spdxlicense->spdx_url) ? $spdxlicense->spdx_url : null;
                 $metaentry['attributes']['image']['licenses'] = array();
                 $metaentry['attributes']['image']['licenses'][0]['id'] = $spdxlicense->spdx_shortname;
-                $metaentry['attributes']['image']['licenses'][0]['url'] = $spdxlicense->spdx_url;
+                $metaentry['attributes']['image']['licenses'][0]['url'] = $spdxurl;
                 $metaentry['attributes']['image']['licenses'][0]['name'] = $spdxlicense->spdx_fullname;
                 $metaentry['attributes']['image']['licenses'][0]['author'] = $imagefile->get_author();
             }
@@ -160,9 +161,10 @@ foreach ($metarecords as $meta) {
             $metaentry['attributes']['video']['url'] = trim($meta->videocode);
 
             $spdxlicense = $DB->get_record('ildmeta_spdx_licenses', array('moodle_license' => $license->id), '*', MUST_EXIST);
+            $spdxurl = !empty($spdxlicense->spdx_url) ? $spdxlicense->spdx_url : null;
             $metaentry['attributes']['video']['licenses'] = array();
             $metaentry['attributes']['video']['licenses'][0]['id'] = $spdxlicense->spdx_shortname;
-            $metaentry['attributes']['video']['licenses'][0]['url'] = $spdxlicense->spdx_url;
+            $metaentry['attributes']['video']['licenses'][0]['url'] = $spdxurl;
             $metaentry['attributes']['video']['licenses'][0]['name'] = $spdxlicense->spdx_fullname;
         }
     }
@@ -170,9 +172,10 @@ foreach ($metarecords as $meta) {
     $license = $DB->get_record('license', array('id' => $meta->license), '*', IGNORE_MISSING);
     if (isset($license) && !empty($license) && $license->shortname != 'unknown') {
         $spdxlicense = $DB->get_record('ildmeta_spdx_licenses', array('moodle_license' => $license->id), '*', MUST_EXIST);
+        $spdxurl = !empty($spdxlicense->spdx_url) ? $spdxlicense->spdx_url : null;
         $metaentry['attributes']['courseLicenses'] = array();
         $metaentry['attributes']['courseLicenses'][0]['id'] = $spdxlicense->spdx_shortname;
-        $metaentry['attributes']['courseLicenses'][0]['url'] = $spdxlicense->spdx_url;
+        $metaentry['attributes']['courseLicenses'][0]['url'] = $spdxurl;
         $metaentry['attributes']['courseLicenses'][0]['name'] = $spdxlicense->spdx_fullname;
     } else {
         $metaentry['attributes']['courseLicenses'] = [];
