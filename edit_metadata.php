@@ -389,10 +389,12 @@ if ($mform->is_cancelled()) {
 
         $toform->coursetitle = $course->fullname;
         if (isset($course->summary)) {
-          // CHANGED tinjohn 20221208 given array is not valid and not necessary.
+          // CHANGED tinjohn 20221208 given array is not valid.
           // Modified to single string.
           // Error php 8.0 and Moodle 4.0.4 -> mysqli::real_escape_string(): Argument #1 ($string) must be of type string, array given.
             $toform->teasertext = $course->summary;
+        } else {
+            $toform->teasertext = '';
         }
         if (isset($course->startdate)) {
             $toform->starttime = $course->startdate;
@@ -443,6 +445,8 @@ if ($mform->is_cancelled()) {
 
 
         $toform->id = $DB->insert_record($tbl, $toform);
+        // ADDED tinjohn 20221208 the array for the form.
+        $toform->teasertext['text'] = $toform->teasertext;
     }
 
 
