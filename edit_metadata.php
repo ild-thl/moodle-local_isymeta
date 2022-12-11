@@ -443,10 +443,13 @@ if ($mform->is_cancelled()) {
         $toform->availablefrom = null;
         $toform->availableuntil = null;
 
-
+	// ADDED tinjohn: should not be written here.
+	// New database entries were written whenever user choose the ILD Meta from menu - not a good happit because it is not deleted when user cancels dialog or just leaves.    
         $toform->id = $DB->insert_record($tbl, $toform);
         // ADDED tinjohn 20221208 the array for the form.
-        $toform->teasertext['text'] = $toform->teasertext;
+        $fromdbtoformteasertext = $toform->teasertext;
+        $toform->teasertext = array();
+        $toform->teasertext['text'] = $fromdbtoformteasertext;
     }
 
 
