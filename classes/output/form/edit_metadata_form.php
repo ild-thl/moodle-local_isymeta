@@ -60,7 +60,9 @@ class edit_metadata_form extends \moodleform {
 
         $langlist = [
             'Deutsch',
-            'Englisch'
+            'Englisch',
+            'Ukrainisch',
+            'Russisch'
         ];
 
         $mform->addElement('html', '<h2>Meta: Übersichtsseite</h2>');

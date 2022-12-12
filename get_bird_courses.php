@@ -84,8 +84,10 @@ foreach ($metarecords as $meta) {
     // TODO: Enable selection of multiple teaching languages.
     // TODO: Add more languages and manage them like the other vocabularies.
     $langlist = [
-        'de-DE',
-        'en-US'
+        'de',
+        'en',
+        'uk',
+        'ru'
     ];
     $metaentry['attributes']['languages'] = [$langlist[$meta->courselanguage]];
 
