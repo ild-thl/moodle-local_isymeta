@@ -389,7 +389,12 @@ if ($mform->is_cancelled()) {
 
         $toform->coursetitle = $course->fullname;
         if (isset($course->summary)) {
-            $toform->teasertext['text'] = $course->summary;
+          // CHANGED tinjohn 20221208 given array is not valid.
+          // Modified to single string.
+          // Error php 8.0 and Moodle 4.0.4 -> mysqli::real_escape_string(): Argument #1 ($string) must be of type string, array given.
+            $toform->teasertext = $course->summary;
+        } else {
+            $toform->teasertext = '';
         }
         if (isset($course->startdate)) {
             $toform->starttime = $course->startdate;
@@ -438,8 +443,13 @@ if ($mform->is_cancelled()) {
         $toform->availablefrom = null;
         $toform->availableuntil = null;
 
-
+	// ADDED tinjohn: should not be written here.
+	// New database entries were written whenever user choose the ILD Meta from menu - not a good happit because it is not deleted when user cancels dialog or just leaves.    
         $toform->id = $DB->insert_record($tbl, $toform);
+        // ADDED tinjohn 20221208 the array for the form.
+        $fromdbtoformteasertext = $toform->teasertext;
+        $toform->teasertext = array();
+        $toform->teasertext['text'] = $fromdbtoformteasertext;
     }
 
 
