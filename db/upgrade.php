@@ -371,5 +371,18 @@ function xmldb_local_ildmeta_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2022111916, 'local', 'ildmeta');
     }
 
+    if ($oldversion < 2022121216) {
+        $ildmetatable = new xmldb_table('ildmeta');
+
+        // Update coursetitle precision to be compatible with course fullname.
+        $coursetitle = new xmldb_field('coursetitle', XMLDB_TYPE_CHAR, '254', null, XMLDB_NOTNULL, null, null, 'starttime');
+        if ($dbman->field_exists($ildmetatable, $coursetitle)) {
+            $dbman->change_field_precision($ildmetatable,  $coursetitle);
+        }
+
+        // Ildmeta savepoint reached.
+        upgrade_plugin_savepoint(true, 2022121216, 'local', 'ildmeta');
+    }
+
     return true;
 }

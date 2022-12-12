@@ -26,6 +26,6 @@ defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_ildmeta';
 $plugin->release = '0.1.0';
-$plugin->version = 2022111916;
+$plugin->version = 2022121216;
 $plugin->requires = 2010112400;
 $plugin->maturity = MATURITY_ALPHA;

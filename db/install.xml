@@ -11,7 +11,7 @@
         <FIELD NAME="overviewimage" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
         <FIELD NAME="detailimage" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
         <FIELD NAME="starttime" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
-        <FIELD NAME="coursetitle" TYPE="char" LENGTH="120" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="coursetitle" TYPE="char" LENGTH="254" NOTNULL="true" SEQUENCE="false" />
         <FIELD NAME="provider" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
         <FIELD NAME="subjectarea" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
         <FIELD NAME="lecturer" TYPE="char" LENGTH="120" NOTNULL="true" SEQUENCE="false" />
