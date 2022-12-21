@@ -75,7 +75,7 @@ $editoropts = array(
 if (isset($record->detailslecturer)) {
     $maxlecturer = $record->detailslecturer;
 } else {
-    $maxlecturer = 2;
+    $maxlecturer = 1;
 }
 
 $recordslect = $DB->get_records($tbllecturer, array('courseid' => $id));
@@ -89,56 +89,6 @@ if ($mform->is_cancelled()) {
     $redirectto = new moodle_url('/');
     redirect($redirectto);
 } else if ($fromform = $mform->get_data()) {
-    // First of all, check for additional lecturer fields.
-    if ($fromform->additional_lecturer > 0) {
-        $addlect = new stdClass();
-        $addlect->id = $record->id;
-        $addlect->detailslecturer = $fromform->additional_lecturer + $record->detailslecturer;
-        $DB->update_record($tbl, $addlect);
-
-
-        // Add empty fields in ildmeta_additional.
-        // New logic required due to delete options...
-
-        // Get last lecturer id.
-
-        $recordlectlast = $DB->get_record_sql(
-            "SELECT * FROM {ildmeta_additional} WHERE courseid = ? ORDER BY id DESC",
-            array('courseid' => $id)
-        );
-
-        if (!empty($recordlectlast)) {
-            $i = explode("_", $recordlectlast->name)[2] + 1;
-        } else {
-            $i = 1;
-        }
-
-        $maxi = ($i - 1) + $fromform->additional_lecturer;
-
-        while ($i <= $maxi) {
-            $str1 = "lecturer_type_" . $i;
-            $str2 = "detailslecturer_image_" . $i;
-            $str3 = "detailslecturer_editor_" . $i;
-
-            $fields = array($str1, $str2, $str3);
-
-            foreach ($fields as $f) {
-                $ins = new stdClass();
-                $ins->courseid = $id;
-                $ins->name = $f;
-                $ins->value = '';
-                $DB->insert_record($tbllecturer, $ins);
-            }
-            $i++;
-        }
-        // If additional lecturer the user will be redirected to the edit_metadata.php for further editing.
-        $url = new moodle_url('/local/ildmeta/edit_metadata.php', array('id' => $id));
-    } else {
-        // Otherweise he will be forwarded to the detailpage.php.
-        $url = new moodle_url('/blocks/ildmetaselect/detailpage.php', array('id' => $id));
-    }
-
-
     $todb = new stdClass;
     $todb->courseid = $id;
     $todb->coursetitle = $fromform->coursetitle;
@@ -238,7 +188,7 @@ if ($mform->is_cancelled()) {
             // Use the default value "no indexination".
             $todb->noindexcourse = 1;
         }
-        $DB->insert_record($tbl, $todb);
+        $todb->id = $DB->insert_record($tbl, $todb);
 
         // If course is in db, update.
     } else {
@@ -253,10 +203,57 @@ if ($mform->is_cancelled()) {
         $DB->update_record($tbl, $todb);
     }
 
+     // First of all, check for additional lecturer fields.
+    if ($fromform->additional_lecturer > 0) {
+        $addlect = new stdClass();
+        $addlect->id = $todb->id;
+        $addlect->detailslecturer = $fromform->additional_lecturer + $maxlecturer;
+        $DB->update_record($tbl, $addlect);
+
+
+        // Add empty fields in ildmeta_additional.
+        // New logic required due to delete options...
+
+        // Get last lecturer id.
+
+        $recordlectlast = $DB->get_record_sql(
+            "SELECT * FROM {ildmeta_additional} WHERE courseid = ? ORDER BY id DESC",
+            array('courseid' => $id)
+        );
+
+        if (!empty($recordlectlast)) {
+            $i = explode("_", $recordlectlast->name)[2] + 1;
+        } else {
+            $i = 1;
+        }
+
+        $maxi = ($i - 1) + $fromform->additional_lecturer;
+
+        while ($i <= $maxi) {
+            $str1 = "lecturer_type_" . $i;
+            $str2 = "detailslecturer_image_" . $i;
+            $str3 = "detailslecturer_editor_" . $i;
+
+            $fields = array($str1, $str2, $str3);
+
+            foreach ($fields as $f) {
+                $ins = new stdClass();
+                $ins->courseid = $id;
+                $ins->name = $f;
+                $ins->value = '';
+                $DB->insert_record($tbllecturer, $ins);
+            }
+            $i++;
+        }
+        // If additional lecturer the user will be redirected to the edit_metadata.php for further editing.
+        $url = new moodle_url('/local/ildmeta/edit_metadata.php', array('id' => $id));
+    } else {
+        // Otherweise he will be forwarded to the detailpage.php.
+        $url = new moodle_url('/blocks/ildmetaselect/detailpage.php', array('id' => $id));
+    }
+
     // Get lecturer editor + filemanager.
-
     $lecturer = new stdClass();
-
     foreach ($fromform as $key => $value) {
         if (strpos($key, '_type')) {
             $lecturer->$key = $fromform->$key;
@@ -420,10 +417,10 @@ if ($mform->is_cancelled()) {
         $toform->targetgroup = null;
         $toform->learninggoals = null;
         $toform->structure = null;
-        $toform->detailslecturer = 2;
+        $toform->detailslecturer = 1;
         $toform->detailsmorelecturer = null;
         $toform->detailslecturerimage = '';
-        $toform->additional_lecturer = 2;
+        $toform->additional_lecturer = 1;
         $toform->certificateofachievement = null;
         $toform->license = 0;
         $toform->videocode = null;
@@ -443,9 +440,6 @@ if ($mform->is_cancelled()) {
         $toform->availablefrom = null;
         $toform->availableuntil = null;
 
-	// ADDED tinjohn: should not be written here.
-	// New database entries were written whenever user choose the ILD Meta from menu - not a good happit because it is not deleted when user cancels dialog or just leaves.    
-        $toform->id = $DB->insert_record($tbl, $toform);
         // ADDED tinjohn 20221208 the array for the form.
         $fromdbtoformteasertext = $toform->teasertext;
         $toform->teasertext = array();
