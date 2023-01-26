@@ -75,12 +75,19 @@ $editoropts = array(
 if (isset($record->detailslecturer)) {
     $maxlecturer = $record->detailslecturer;
 } else {
-    $maxlecturer = 1;
+    // CHANGED tinjohn 20221213 - for whatever reason maxlecturer was set to 2
+    // Maybe User do not want an extra lecturer - but form required information before saving.
+    $maxlecturer = 0;
 }
 
 $recordslect = $DB->get_records($tbllecturer, array('courseid' => $id));
 
-$customdata = array('filemanageropts' => $filemanageropts, 'editoropts' => $editoropts, 'max_lecturer' => $maxlecturer, 'courseid' => $id, 'lecturer' => $recordslect);
+$customdata = array(
+    'filemanageropts' => $filemanageropts,
+    'editoropts' => $editoropts,
+    'max_lecturer' => $maxlecturer,
+    'courseid' => $id,
+    'lecturer' => $recordslect);
 
 $mform = new edit_metadata_form($url . '?courseid=' . $id, $customdata);
 
@@ -131,8 +138,7 @@ if ($mform->is_cancelled()) {
 
     $todb->tags = $fromform->tags;
 
-
-    // Bird/DC properties.
+    // Bird/DC properties - overwrite from form.
     $todb->exporttobird = $fromform->exporttobird;
     if (isset($fromform->birdsubjectarea)) {
         $todb->birdsubjectarea = $fromform->birdsubjectarea;
@@ -188,7 +194,10 @@ if ($mform->is_cancelled()) {
             // Use the default value "no indexination".
             $todb->noindexcourse = 1;
         }
-        $todb->id = $DB->insert_record($tbl, $todb);
+        $DB->insert_record($tbl, $todb);
+
+        // ADDED tinjohn 20221213. After adding new record, get it and use it like it was there.
+        $todb = $DB->get_record($tbl, ['courseid' => $id]);
 
         // If course is in db, update.
     } else {
@@ -203,7 +212,7 @@ if ($mform->is_cancelled()) {
         $DB->update_record($tbl, $todb);
     }
 
-     // First of all, check for additional lecturer fields.
+    // Finally, check for additional lecturer fields.
     if ($fromform->additional_lecturer > 0) {
         $addlect = new stdClass();
         $addlect->id = $todb->id;
@@ -217,7 +226,7 @@ if ($mform->is_cancelled()) {
         // Get last lecturer id.
 
         $recordlectlast = $DB->get_record_sql(
-            "SELECT * FROM {ildmeta_additional} WHERE courseid = ? ORDER BY id DESC",
+            "SELECT * FROM {ildmeta_additional} WHERE courseid = ? ORDER BY id DESC LIMIT 1",
             array('courseid' => $id)
         );
 
@@ -251,6 +260,7 @@ if ($mform->is_cancelled()) {
         // Otherweise he will be forwarded to the detailpage.php.
         $url = new moodle_url('/blocks/ildmetaselect/detailpage.php', array('id' => $id));
     }
+    // Check for additional lecturer fields end.
 
     // Get lecturer editor + filemanager.
     $lecturer = new stdClass();
@@ -271,7 +281,6 @@ if ($mform->is_cancelled()) {
     }
 
     foreach ($lecturer as $key => $value) {
-
         $lectodb = new stdClass();
         $lectodb->courseid = $id;
         $lectodb->name = $key;
@@ -281,11 +290,8 @@ if ($mform->is_cancelled()) {
         if (!$DB->get_record($tbllecturer, array('name' => $lectodb->name, 'courseid' => $id))) {
             $DB->insert_record($tbllecturer, $lectodb);
         } else {
-
             $primkey = $DB->get_record($tbllecturer, array('courseid' => $id, 'name' => $lectodb->name));
-
             $lectodb->id = $primkey->id;
-
             $DB->update_record($tbllecturer, $lectodb);
         }
     }
@@ -293,12 +299,14 @@ if ($mform->is_cancelled()) {
     // Redirect to detailpage.
     redirect($url, 'Daten erfolgreich gespeichert', null, \core\output\notification::NOTIFY_SUCCESS);
 } else {
+    // ADDED COMMENT tinjohn 20221214 - ELSE (there was no data to store) just put the data to form.
+    // Try read the date from the ildmetatable.
     // Prefill forms from db.
     $getdb = $DB->get_record($tbl, array('courseid' => $id));
 
     $getlect = $DB->get_records($tbllecturer, array('courseid' => $id));
 
-
+    // ADDED tinjohn 20221214 read data if there is already a record in ildmeta table.
     if ($getdb != null) {
         $toform = new stdClass;
         $toform->coursetitle = $getdb->coursetitle;
@@ -373,6 +381,7 @@ if ($mform->is_cancelled()) {
             $toform->$lectname = $draftitemid;
         }
     } else {
+        // ADDED tinjohn 20221214 else initialise data with data from course table.
 
         $toform = new stdClass();
         $course = $DB->get_record('course', array('id' => $id), 'fullname, shortname, summary, startdate', MUST_EXIST);
@@ -386,12 +395,10 @@ if ($mform->is_cancelled()) {
 
         $toform->coursetitle = $course->fullname;
         if (isset($course->summary)) {
-          // CHANGED tinjohn 20221208 given array is not valid.
-          // Modified to single string.
-          // Error php 8.0 and Moodle 4.0.4 -> mysqli::real_escape_string(): Argument #1 ($string) must be of type string, array given.
-            $toform->teasertext = $course->summary;
+            // CHANGED tinjohn 20221211. Array again because there will be no DB query.
+            $toform->teasertext['text'] = $course->summary;
         } else {
-            $toform->teasertext = '';
+            $toform->teasertext['text'] = '';
         }
         if (isset($course->startdate)) {
             $toform->starttime = $course->startdate;
@@ -417,10 +424,10 @@ if ($mform->is_cancelled()) {
         $toform->targetgroup = null;
         $toform->learninggoals = null;
         $toform->structure = null;
-        $toform->detailslecturer = 1;
+        $toform->detailslecturer = 0;
         $toform->detailsmorelecturer = null;
         $toform->detailslecturerimage = '';
-        $toform->additional_lecturer = 1;
+        $toform->additional_lecturer = 0;
         $toform->certificateofachievement = null;
         $toform->license = 0;
         $toform->videocode = null;
@@ -439,11 +446,6 @@ if ($mform->is_cancelled()) {
         $toform->courseprerequisites = null;
         $toform->availablefrom = null;
         $toform->availableuntil = null;
-
-        // ADDED tinjohn 20221208 the array for the form.
-        $fromdbtoformteasertext = $toform->teasertext;
-        $toform->teasertext = array();
-        $toform->teasertext['text'] = $fromdbtoformteasertext;
     }
 
 

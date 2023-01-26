@@ -287,7 +287,7 @@ class edit_metadata_form extends \moodleform {
             '',
             'Bitte die Anzahl der zusätzlich benötigten Felder zum Anlegen weiterer Autor*innen und Anbieter*innen angeben.'
         );
-        $this->add_action_buttons($cancel = false, $submitlabel = 'Felder hinzufügen');
+        $this->add_action_buttons($cancel = false, $submitlabel = 'Felder hinzufügen - bitte vorher speichern');
 
         $mform->addElement('html', '<h2>Weitere Informationen</h2>');
 
@@ -323,15 +323,16 @@ class edit_metadata_form extends \moodleform {
         // Disabled if exporttobird is not set to 1 -> Yes.
         $mform->disabledIf('abstract', 'exporttobird', 'eq', '0');
 
+        // Kursformat.
+        $mform->addElement('select', 'courseformat', get_string('courseformat', 'local_ildmeta'), $vocabularies->courseformats);
+        // Disabled if exporttobird is not set to 1 -> Yes.
+        $mform->disabledIf('courseformat', 'exporttobird', 'eq', '0');
+
         // Kurstyp.
         $mform->addElement('select', 'coursetype', get_string('coursetype', 'local_ildmeta'), $vocabularies->coursetypes);
         // Disabled if exporttobird is not set to 1 -> Yes.
         $mform->disabledIf('coursetype', 'exporttobird', 'eq', '0');
 
-        // Kursformat.
-        $mform->addElement('select', 'courseformat', get_string('courseformat', 'local_ildmeta'), $vocabularies->courseformats);
-        // Disabled if exporttobird is not set to 1 -> Yes.
-        $mform->disabledIf('courseformat', 'exporttobird', 'eq', '0');
         // Language course type.
         $mform->addElement('select', 'languagesubject', get_string('languagesubject', 'local_ildmeta'), $vocabularies->languagesubject);
         // Disabled if exporttobird is not set to 1 -> Yes.
@@ -372,6 +373,7 @@ class edit_metadata_form extends \moodleform {
         );
         $mform->addElement('select', 'expires', get_string('expires', 'local_ildmeta'), $expireoptions);
         $mform->addHelpButton('expires', 'expires', 'local_ildmeta');
+        $mform->disabledIf('expires', 'exporttobird', 'eq', '0');
 
         // Available until. Required in BirdCourse.
         $mform->addElement('date_selector', 'availableuntil', get_string('availableuntil', 'local_ildmeta'));
