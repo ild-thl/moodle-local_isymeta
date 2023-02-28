@@ -186,7 +186,7 @@ class edit_metadata_form extends \moodleform {
          * Each record will be selected by "courseid" and "name"
         */
 
-        $mform->addElement('html', '<h2>Angaben zu Autoren*innen und Anbieter*innen</h2>');
+        $mform->addElement('html', '<h2>Angaben zu Autor*innen und Anbieter*innen</h2>');
         $i = 1;
 
         // Above $i will be used here!
