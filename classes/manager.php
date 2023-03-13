@@ -105,6 +105,7 @@ class manager {
             }
 
             $result[$provider->id] = [
+                "id" => $provider->id,
                 "name" => current_language() == 'de' ? $provider->name_de : $provider->name_en,
                 "url" => $provider->url,
                 "logo" => (new \moodle_url($logourl))->out(),
