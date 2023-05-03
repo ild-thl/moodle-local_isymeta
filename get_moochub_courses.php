@@ -57,12 +57,14 @@ foreach ($metarecords as $meta) {
     $metaentry = [];
     $metaentry['type'] = 'courses';
     // Create an ID by adding the moodle course id to the host name of the current moodle site.
-    $metaentry['id'] =  parse_url($CFG->wwwroot, PHP_URL_HOST) . $meta->courseid;
+    $metaentry['id'] = parse_url($CFG->wwwroot, PHP_URL_HOST) . $meta->courseid;
     $metaentry['attributes'] = [];
     $metaentry['attributes']['name'] = $meta->coursetitle;
     $metaentry['attributes']['courseCode'] = null;
     $metaentry['attributes']['courseMode'] = 'MOOC';
-    $metaentry['attributes']['url'] = $CFG->wwwroot . '/blocks/ildmetaselect/detailpage.php?id=' . $meta->courseid;
+
+    $metaentry['attributes']['url'] = manager::get_external_course_link($meta->courseid);
+
     if (isset($meta->teasertext) && !empty($meta->teasertext)) {
         $metaentry['attributes']['description'] = $meta->teasertext;
     } else {

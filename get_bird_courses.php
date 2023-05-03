@@ -89,7 +89,9 @@ foreach ($metarecords as $meta) {
     // TODO: course_charge_fee.
     // TODO: course_charge_currency.
     // TODO: course_certificate_type.
-    $metaentry['course_url_landingpage']['de'] = $CFG->wwwroot . '/blocks/ildmetaselect/detailpage.php?id=' . $meta->courseid;
+
+    $metaentry['course_url_landingpage']['de'] = manager::get_external_course_link($meta->courseid);
+
     // TODO: course_publication_until.
     $metaentry['course_description_long']['de'] = "";
     if (isset($meta->teasertext) && !empty($meta->teasertext)) {

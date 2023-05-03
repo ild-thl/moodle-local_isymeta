@@ -26,6 +26,7 @@ require_once(__DIR__ . '/../../config.php');
 require_once('lib.php');
 
 use local_ildmeta\output\form\edit_metadata_form;
+use local_ildmeta\manager;
 
 $id = required_param('id', PARAM_INT);
 $coursecontext = context_course::instance($id);
@@ -257,8 +258,8 @@ if ($mform->is_cancelled()) {
         // If additional lecturer the user will be redirected to the edit_metadata.php for further editing.
         $url = new moodle_url('/local/ildmeta/edit_metadata.php', array('id' => $id));
     } else {
-        // Otherweise he will be forwarded to the detailpage.php.
-        $url = new moodle_url('/blocks/ildmetaselect/detailpage.php', array('id' => $id));
+        // Otherweise he will be forwarded to the course page.
+        $url = new moodle_url(manager::get_external_course_link($id));
     }
     // Check for additional lecturer fields end.
 
@@ -296,7 +297,7 @@ if ($mform->is_cancelled()) {
         }
     }
 
-    // Redirect to detailpage.
+    // Redirect to course page.
     redirect($url, 'Daten erfolgreich gespeichert', null, \core\output\notification::NOTIFY_SUCCESS);
 } else {
     // ADDED COMMENT tinjohn 20221214 - ELSE (there was no data to store) just put the data to form.

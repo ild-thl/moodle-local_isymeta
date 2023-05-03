@@ -278,4 +278,16 @@ class manager {
         ];
         $DB->insert_record('ildmeta_vocabulary', $languagelevels);
     }
+
+    private static function detailpage_is_enabled() {
+        return get_config('block_ildmetaselect', 'add_detail_page');
+    }
+
+    public static function get_external_course_link($courseid) {
+        global $CFG;
+        if (self::detailpage_is_enabled()) {
+            return $CFG->wwwroot . '/blocks/ildmetaselect/detailpage.php?id=' . $courseid;
+        }
+        return $CFG->wwwroot . '/course/view.php?id=' . $courseid;
+    }
 }
