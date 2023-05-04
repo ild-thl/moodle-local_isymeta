@@ -23,9 +23,11 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once(__DIR__ . '/../../config.php');
-
 use local_ildmeta\manager;
+
+require(__DIR__.'/../../config.php');
+global $CFG;
+require_once($CFG->libdir . '/filelib.php');
 
 $download = optional_param('download', false, PARAM_BOOL);
 
