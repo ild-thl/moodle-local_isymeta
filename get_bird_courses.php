@@ -201,7 +201,7 @@ foreach ($metarecords as $meta) {
     }
     // TODO: course_schedule.
     // TODO: course_participation_condition.
-    $metaentry['course_coursemode']['de'] = [$meta->selfpaced ? 'Selbstlernkurs' : 'Betreuter Kurs'];
+    $metaentry['course_coursemode']['de'] = $meta->selfpaced ? 'Selbstlernkurs' : 'Betreuter Kurs';
 
     $metas[] = $metaentry;
 }
