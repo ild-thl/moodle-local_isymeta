@@ -55,8 +55,7 @@ foreach ($metarecords as $meta) {
 
     // Set course_serviceprovider.
     $provider = $providers[$meta->provider];
-    // TODO: Check ahat kind of id is neede here.
-    $metaentry['course_serviceprovider_id'] = $provider['id'];
+    $metaentry['course_serviceprovider_id'] = $meta->courseid;
     $metaentry['course_serviceprovider_name']['de'] = $provider['name'];
     $urlwithprotocol = $provider['url'];
     // Make sure the provider url includes a protocol, add https if missing.
