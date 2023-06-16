@@ -96,11 +96,11 @@ foreach ($metarecords as $meta) {
     // TODO: course_publication_until.
     $metaentry['course_description_long']['de'] = "";
     if (isset($meta->teasertext) && !empty($meta->teasertext)) {
-        $metaentry['course_description_long']['de'] = $meta->teasertext;
+        $metaentry['course_description_long']['de'] = addslashes($meta->teasertext);
     }
     $metaentry['course_description_short']['de'] = "";
     if (isset($meta->abstract) && !empty($meta->abstract)) {
-        $metaentry['course_description_short']['de'] = $meta->abstract;
+        $metaentry['course_description_short']['de'] = addslashes($meta->abstract);
     }
     // Set image metadata.
     // Get overview image from filestorage.
@@ -160,7 +160,7 @@ foreach ($metarecords as $meta) {
     $metaentry['course_title']['de'] = $meta->coursetitle;
     // TODO: course_registrationperiod.
     if (isset($meta->structure) && !empty($meta->structure)) {
-        $metaentry['course_content']['de'] = $meta->structure;
+        $metaentry['course_content']['de'] = addslashes($meta->structure);
     }
     // TODO: course_capacity.
     $metaentry['course_duration_timeunit'] = ["de" => "Stunden", "en" => "Hours"];
@@ -172,7 +172,7 @@ foreach ($metarecords as $meta) {
     // TODO: course_participation_availableseats.
     // TODO: course_publication_from.
     if (isset($meta->courseprerequisites) && !empty($meta->courseprerequisites)) {
-        $metaentry['course_previousknowledge_mandatory']['de'] = $meta->courseprerequisites;
+        $metaentry['course_previousknowledge_mandatory']['de'] = addslashes($meta->courseprerequisites);
     }
     // TODO: course_previousknowlodge_proof.
     // TODO: course_location_city.
