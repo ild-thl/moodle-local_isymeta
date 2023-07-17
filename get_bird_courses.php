@@ -69,9 +69,8 @@ foreach ($metarecords as $meta) {
     // TODO: course_level.
     // TODO: course_level_remarks.
     // TODO: course_level_goals.
-    // TODO: course_subjectgroup.
     // Type of laguage course.
-    if (isset($meta->birdsubjectarea)) {
+    if (isset($meta->birdsubjectarea) && $vocabularies->birdsubjectarea[$meta->birdsubjectarea] != 'Keine Angabe') {
         $metaentry['course_subjectgroup']['de'] = [$vocabularies->birdsubjectarea[$meta->birdsubjectarea]];
     }
     // TODO: course_participation_accessibility.
