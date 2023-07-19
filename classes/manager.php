@@ -175,7 +175,7 @@ class manager {
             'terms' => json_encode([
                 ["de" => "Sprachkurs", "en" => "Language Course"],
                 ["de" => "Fachkurs", "en" => "Specialised Course"],
-                ["de" => "Propädeutik", "en" => "Propaedeutics"],
+                ["de" => "Propädeutika", "en" => "Propaedeutics"],
                 ["de" => "Soft Skills", "en" => "Soft Skills"],
                 ["de" => "Career Skills", "en" => "Career Skills"],
                 ["de" => "Digital Skills", "en" => "Digital Skills"],
@@ -192,6 +192,7 @@ class manager {
                 ["de" => "Online (Selbstlernkurs)", "en" => "Online Asynchronous"],
                 ["de" => "Online mit festen Online-Gruppenterminen", "en" => "Online Synchronous"],
                 ["de" => "Blended Learning mit festen Präsenz-Gruppenterminen", "en" => "Blended Learning"],
+                // ["de" => "MOOC", "en" => "MOOC"],
             ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE),
         ];
         $DB->insert_record('ildmeta_vocabulary', $courseformats);
