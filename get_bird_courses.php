@@ -66,7 +66,7 @@ foreach ($metarecords as $meta) {
     $metaentry['course_serviceprovider_url_image']['de'] = $provider['logo'];
     $metaentry['course_type']['de'] = [$vocabularies->coursetypes[$meta->coursetype]];
     if ($metaentry['course_type']['de'] == ['Propädeutik']) {
-        $metaentry['course_type']['de'] == ['Propädeutika'];
+        $metaentry['course_type']['de'] = ['Propädeutika'];
     }
     $metaentry['course_targetgroup']['de'] = [$vocabularies->audience[$meta->audience]];
     // TODO: course_level.
