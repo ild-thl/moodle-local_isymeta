@@ -116,24 +116,22 @@ foreach ($metarecords as $meta) {
     }
 
     // Set image metadata.
-    if (!isset($fileurl) || empty((string)$fileurl)) {
+    if (!isset($fileurl) || empty((string)$fileurl) || !isset($imagefile)) {
         $metaentry['attributes']['image'] = null;
     } else {
         $metaentry['attributes']['image'] = array();
         $metaentry['attributes']['image']['url'] = trim((string)$fileurl);
 
         // Get License of image and convert to an SPDX license.
-        if (isset($imagefile)) {
-            $license = $DB->get_record('license', array('shortname' => $imagefile->get_license()), '*', MUST_EXIST);
-            if (isset($license) && !empty($license) && $license->shortname != 'unknown') {
-                $spdxlicense = $DB->get_record('ildmeta_spdx_licenses', array('moodle_license' => $license->id), '*', MUST_EXIST);
-                $spdxurl = !empty($spdxlicense->spdx_url) ? $spdxlicense->spdx_url : null;
-                $metaentry['attributes']['image']['licenses'] = array();
-                $metaentry['attributes']['image']['licenses'][0]['id'] = $spdxlicense->spdx_shortname;
-                $metaentry['attributes']['image']['licenses'][0]['url'] = $spdxurl;
-                $metaentry['attributes']['image']['licenses'][0]['name'] = $spdxlicense->spdx_fullname;
-                $metaentry['attributes']['image']['licenses'][0]['author'] = $imagefile->get_author();
-            }
+        $license = $DB->get_record('license', array('shortname' => $imagefile->get_license()), '*', MUST_EXIST);
+        if (isset($license) && !empty($license) && $license->shortname != 'unknown') {
+            $spdxlicense = $DB->get_record('ildmeta_spdx_licenses', array('moodle_license' => $license->id), '*', MUST_EXIST);
+            $spdxurl = !empty($spdxlicense->spdx_url) ? $spdxlicense->spdx_url : null;
+            $metaentry['attributes']['image']['licenses'] = array();
+            $metaentry['attributes']['image']['licenses'][0]['id'] = $spdxlicense->spdx_shortname;
+            $metaentry['attributes']['image']['licenses'][0]['url'] = $spdxurl;
+            $metaentry['attributes']['image']['licenses'][0]['name'] = $spdxlicense->spdx_fullname;
+            $metaentry['attributes']['image']['licenses'][0]['author'] = $imagefile->get_author();
         }
     }
 
