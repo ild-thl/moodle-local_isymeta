@@ -132,6 +132,8 @@ foreach ($metarecords as $meta) {
             $metaentry['attributes']['image']['licenses'][0]['url'] = $spdxurl;
             $metaentry['attributes']['image']['licenses'][0]['name'] = $spdxlicense->spdx_fullname;
             $metaentry['attributes']['image']['licenses'][0]['author'] = $imagefile->get_author();
+        } else {
+            $metaentry['attributes']['image'] = null;
         }
     }
 
