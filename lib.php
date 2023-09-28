@@ -55,7 +55,7 @@ function local_ildmeta_extend_settings_navigation($settingsnav, $context) {
 
 function local_ildmeta_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options = array()) {
     // Require login for every other filearea than 'overviewimage'.
-    if ($filearea !== 'overviewimage' && $filearea !== 'provider') {
+    if ($filearea !== 'overviewimage' && $filearea !== 'provider' && strpos($filearea, 'detailslecturer_image_') !== 0) {
         // Make sure the user is logged in and has access to the module.
         require_login($course, true, $cm);
 
