@@ -383,6 +383,20 @@ function xmldb_local_ildmeta_upgrade($oldversion) {
         // Ildmeta savepoint reached.
         upgrade_plugin_savepoint(true, 2022121216, 'local', 'ildmeta');
     }
+    
 
+    if ($oldversion < 2023102713) {
+        $ildmetatable = new xmldb_table('ildmeta');
+
+        // Update birdsubjectarea default value to 0.
+        $birdsubjectarea = new xmldb_field('birdsubjectarea', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, 0, 'exporttobird');
+        if ($dbman->field_exists($ildmetatable, $birdsubjectarea)) {
+            $dbman->change_field_precision($ildmetatable,  $birdsubjectarea);
+        }
+
+        // Ildmeta savepoint reached.
+        upgrade_plugin_savepoint(true, 2023102713, 'local', 'ildmeta');
+    }
+    
     return true;
 }
