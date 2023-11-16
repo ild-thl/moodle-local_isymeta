@@ -99,5 +99,7 @@ $string['text_processingtime'] = 'Please only enter whole hours as an integer';
 $string['title'] = 'Edit metadata';
 $string['usecustomvocabulary'] = 'Custom vocabulary';
 $string['usecustomvocabulary_desc'] = 'If this option is set, the custom vocabulary will be available as options for the course metadata settings.';
+$string['uuid'] = 'UUID';
+$string['invaliduuid'] = 'Invalid UUID';
 $string['videocode'] = 'Youtube link';
 $string['videolicense'] = 'Video licence';

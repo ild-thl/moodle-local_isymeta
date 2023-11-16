@@ -71,6 +71,7 @@ $data = Helper::toJSON($metas);
 
 
 // Get validation result.
+/** @var ValidationResult $result */
 $result = $validator->validate($data, $schema);
 
 // Checking if $data is valid.

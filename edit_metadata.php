@@ -99,6 +99,7 @@ if ($mform->is_cancelled()) {
 } else if ($fromform = $mform->get_data()) {
     $todb = new stdClass;
     $todb->courseid = $id;
+    $todb->uuid = $fromform->uuid;
     $todb->coursetitle = $fromform->coursetitle;
     $todb->lecturer = $fromform->lecturer;
     if (isset($fromform->noindexcourse)) {
@@ -310,6 +311,7 @@ if ($mform->is_cancelled()) {
     // ADDED tinjohn 20221214 read data if there is already a record in ildmeta table.
     if ($getdb != null) {
         $toform = new stdClass;
+        $toform->uuid = $getdb->uuid;
         $toform->coursetitle = $getdb->coursetitle;
         $toform->lecturer = $getdb->lecturer;
         if (isset($getdb->overviewimage) && !empty($getdb->overviewimage)) {
@@ -385,6 +387,7 @@ if ($mform->is_cancelled()) {
         // ADDED tinjohn 20221214 else initialise data with data from course table.
 
         $toform = new stdClass();
+        $toform->uuid = manager::guidv4();
         $course = $DB->get_record('course', array('id' => $id), 'fullname, shortname, summary, startdate', MUST_EXIST);
         $sql = "SELECT t.name
                 FROM mdl_tag_instance ti
@@ -392,7 +395,6 @@ if ($mform->is_cancelled()) {
                 ON ti.tagid = t.id
                 WHERE ti.itemtype = 'course'
                 AND ti.itemid = :courseid;";
-
 
         $toform->coursetitle = $course->fullname;
         if (isset($course->summary)) {
