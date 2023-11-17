@@ -62,6 +62,186 @@ $metaslinks = ['self' => $jsonlink, 'first' => $jsonlink, 'last' => $jsonlink];
 $metas['links'] = $metaslinks;
 $metas['data'] = [];
 
+// Get vocabularies from ildmeta_vocabulary for dropdown selection fields.
+$records = $DB->get_records('ildmeta_vocabulary');
+$vocabularies = new \stdClass();
+foreach ($records as $vocabulary) {
+    $vocabularies->{$vocabulary->title} = manager::filter_vocabulary_lang($vocabulary, 'de');
+}
+
+// Get list of providers.
+$providers = manager::get_providers('de');
+
+// Create a json entry for every course, that is supposed to be shared.
+foreach ($metarecords as $meta) {
+    // Skip courses that are not supposed to be exported or a course record does not exist.
+    $course = $DB->record_exists('course', array('id' => $meta->courseid));
+    if ($meta->noindexcourse != 0 || !$course) {
+        continue;
+    }
+
+    $metaentry = [];
+    $metaentry['id'] = $meta->uuid;
+    $metaentry['type'] = 'Course';
+
+    $metaentry['attributes'] = [];
+    $metaentry['attributes']['name'] = $meta->coursetitle;
+    $metaentry['attributes']['courseCode'] = $course->idnumber ?? null;
+    $metaentry['attributes']['courseMode'] = ['online', 'asynchronous'];
+    $metaentry['attributes']['learningResourceType'] = [
+        "identifier" => "https://w3id.org/kim/hcrt/course",
+        "type" => "Concept",
+        "inScheme" => "https://w3id.org/kim/hcrt/scheme"
+    ];
+    $metaentry['attributes']['description'] = $meta->teasertext;
+    $langlist = [
+        'de',
+        'en',
+        'uk',
+        'ru'
+    ];
+    $metaentry['attributes']['inLanguage'] = [$langlist[$meta->courselanguage]];
+    $metaentry['attributes']['endDate'] = date('c', $meta->starttime);
+    $metaentry['attributes']['endDate'] = null;
+    $metaentry['attributes']['expires'] = null;
+    if (isset($meta->availableuntil) && !empty($meta->availableuntil)) {
+        $metaentry['attributes']['expires'] = [date('c', $meta->availableuntil)];
+    }
+
+    // Get overview image from filestorage.
+    // If no custom image ist set in ildmeta, then use the course image instead.
+    $fs = get_file_storage();
+    $context = context_course::instance($meta->courseid);
+    $fileurl = '';
+    $imagefile = null;
+    if (isset($meta->overviewimage)) {
+        $files = $fs->get_area_files($context->id, 'local_ildmeta', 'overviewimage', 0);
+    } else {
+        $files = $fs->get_area_files($context->id, 'course', 'overviewfiles', 0);
+    }
+    foreach ($files as $file) {
+        if ($file->is_valid_image()) {
+            $imagefile = $file;
+            $fileurl = moodle_url::make_pluginfile_url(
+                $file->get_contextid(),
+                $file->get_component(),
+                $file->get_filearea(),
+                isset($meta->overviewimage) ? $file->get_itemid() : null,
+                $file->get_filepath(),
+                $file->get_filename(),
+                false
+            );
+            break;
+        }
+    }
+
+    // Set image metadata.
+    if (isset($fileurl) && !empty((string)$fileurl) and isset($imagefile)) {
+        $metaentry['attributes']['image'] = array();
+        $metaentry['attributes']['image']['type'] = "ImageObject";
+        $metaentry['attributes']['image']['contentUrl'] = trim((string)$fileurl);
+
+        // Get License of image and convert to an SPDX license.
+        $license = $DB->get_record('license', array('shortname' => $imagefile->get_license()), '*', MUST_EXIST);
+        if (isset($license) && !empty($license) && $license->shortname != 'unknown') {
+            $spdxlicense = $DB->get_record('ildmeta_spdx_licenses', array('moodle_license' => $license->id), '*', MUST_EXIST);
+            $spdxurl = !empty($spdxlicense->spdx_url) ? $spdxlicense->spdx_url : null;
+            $metaentry['attributes']['image']['license'] = array();
+            $metaentry['attributes']['image']['license'][0]['identifier'] = $spdxlicense->spdx_shortname;
+            $metaentry['attributes']['image']['license'][0]['url'] = $spdxurl;
+        }
+    }
+
+    // Set video.
+    if (isset($meta->videocode) && !empty(trim($meta->videolicense))) {
+        $license = $DB->get_record('license', array('id' => $meta->videolicense), '*', IGNORE_MISSING);
+        // Only set video if video license is known.
+        if (isset($license) && !empty($license) && $license->shortname != 'unknown') {
+            $metaentry['attributes']['trailer'] = array();
+            $metaentry['attributes']['trailer']['type'] = "VideoObject";
+            $metaentry['attributes']['trailer']['contentUrl'] = trim($meta->videocode);
+
+            $spdxlicense = $DB->get_record('ildmeta_spdx_licenses', array('moodle_license' => $license->id), '*', MUST_EXIST);
+            $spdxurl = !empty($spdxlicense->spdx_url) ? $spdxlicense->spdx_url : null;
+            $metaentry['attributes']['trailer']['licenses'] = array();
+            $metaentry['attributes']['trailer']['licenses'][0]['identifier'] = $spdxlicense->spdx_shortname;
+            $metaentry['attributes']['trailer']['licenses'][0]['url'] = $spdxurl;
+        }
+    }
+
+    // Set instructors.
+    $lecturer = explode(', ', $meta->lecturer);
+    $metaentry['attributes']['instructor'] = array();
+    for ($i = 0; $i < count($lecturer); $i++) {
+        if ($lecturer[$i] != '') {
+            $metaentry['attributes']['instructor'][$i] = array();
+            $metaentry['attributes']['instructor'][$i]['name'] = $lecturer[$i];
+            $metaentry['attributes']['instructor'][$i]['type'] = 'Person';
+            // TODO: Add image of instructor.
+        }
+    }
+
+    // TODO Set teaches.
+
+    // Set duration by converting amount of hours to ISO 8601 duration.
+    if (isset($meta->processingtime) && !empty($meta->processingtime)) {
+        $duration = 'PT' . $meta->processingtime . 'H';
+        $metaentry['attributes']['duration'] = $duration;
+    }
+
+    // Set course provider.
+    $provider = $providers[$meta->provider];
+    $metaentry['attributes']['publisher']['name'] = $provider['name'];
+    $urlwithprotocol = $provider['url'];
+    // Make sure the provider url includes a protocol, add https if missing.
+    if (strpos($provider['url'], 'http') === false) {
+        $urlwithprotocol = 'https://' . $provider['url'];
+    }
+    $metaentry['attributes']['publisher']['identifier'] = $urlwithprotocol;
+    $metaentry['attributes']['publisher']['type'] = 'Organization';
+    $metaentry['attributes']['publisher']['image'] = array();
+    $metaentry['attributes']['publisher']['image']['type'] = 'ImageObject';
+    $metaentry['attributes']['publisher']['image']['contentUrl'] = $provider['logo'];
+    $metaentry['attributes']['publisher']['image']['license'] = array();
+    $metaentry['attributes']['publisher']['image']['license'][0]['identifier'] = 'proprietary';
+    $metaentry['attributes']['publisher']['image']['license'][0]['url'] = null;
+
+    $metaentry['attributes']['url'] = manager::get_external_course_link($meta->courseid);
+
+    // Set course license.
+    $license = $DB->get_record('license', array('id' => $meta->license), '*', IGNORE_MISSING);
+    if (isset($license) && !empty($license) && $license->shortname != 'unknown') {
+        $spdxlicense = $DB->get_record('ildmeta_spdx_licenses', array('moodle_license' => $license->id), '*', MUST_EXIST);
+        $spdxurl = !empty($spdxlicense->spdx_url) ? $spdxlicense->spdx_url : null;
+        $metaentry['attributes']['license'] = array();
+        $metaentry['attributes']['license'][0]['identifier'] = $spdxlicense->spdx_shortname;
+        $metaentry['attributes']['license'][0]['url'] = $spdxurl;
+    } else {
+        $metaentry['attributes']['license'] = [];
+        $metaentry['attributes']['license'][0]['identifier'] = 'Proprietary';
+        $metaentry['attributes']['license'][0]['url'] = null;
+    }
+
+    $metaentry['attributes']['access'] = ['free'];
+
+    // TODO Set audience.
+    // TODO Set educationalAlignement.
+    // TODO Set educationalLevel.
+    // TODO Set actual creator. For now copy publisher.
+    $metaentry['attributes']['creator'] = [$metaentry['attributes']['publisher']];
+
+    $metaentry['attributes']['keywords'] = explode(', ', $meta->tags);
+
+    // TODO Set numberOfCredits.
+    // TODO Set educationalCredentialsAwarded.
+    // TODO Set competencyRequired.
+    // TODO Set accessMode.
+    // Set dateCreated.
+    // Set dateModified.
+
+    $metas['data'][] = $metaentry;
+}
+
 // Schema Validation.
 $validator = new Validator();
 $schemaurl = "https://raw.githubusercontent.com/MaxThomasHPI/schemaV3/f1f86b2bec99d0b3d78749bdd1d1a461121590ef/moochub-schema.json";
