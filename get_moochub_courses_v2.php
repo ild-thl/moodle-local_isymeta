@@ -28,6 +28,7 @@ use Opis\JsonSchema\{
     Validator,
     ValidationResult,
     Helper,
+    Errors\ErrorFormatter,
 };
 
 require_once(__DIR__ . '/../../config.php');
@@ -217,7 +218,7 @@ foreach ($metarecords as $meta) {
     $metaentry['attributes']['moocProvider']['logo'] = $provider['logo'];
 
     // Set access to "free". Currently there is no option to track paid courses.
-    $metaentry['attributes']['access'] = 'free';
+    $metaentry['attributes']['access'] = ['free'];
 
     $metas['data'][] = $metaentry;
 }
@@ -252,6 +253,16 @@ if ($result->isValid()) {
 if ($result->hasError()) {
     // Get the error.
     $error = $result->error();
+
+    // Create an error formatter.
+    $formatter = new ErrorFormatter();
+    $formattederror = $formatter->format($error, true);
+
+    $errormessage = json_encode(
+        $formattederror,
+        JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES
+    );
+
     // Notify moodle admin per email.
     $PAGE->set_context(context_system::instance());
     $admin = get_admin();
@@ -260,17 +271,18 @@ if ($result->hasError()) {
     $subject = 'ILD Meta Data: JSON Schema Validation Error';
     $message = 'There was an error while validating the JSON Schema for the moochub courses. Please check the error message below.';
     $message .= '<br><br>';
-    $message .= $error->keyword() . ': ' . $error->message();
+    $message .= $errormessage;
 
     // Send email.
     email_to_user($adminuser, $adminuser, $subject, $message, '', '', '', true);
 
     // Send error 500 response.
     $error = [
-        'error' => $error->keyword() . ': ' . $error->message(),
+        'errors' => $formattederror,
         'schema' => $schema,
         'source' => $metas
     ];
+
     header('Content-Type: application/vnd.api+json; moochub-version=2.3');
     $json = json_encode($error, JSON_UNESCAPED_SLASHES);
     http_response_code(500);
