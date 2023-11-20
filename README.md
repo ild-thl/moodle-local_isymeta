@@ -6,7 +6,9 @@ This metadata is consumed by other plugins to display more details about a cours
 Additionally the plugin provides a way to export metadata as a [MOOChub/schema](https://github.com/MOOChub/schema) compatible json file. 
 This allows publishing courses on [MOOChub](https://moochub.org/) by providing the relevant metadata.
 The MOOChub data will be generated on demand when accessing the following URL: yourmoodlesite.com/local/ildmeta/get_moochub_courses.php
-Providing the manually given course id (Moodles idnumber) MOOChub data for a single course will be generated on demand when accessing the following URL: yourmoodlesite.com/local/ildmeta/get_moochub_courses.php?idn=IDNUMBER
+Providing the manually given course id (Moodles idnumber) MOOChub data for a single course will be generated on demand when accessing the following URL: yourmoodlesite.com/local/ildmeta/get_moochub_courses.php?idn=IDNUMBER.
+
+
 To generate data that is compatible with BIRD, access the following URL: yourmoodlesite.com/local/ildmeta/get_bird_courses.php
 
 Beware these URLs can be accessed by anyone. There are no login or capability checks made. Make sure that no sensitive data is included.
