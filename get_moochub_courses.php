@@ -42,26 +42,50 @@ $jsonlink = $CFG->httpswwwroot . '/local/ildmeta/get_moochub_courses.php';
 $metaslinks = ['self' => $jsonlink, 'first' => $jsonlink, 'last' => $jsonlink];
 $metas['links'] = $metaslinks;
 
-$allmetarecs = TRUE;
-
-// Check if the 'idn' parameter exists.
-if (isset($_GET['idn'])) {
-    $allmetarecs = FALSE;
-    $idnumber = $_GET['idn'];
-    $course = $DB->get_record('course', array('idnumber' => $idnumber), '*');
-    if($course) {
-        $database_course_id = $course->id;
-        $metarecords = $DB->get_records('ildmeta', array('courseid' => $database_course_id));
+// Function to process input.
+function pproc_input($idnumbers) {
+    // Create array for input.
+    if(!is_array($idnumbers) and is_string($idnumbers)) {
+        $idnumbers = [$idnumbers];
     }
-} 
+    // Remove empty values.
+    $idnumbers = array_filter($idnumbers, function ($value) {
+        return trim($value) !== '';
+    });
+    return($idnumbers);
+}
 
-if ($allmetarecs) {
+if(!isset($_GET['idn']) && !isset($_GET['id'])) {
     $metarecords = $DB->get_records('ildmeta');
+}
+if (isset($_GET['idn'])) {
+    $idnumbers = $_GET['idn'];
+    $idnumbers = pproc_input($idnumbers);
+    if (!empty($idnumbers))  {
+        // Get all meta records for the given idnumers.
+        [$insql, $inparams] = $DB->get_in_or_equal($idnumbers);
+        $sql = "SELECT * FROM {ildmeta} meta
+                LEFT JOIN {course} course ON meta.courseid = course.id
+                WHERE course.idnumber $insql";
+        $metarecords = $DB->get_records_sql($sql, $inparams);
+    }
+}
+if (isset($_GET['id'])) {
+    $idnumbers = $_GET['id'];
+    $idnumbers = pproc_input($idnumbers);
+    if (!empty($idnumbers))  {
+        // Get all meta records for the given course ids.
+        [$insql, $inparams] = $DB->get_in_or_equal($idnumbers);
+        $sql = "SELECT * FROM {ildmeta} meta
+                LEFT JOIN {course} course ON meta.courseid = course.id
+                WHERE course.id $insql";
+        $metarecords = $DB->get_records_sql($sql, $inparams);
+    }
 }
 
 // Return empty data, if there was no course.
-if(!$metarecords) {
-    $metas['data'] = null;
+if(!isset($metarecords) or empty($metarecords)) {
+        $metas['data'] = [];
 } else {
     // Get vocabularies from ildmeta_vocabulary for dropdown selection fields.
     $records = $DB->get_records('ildmeta_vocabulary');
@@ -244,5 +268,7 @@ if(!$metarecords) {
 // Send Json response.
 header('Content-Type: application/json');
 $json = json_encode($metas, JSON_UNESCAPED_SLASHES);
+$json = json_encode($metas, JSON_PRETTY_PRINT);
+
 // If download flag is set trigger download on client browser.
 send_file($json, 'courses_moochub.json', 0, 0, true, $download);
