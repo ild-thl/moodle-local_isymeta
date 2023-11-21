@@ -268,7 +268,6 @@ if(!isset($metarecords) or empty($metarecords)) {
 // Send Json response.
 header('Content-Type: application/json');
 $json = json_encode($metas, JSON_UNESCAPED_SLASHES);
-$json = json_encode($metas, JSON_PRETTY_PRINT);
 
 // If download flag is set trigger download on client browser.
 send_file($json, 'courses_moochub.json', 0, 0, true, $download);
