@@ -244,7 +244,7 @@ foreach ($metarecords as $meta) {
 
 // Schema Validation.
 $validator = new Validator();
-$schemaurl = "https://raw.githubusercontent.com/MaxThomasHPI/schemaV3/f1f86b2bec99d0b3d78749bdd1d1a461121590ef/moochub-schema.json";
+$schemaurl = "https://raw.githubusercontent.com/MOOChub/schema/b89a218d74fec89fe01ea5ad68b95b07dcfe17a6/moochub-schema.json";
 // Get schema from github.
 $schemajson = file_get_contents($schemaurl);
 $schema = Helper::toJSON(json_decode($schemajson));
