@@ -48,7 +48,9 @@ if (isset($_GET['moochub-version'])) {
     if (isset($_SERVER['HTTP_ACCEPT'])) {
         $accept = $_SERVER['HTTP_ACCEPT'];
         // Get requested version from Accept header with regex moochub-version=2.1 => 2.1 .
-        $requestedversion = preg_replace('/.*moochub-version=(\d+(\.\d+)?)*/', '$1', $accept);
+        if (preg_match('/.*moochub-version=(\d+(\.\d+)?)*/', $accept, $matches)) {
+            $requestedversion = $matches[1];
+        } 
         if (isset($requestedversion) and !empty($requestedversion)) {
             $requestedversion = floatval($requestedversion);
             if ($requestedversion < 3) {
