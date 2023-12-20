@@ -35,7 +35,10 @@ require_once(__DIR__ . '/../../config.php');
 
 global $CFG;
 require_once($CFG->libdir . '/filelib.php');
-require('./vendor/autoload.php');
+// Check if file exists.
+if (file_exists('./vendor/autoload.php')) {
+    require_once('./vendor/autoload.php');
+}
 
 $download = optional_param('download', false, PARAM_BOOL);
 
@@ -255,22 +258,74 @@ if (!isset($metarecords) or empty($metarecords)) {
         $metas['data'][] = $metaentry;
     }
 }
+// Check if opis/json-schema is installed.
+if (class_exists('Opis\JsonSchema\Validator')) {
+    // Schema Validation.
+    $validator = new Validator();
+    $schemaurl = "https://raw.githubusercontent.com/MOOChub/schema/d32a0476c8a8ef48af54439f329bffaaf088bf1c/moochub-schema.json";
+    // Get schema from github.
+    $schemajson = file_get_contents($schemaurl);
+    $schema = Helper::toJSON(json_decode($schemajson));
+    $data = Helper::toJSON($metas);
 
-// Schema Validation.
-$validator = new Validator();
-$schemaurl = "https://raw.githubusercontent.com/MOOChub/schema/d32a0476c8a8ef48af54439f329bffaaf088bf1c/moochub-schema.json";
-// Get schema from github.
-$schemajson = file_get_contents($schemaurl);
-$schema = Helper::toJSON(json_decode($schemajson));
-$data = Helper::toJSON($metas);
 
+    // Get validation result.
+    /** @var ValidationResult $result */
+    $result = $validator->validate($data, $schema);
 
-// Get validation result.
-/** @var ValidationResult $result */
-$result = $validator->validate($data, $schema);
+    // Checking if $data is valid.
+    if ($result->isValid()) {
+        // Send Json response.
+        $json = json_encode($metas, JSON_UNESCAPED_SLASHES);
+        // If download flag is set trigger download on client browser.
+        if ($download) {
+            send_file($json, 'courses_moochub.json', 0, 0, true, $download);
+        } else {
+            header('Content-Type: application/vnd.api+json; moochub-version=2.3');
+            echo $json;
+        }
+    }
 
-// Checking if $data is valid.
-if ($result->isValid()) {
+    // Checking if there is an error.
+    if ($result->hasError()) {
+        // Get the error.
+        $error = $result->error();
+
+        // Create an error formatter.
+        $formatter = new ErrorFormatter();
+        $formattederror = $formatter->format($error, true);
+
+        $errormessage = json_encode(
+            $formattederror,
+            JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES
+        );
+
+        // Notify moodle admin per email.
+        $PAGE->set_context(context_system::instance());
+        $admin = get_admin();
+        $adminuser = $DB->get_record('user', ['id' => $admin->id]);
+        $adminemail = $adminuser->email;
+        $subject = 'ILD Meta Data: JSON Schema Validation Error';
+        $message = 'There was an error while validating the JSON Schema for the moochub courses. Please check the error message below.';
+        $message .= '<br><br>';
+        $message .= $errormessage;
+
+        // Send email.
+        email_to_user($adminuser, $adminuser, $subject, $message, '', '', '', true);
+
+        // Send error 500 response.
+        $error = [
+            'errors' => $formattederror,
+            'schema' => $schema,
+            'source' => $metas
+        ];
+
+        header('Content-Type: application/vnd.api+json; moochub-version=2.3');
+        $json = json_encode($error, JSON_UNESCAPED_SLASHES);
+        http_response_code(500);
+        echo $json;
+    }
+} else {
     // Send Json response.
     $json = json_encode($metas, JSON_UNESCAPED_SLASHES);
     // If download flag is set trigger download on client browser.
@@ -280,44 +335,4 @@ if ($result->isValid()) {
         header('Content-Type: application/vnd.api+json; moochub-version=2.3');
         echo $json;
     }
-}
-
-// Checking if there is an error.
-if ($result->hasError()) {
-    // Get the error.
-    $error = $result->error();
-
-    // Create an error formatter.
-    $formatter = new ErrorFormatter();
-    $formattederror = $formatter->format($error, true);
-
-    $errormessage = json_encode(
-        $formattederror,
-        JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES
-    );
-
-    // Notify moodle admin per email.
-    $PAGE->set_context(context_system::instance());
-    $admin = get_admin();
-    $adminuser = $DB->get_record('user', ['id' => $admin->id]);
-    $adminemail = $adminuser->email;
-    $subject = 'ILD Meta Data: JSON Schema Validation Error';
-    $message = 'There was an error while validating the JSON Schema for the moochub courses. Please check the error message below.';
-    $message .= '<br><br>';
-    $message .= $errormessage;
-
-    // Send email.
-    email_to_user($adminuser, $adminuser, $subject, $message, '', '', '', true);
-
-    // Send error 500 response.
-    $error = [
-        'errors' => $formattederror,
-        'schema' => $schema,
-        'source' => $metas
-    ];
-
-    header('Content-Type: application/vnd.api+json; moochub-version=2.3');
-    $json = json_encode($error, JSON_UNESCAPED_SLASHES);
-    http_response_code(500);
-    echo $json;
 }
