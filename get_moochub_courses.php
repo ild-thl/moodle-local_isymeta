@@ -36,19 +36,28 @@ use Opis\JsonSchema\{
 
 require_once(__DIR__ . '/../../config.php');
 
-// Read Accept header to determine wich version of moochub schema is requested.
-// If a version lower than 3 is requested run get_moochub_courses_v2.php instead.
-if (isset($_SERVER['HTTP_ACCEPT'])) {
-    $accept = $_SERVER['HTTP_ACCEPT'];
-    // Get requested version from Accept header with regex moochub-version=2.1 => 2.1 .
-    $requestedversion = preg_replace('/.*moochub-version=(\d+(\.\d+)?)*/', '$1', $accept);
-    if (isset($requestedversion) and !empty($requestedversion)) {
-        $requestedversion = floatval($requestedversion);
-        if ($requestedversion < 3) {
-            require('get_moochub_courses_v2.php');
-            exit;
+if (isset($_GET['moochub-version'])) {
+    $requestedversion = $_GET['moochub-version'];
+    if (is_numeric($requestedversion) && $requestedversion < 3) {
+        require('get_moochub_courses_v2.php');
+        exit;
+    }
+} else {
+    // Read Accept header to determine wich version of moochub schema is requested.
+    // If a version lower than 3 is requested run get_moochub_courses_v2.php instead.
+    if (isset($_SERVER['HTTP_ACCEPT'])) {
+        $accept = $_SERVER['HTTP_ACCEPT'];
+        // Get requested version from Accept header with regex moochub-version=2.1 => 2.1 .
+        $requestedversion = preg_replace('/.*moochub-version=(\d+(\.\d+)?)*/', '$1', $accept);
+        if (isset($requestedversion) and !empty($requestedversion)) {
+            $requestedversion = floatval($requestedversion);
+            if ($requestedversion < 3) {
+                require('get_moochub_courses_v2.php');
+                exit;
+            }
         }
     }
+
 }
 
 global $CFG;
