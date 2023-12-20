@@ -17,6 +17,13 @@ Beware these URLs can be accessed by anyone. There are no login or capability ch
 Providing the manually given course id (Moodles idnumber) MOOChub data for a single course will be generated on demand when accessing the following URL: yourmoodlesite.com/local/ildmeta/get_moochub_courses.php?idn=IDNUMBER or for more than one idn use an idn[] e.g.:  yourmoodlesite.com/local/ildmeta/get_moochub_courses.php?idn[]=IDNUMBER&idn[]=IDNUMBER.
 The same will work for the Moodle course ids by the use of the url parameter id instead of idn in the examples above.
 
+### Moochub version
+
+Per default moochub v3 is exported. Use moochub-version=VERSION in the url parameter list or in the Accept request HTTP header for other versions e.g.:
+yourmoodlesite.com/local/ildmeta/get_moochub_courses.php?moochub-version=VERSION
+or
+curl --location --globoff 'yourmoodlesite.com/local/ildmeta/get_moochub_courses.php' --header 'Accept: moochub-version=3'  
+
 ## Usage
 
 Before describing your first set of courses, you should edit the vocabularies and providers, that are available in the metadata form.
