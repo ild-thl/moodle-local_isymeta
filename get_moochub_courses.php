@@ -291,8 +291,9 @@ if (!isset($metarecords) or empty($metarecords)) {
         // TODO Set actual creator. For now copy publisher.
         $metaentry['attributes']['creator'] = [$metaentry['attributes']['publisher']];
 
-        $metaentry['attributes']['keywords'] = explode(', ', $meta->tags);
-
+        if (isset($meta->tags) && !empty($meta->tags)) {
+            $metaentry['attributes']['keywords'] = explode(', ', $meta->tags);
+        }
         // TODO Set numberOfCredits.
         // TODO Set educationalCredentialsAwarded.
         // TODO Set competencyRequired.
