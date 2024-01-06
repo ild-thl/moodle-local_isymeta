@@ -242,7 +242,29 @@ if (!isset($metarecords) or empty($metarecords)) {
             }
         }
 
-        // TODO Set teaches.
+        // Get course competencies from competency_coursecomp and competency
+        // where competency_framework.shortname is "ESCO", "GRETA" or "DigComp".
+        $sql = "SELECT competency.shortname, competency.idnumber, competency.description,
+                framework.shortname as frameworkname, framework.idnumber as frameworkversion
+                FROM {competency_coursecomp} coursecomp
+                LEFT JOIN {competency} competency ON coursecomp.competencyid = competency.id
+                LEFT JOIN {competency_framework} framework ON competency.competencyframeworkid = framework.id
+                WHERE coursecomp.courseid = :courseid AND framework.shortname IN ('ESCO', 'GRETA', 'DigComp')";
+        $competencies = $DB->get_records_sql($sql, ['courseid' => $meta->courseid]);
+
+        // Add taught competencies to metaentry.
+        foreach ($competencies as $competency) {
+            $teaches = [];
+            $teaches['name'] = [];
+            $teaches['name'][0] = [];
+            $teaches['name'][0]['inLanguage'] = 'de';
+            $teaches['name'][0]['name'] = $competency->shortname;
+            $teaches['description'] = $competency->description;
+            $teaches['educationalFramework'] = $competency->frameworkname;
+            $teaches['educationalFramework_version'] = $competency->frameworkversion;
+            $teaches['targetUrl'] = $competency->idnumber;
+            $metaentry['attributes']['teaches'][] = $teaches;
+        }
 
         // Set duration by converting amount of hours to ISO 8601 duration.
         if (isset($meta->processingtime) && !empty($meta->processingtime)) {
