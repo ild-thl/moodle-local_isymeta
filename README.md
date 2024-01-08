@@ -14,15 +14,20 @@ Beware these URLs can be accessed by anyone. There are no login or capability ch
 
 ### Moochub metadata by course idnumber or course id
 
-Providing the manually given course id (Moodles idnumber) MOOChub data for a single course will be generated on demand when accessing the following URL: yourmoodlesite.com/local/ildmeta/get_moochub_courses.php?idn=IDNUMBER or for more than one idn use an idn[] e.g.:  yourmoodlesite.com/local/ildmeta/get_moochub_courses.php?idn[]=IDNUMBER&idn[]=IDNUMBER.
+Providing the manually given course id (Moodles idnumber) MOOChub data for a single course will be generated on demand when accessing the following URL: `yourmoodlesite.com/local/ildmeta/get_moochub_courses.php?idn=IDNUMBER`
+or for more than one idn use an idn[] e.g.:
+`yourmoodlesite.com/local/ildmeta/get_moochub_courses.php?idn[]=IDNUMBER&idn[]=IDNUMBER`.
 The same will work for the Moodle course ids by the use of the url parameter id instead of idn in the examples above.
 
 ### Moochub version
 
 Per default moochub v3 is exported. Use moochub-version=VERSION in the url parameter list or in the Accept request HTTP header for other versions e.g.:
-yourmoodlesite.com/local/ildmeta/get_moochub_courses.php?moochub-version=VERSION
+`yourmoodlesite.com/local/ildmeta/get_moochub_courses.php?moochub-version=VERSION`
 or
+
+```bash
 curl --location --globoff 'yourmoodlesite.com/local/ildmeta/get_moochub_courses.php' --header 'Accept: moochub-version=3'  
+```
 
 ## Usage
 
@@ -31,6 +36,15 @@ Before describing your first set of courses, you should edit the vocabularies an
 To create a new provider access /local/ildmeta/edit_provider.php or go to Site administration -> Plugins -> Local Plugins -> ILD Meta -> Edit provider
 
 To edit vocabularies for coursetypes, courseformats, audiences, and subjectareas access /local/ildmeta/edit_vocabulary.php or go to Site administration -> Plugins -> Local Plugins -> ILD Meta -> Edit vocabulary. Here you can edit or delete existing terms. Make sure you use the correct json grammar to describe your data. You can add terms in diffrent languages by using the respective language code. See [list of language codes](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes).
+
+### Compencies
+The course competences are added to the metadata if a competence from one of the following frameworks is attached to the course:
+* ESCO
+* DigComp
+* GRETA
+  
+Note: The name of the competency framework must match exactly the name given in the list above. The version number of the framework needs to be set as ID-Nummer of the competency framework.
+
 
 ## Installation
 
