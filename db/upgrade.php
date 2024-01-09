@@ -22,6 +22,8 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use local_ildmeta\manager;
+
 /**
  * Upgrades the database according to the current version.
  *
@@ -383,7 +385,6 @@ function xmldb_local_ildmeta_upgrade($oldversion) {
         // Ildmeta savepoint reached.
         upgrade_plugin_savepoint(true, 2022121216, 'local', 'ildmeta');
     }
-    
 
     if ($oldversion < 2023102713) {
         $ildmetatable = new xmldb_table('ildmeta');
@@ -397,6 +398,37 @@ function xmldb_local_ildmeta_upgrade($oldversion) {
         // Ildmeta savepoint reached.
         upgrade_plugin_savepoint(true, 2023102713, 'local', 'ildmeta');
     }
-    
+
+    if ($oldversion < 2023111619) {
+        $ildmetatable = new xmldb_table('ildmeta');
+
+        $field = new xmldb_field('uuid', XMLDB_TYPE_CHAR, '36', null, XMLDB_NOTNULL, null, null, 'id');
+
+        // Conditionally launch add field uuid.
+        if (!$dbman->field_exists($ildmetatable, $field)) {
+            $dbman->add_field($ildmetatable, $field);
+        }
+
+        // Generate uuid for existing records, where uuid is null or empty.
+        $records = $DB->get_records_sql('SELECT * FROM {ildmeta} WHERE uuid IS NULL OR uuid = ""');
+        foreach ($records as $record) {
+            do {
+                $uuid = manager::guidv4();
+            } while ($DB->record_exists('ildmeta', ['uuid' => $uuid]));
+
+            $record->uuid = $uuid;
+            $DB->update_record('ildmeta', $record);
+        }
+
+        // Define key uuid (unique) to be added to ildmeta.
+        $key = new xmldb_key('uuid', XMLDB_KEY_UNIQUE, ['uuid']);
+
+        // Launch add key uuid.
+        $dbman->add_key($ildmetatable, $key);
+
+        // Ildmeta savepoint reached.
+        upgrade_plugin_savepoint(true, 2023111619, 'local', 'ildmeta');
+    }
+
     return true;
 }

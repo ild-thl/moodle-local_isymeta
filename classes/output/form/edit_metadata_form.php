@@ -81,6 +81,12 @@ class edit_metadata_form extends \moodleform {
             // $mform->addRule('noindexcourse', get_string('required'), 'required', null, 'server');
         }
 
+        // UUID. Required.
+        $mform->addElement('text', 'uuid', get_string('uuid', 'local_ildmeta'));
+        $mform->setType('uuid', PARAM_RAW);
+        $mform->addRule('uuid', get_string('required'), 'required', null, 'client');
+        // Check valid UUID.
+        $mform->addRule('uuid', get_string('invaliduuid', 'local_ildmeta'), 'regex', '/^[a-f\d]{8}(-[a-f\d]{4}){4}[a-f\d]{8}$/i', 'client');
         // Kurstitel. Required.
         $mform->addElement('text', 'coursetitle', get_string('coursetitle', 'local_ildmeta'));
         $mform->setType('coursetitle', PARAM_TEXT);

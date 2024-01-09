@@ -99,5 +99,7 @@ $string['text_processingtime'] = 'Bitte nur in ganzen Stunden als Ganzzahl angeb
 $string['title'] = 'Metadaten bearbeiten';
 $string['usecustomvocabulary'] = 'Eigenes Vokabular';
 $string['usecustomvocabulary_desc'] = 'Wenn diese Option aktiviert ist, steht in den Kurs-Metadaten-Einstellungen das selbst definierte Vokabular zur Auswahl bereit.';
+$string['uuid'] = 'UUID';
+$string['invaliduuid'] = 'Ungültige UUID';
 $string['videocode'] = 'Youtube-Link';
 $string['videolicense'] = 'Video-Lizenz';
