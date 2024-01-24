@@ -282,12 +282,15 @@ if (!isset($metarecords) or empty($metarecords)) {
         }
         $metaentry['attributes']['publisher']['identifier'] = $urlwithprotocol;
         $metaentry['attributes']['publisher']['type'] = 'Organization';
-        $metaentry['attributes']['publisher']['image'] = array();
-        $metaentry['attributes']['publisher']['image']['type'] = 'ImageObject';
-        $metaentry['attributes']['publisher']['image']['contentUrl'] = $provider['logo'];
-        $metaentry['attributes']['publisher']['image']['license'] = array();
-        $metaentry['attributes']['publisher']['image']['license'][0]['identifier'] = 'proprietary';
-        $metaentry['attributes']['publisher']['image']['license'][0]['url'] = null;
+
+        if (isset($provider['logo']) && !empty((string)$provider['logo'])) {
+            $metaentry['attributes']['publisher']['image'] = array();
+            $metaentry['attributes']['publisher']['image']['type'] = "ImageObject";
+            $metaentry['attributes']['publisher']['image']['contentUrl'] = trim((string)$provider['logo']);
+            $metaentry['attributes']['publisher']['image']['license'] = array();
+            $metaentry['attributes']['publisher']['image']['license'][0]['identifier'] = 'proprietary';
+            $metaentry['attributes']['publisher']['image']['license'][0]['url'] = null;
+        }
 
         $metaentry['attributes']['url'] = manager::get_external_course_link($meta->courseid);
 
@@ -385,8 +388,8 @@ if (class_exists('Opis\JsonSchema\Validator')) {
         // Send error 500 response.
         $error = [
             'errors' => $formattederror,
+            'source' => $metas,
             'schema' => $schema,
-            'source' => $metas
         ];
 
         header('Content-Type: application/vnd.api+json; moochub-version=3');

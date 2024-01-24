@@ -316,8 +316,8 @@ if (class_exists('Opis\JsonSchema\Validator')) {
         // Send error 500 response.
         $error = [
             'errors' => $formattederror,
+            'source' => $metas,
             'schema' => $schema,
-            'source' => $metas
         ];
 
         header('Content-Type: application/vnd.api+json; moochub-version=2.3');
