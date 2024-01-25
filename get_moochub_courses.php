@@ -224,9 +224,9 @@ if (!isset($metarecords) or empty($metarecords)) {
 
                 $spdxlicense = $DB->get_record('ildmeta_spdx_licenses', array('moodle_license' => $license->id), '*', MUST_EXIST);
                 $spdxurl = !empty($spdxlicense->spdx_url) ? $spdxlicense->spdx_url : null;
-                $metaentry['attributes']['trailer']['licenses'] = array();
-                $metaentry['attributes']['trailer']['licenses'][0]['identifier'] = $spdxlicense->spdx_shortname;
-                $metaentry['attributes']['trailer']['licenses'][0]['url'] = $spdxurl;
+                $metaentry['attributes']['trailer']['license'] = array();
+                $metaentry['attributes']['trailer']['license'][0]['identifier'] = $spdxlicense->spdx_shortname;
+                $metaentry['attributes']['trailer']['license'][0]['url'] = $spdxurl;
             }
         }
 
