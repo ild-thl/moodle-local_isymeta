@@ -50,21 +50,28 @@ if (has_capability('moodle/site:config', $context)) {
     if ($mform->is_cancelled()) {
         redirect($url);
     } else if ($data = $mform->get_data()) {
+        # moodle license
         foreach ($licenses as $license) {
+            $gotid = FALSE;
+            # search for the spdxlicense with with moodle_license as moodle_license_id
             foreach ($spdxlicenses as $spdxlicense) {
                 if ($spdxlicense->moodle_license === $license->id) {
+                    $gotid = TRUE;
+                    # the last one does always have an id
+                    $spdxlicense->moodle_license = $data->{"moodle_license_" . $license->id};
+                    $spdxlicense->spdx_shortname = $data->{"shortname_" . $license->id};
+                    $spdxlicense->spdx_fullname = $data->{"fullname_" . $license->id};
+                    $spdxlicense->spdx_url = $data->{"url_" . $license->id};
+                    $DB->update_record('ildmeta_spdx_licenses', $spdxlicense);
                     break;
                 }
             }
-
-            $spdxlicense->moodle_license = $data->{"moodle_license_" . $license->id};
-            $spdxlicense->spdx_shortname = $data->{"shortname_" . $license->id};
-            $spdxlicense->spdx_fullname = $data->{"fullname_" . $license->id};
-            $spdxlicense->spdx_url = $data->{"url_" . $license->id};
-
-            if (isset($spdxlicense->id)) {
-                $DB->update_record('ildmeta_spdx_licenses', $spdxlicense);
-            } else {
+            if(!$gotid) {
+                # the last one does always have an id
+                $spdxlicense->moodle_license = $data->{"moodle_license_" . $license->id};
+                $spdxlicense->spdx_shortname = $data->{"shortname_" . $license->id};
+                $spdxlicense->spdx_fullname = $data->{"fullname_" . $license->id};
+                $spdxlicense->spdx_url = $data->{"url_" . $license->id};
                 $DB->insert_record('ildmeta_spdx_licenses', $spdxlicense);
             }
         }
