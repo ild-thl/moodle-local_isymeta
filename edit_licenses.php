@@ -57,7 +57,6 @@ if (has_capability('moodle/site:config', $context)) {
             foreach ($spdxlicenses as $spdxlicense) {
                 if ($spdxlicense->moodle_license === $license->id) {
                     $gotid = TRUE;
-                    # the last one does always have an id
                     $spdxlicense->moodle_license = $data->{"moodle_license_" . $license->id};
                     $spdxlicense->spdx_shortname = $data->{"shortname_" . $license->id};
                     $spdxlicense->spdx_fullname = $data->{"fullname_" . $license->id};
@@ -67,7 +66,6 @@ if (has_capability('moodle/site:config', $context)) {
                 }
             }
             if(!$gotid) {
-                # the last one does always have an id
                 $spdxlicense->moodle_license = $data->{"moodle_license_" . $license->id};
                 $spdxlicense->spdx_shortname = $data->{"shortname_" . $license->id};
                 $spdxlicense->spdx_fullname = $data->{"fullname_" . $license->id};
