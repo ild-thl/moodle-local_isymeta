@@ -50,21 +50,26 @@ if (has_capability('moodle/site:config', $context)) {
     if ($mform->is_cancelled()) {
         redirect($url);
     } else if ($data = $mform->get_data()) {
+        # moodle license
         foreach ($licenses as $license) {
+            $gotid = FALSE;
+            # search for the spdxlicense with with moodle_license as moodle_license_id
             foreach ($spdxlicenses as $spdxlicense) {
                 if ($spdxlicense->moodle_license === $license->id) {
+                    $gotid = TRUE;
+                    $spdxlicense->moodle_license = $data->{"moodle_license_" . $license->id};
+                    $spdxlicense->spdx_shortname = $data->{"shortname_" . $license->id};
+                    $spdxlicense->spdx_fullname = $data->{"fullname_" . $license->id};
+                    $spdxlicense->spdx_url = $data->{"url_" . $license->id};
+                    $DB->update_record('ildmeta_spdx_licenses', $spdxlicense);
                     break;
                 }
             }
-
-            $spdxlicense->moodle_license = $data->{"moodle_license_" . $license->id};
-            $spdxlicense->spdx_shortname = $data->{"shortname_" . $license->id};
-            $spdxlicense->spdx_fullname = $data->{"fullname_" . $license->id};
-            $spdxlicense->spdx_url = $data->{"url_" . $license->id};
-
-            if (isset($spdxlicense->id)) {
-                $DB->update_record('ildmeta_spdx_licenses', $spdxlicense);
-            } else {
+            if(!$gotid) {
+                $spdxlicense->moodle_license = $data->{"moodle_license_" . $license->id};
+                $spdxlicense->spdx_shortname = $data->{"shortname_" . $license->id};
+                $spdxlicense->spdx_fullname = $data->{"fullname_" . $license->id};
+                $spdxlicense->spdx_url = $data->{"url_" . $license->id};
                 $DB->insert_record('ildmeta_spdx_licenses', $spdxlicense);
             }
         }
@@ -121,6 +126,40 @@ if (has_capability('moodle/site:config', $context)) {
     $toform["shortname_9"] = 'CC-BY-SA-3.0-DE';
     $toform["fullname_9"] = 'Creative Commons Attribution Share Alike 3.0 Germany';
     $toform["url_9"] = "https://spdx.org/licenses/CC-BY-SA-3.0-DE.html";
+    // All rights reserved.
+    $toform["moodle_license_10"] = 10;
+    $toform["shortname_10"] = 'CC-BY-4.0';
+    $toform["fullname_10"] = 'Creative Commons - 4.0 International';
+    $toform["url_10"] = "https://spdx.org/licenses/CC-BY-4.0.html";
+    // All rights reserved.
+    $toform["moodle_license_11"] = 11;
+    $toform["shortname_11"] = 'CC-BY-NC-4.0';
+    $toform["fullname_11"] = 'Creative Commons Attribution Non Commercial 4.0 International';
+    $toform["url_11"] = "https://spdx.org/licenses/CC-BY-NC-4.0.html";
+    // All rights reserved.
+    $toform["moodle_license_12"] = 12;
+    $toform["shortname_12"] = 'CC-BY-ND-4.0';
+    $toform["fullname_12"] = 'Creative Commons Attribution No Derivatives 4.0 International';
+    $toform["url_12"] = "https://spdx.org/licenses/CC-BY-ND-4.0.html";
+    // All rights reserved.
+    $toform["moodle_license_13"] = 13;
+    $toform["shortname_13"] = 'CC-BY-NC-ND-4.0';
+    $toform["fullname_13"] = 'Creative Commons Attribution Non Commercial No Derivatives 4.0 International';
+    $toform["url_13"] = "https://spdx.org/licenses/CC-BY-NC-ND-4.0.html";
+    // All rights reserved.
+    $toform["moodle_license_14"] = 14;
+    $toform["shortname_14"] = 'CC-BY-NC-SA-4.0';
+    $toform["fullname_14"] = 'Creative Commons Attribution Non Commercial Share Alike 4.0 International';
+    $toform["url_14"] = "https://spdx.org/licenses/CC-BY-NC-SA-4.0.html";
+    // All rights reserved.
+    $toform["moodle_license_15"] = 15;
+    $toform["shortname_15"] = 'CC-BY-SA-4.0';
+    $toform["fullname_15"] = 'Creative Commons Attribution Share Alike 4.0 International';
+    $toform["url_15"] = "https://spdx.org/licenses/CC-BY-SA-4.0.html";
+
+
+
+
 
     foreach ($spdxlicenses as $spdx) {
         $toform["moodle_license_" . $spdx->moodle_license] = $spdx->moodle_license;
