@@ -175,7 +175,9 @@ if ($mform->is_cancelled()) {
         $todb->audience = $fromform->audience;
     }
     if (isset($fromform->courseprerequisites)) {
-        $todb->courseprerequisites = $fromform->courseprerequisites['text'];
+        if (isset($fromform->courseprerequisites['text'])) {
+            $todb->courseprerequisites = $fromform->courseprerequisites['text'];
+        }
     }
     if (isset($fromform->availablefrom)) {
         $todb->availablefrom = $fromform->availablefrom;
