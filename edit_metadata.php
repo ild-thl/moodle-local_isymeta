@@ -300,6 +300,14 @@ if ($mform->is_cancelled()) {
         }
     }
 
+    // Trigger the ildmeta_updated event.
+    $event = \local_ildmeta\event\ildmeta_updated::create(array(
+        'objectid' => $id,
+        'context' => $coursecontext,
+        'other' => array('noindex' => $todb->noindexcourse, 'uuid' => $todb->uuid)
+    ));
+    $event->trigger();
+
     // Redirect to course page.
     redirect($url, 'Daten erfolgreich gespeichert', null, \core\output\notification::NOTIFY_SUCCESS);
 } else {

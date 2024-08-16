@@ -44,6 +44,7 @@ $string['detailsmorelecturer'] = 'More lecturer';
 $string['edit_licenses'] = 'Edit licenses mapping to SPDX';
 $string['edit_provider'] = 'Edit provider';
 $string['edit_vocabulary'] = 'Edit vocabulary';
+$string['eventildmetaupdated'] = 'Course Metadata updated';
 $string['expires'] = 'Availability';
 $string['expires_help'] = 'Is an expiration date known for the course?';
 $string['expires_no'] = 'unlimited availability';

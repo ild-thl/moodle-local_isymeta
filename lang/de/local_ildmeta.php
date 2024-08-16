@@ -44,6 +44,7 @@ $string['detailsmorelecturer'] = 'Weitere Autor*innen';
 $string['edit_licenses'] = 'Lizenz-Mapping zu SPDX bearbeiten';
 $string['edit_provider'] = 'Anbieter verwalten';
 $string['edit_vocabulary'] = 'Vokabular bearbeiten';
+$string['eventildmetaupdated'] = 'Kursmetadaten aktualisiert';
 $string['expires'] = 'Verfügbarkeit';
 $string['expires_help'] = 'Ist ein Ende der Verfügbarkeit des Kurses bekannt?';
 $string['expires_no'] = 'Unbegrenzt verfügbar';
