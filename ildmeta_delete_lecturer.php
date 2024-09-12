@@ -80,9 +80,9 @@ if ($mform->is_cancelled()) {
         }
 
         // Then adjust the counter in ildmeta.
-        $sql = "UPDATE {ildmeta} SET detailslecturer=detailslecturer-1 WHERE courseid = ?";
-        $params = array('courseid' => $courseid);
-
+        $sql = "UPDATE {ildmeta} SET detailslecturer = GREATEST(COALESCE(CAST(detailslecturer AS INTEGER), 0) - 1, 0) WHERE courseid = ?";
+        $params = array($courseid);
+        
         if (!$DB->execute($sql, $params)) {
             $error = true;
         }
