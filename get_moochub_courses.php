@@ -50,7 +50,7 @@ if (isset($_GET['moochub-version'])) {
         // Get requested version from Accept header with regex moochub-version=2.1 => 2.1 .
         if (preg_match('/.*moochub-version=(\d+(\.\d+)?)*/', $accept, $matches)) {
             $requestedversion = $matches[1];
-        } 
+        }
         if (isset($requestedversion) and !empty($requestedversion)) {
             $requestedversion = floatval($requestedversion);
             if ($requestedversion < 3) {
@@ -59,7 +59,6 @@ if (isset($_GET['moochub-version'])) {
             }
         }
     }
-
 }
 
 global $CFG;
@@ -88,7 +87,7 @@ function pproc_input($idnumbers) {
     $idnumbers = array_filter($idnumbers, function ($value) {
         return trim($value) !== '';
     });
-    return($idnumbers);
+    return ($idnumbers);
 }
 
 if (!isset($_GET['idn']) && !isset($_GET['id'])) {
@@ -154,7 +153,24 @@ if (!isset($metarecords) or empty($metarecords)) {
             "type" => "Concept",
             "inScheme" => "https://w3id.org/kim/hcrt/scheme"
         ];
-        $metaentry['attributes']['description'] = $meta->teasertext;
+
+        // Build one course description from all free text fields. Each field is wrapped in a div with a class.
+        $description = '';
+        if (isset($meta->teasertext) && !empty($meta->teasertext)) {
+            $description .= "<div class='teasertext'>$teasertext</div>";
+        }
+        if (isset($meta->targetgroup) && !empty($meta->targetgroup)) {
+            $description .= "<div class='targetgroup'>$targetgroup</div>";
+        }
+        if (isset($meta->learninggoals) && !empty($meta->learninggoals)) {
+            $description .= "<div class='learninggoals'>$learninggoals</div>";
+        }
+        if (isset($meta->structure) && !empty($meta->structure)) {
+            $description .= "<div class='structure'>$structure</div>";
+        }
+
+        $metaentry['attributes']['description'] = $description;
+
         $langlist = [
             'de',
             'en',
