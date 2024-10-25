@@ -154,19 +154,19 @@ if (!isset($metarecords) or empty($metarecords)) {
             "inScheme" => "https://w3id.org/kim/hcrt/scheme"
         ];
 
-        // Build one course description from all free text fields. Each field is wrapped in a div with a class.
+        // Build the course description
         $description = '';
         if (isset($meta->teasertext) && !empty($meta->teasertext)) {
-            $description .= "<div class='teasertext'>$teasertext</div>";
+            $description .= "<div class='teasertext'>$meta->teasertext</div>";
         }
         if (isset($meta->targetgroup) && !empty($meta->targetgroup)) {
-            $description .= "<div class='targetgroup'>$targetgroup</div>";
+            $description .= "<div class='targetgroup'>$meta->targetgroup</div>";
         }
         if (isset($meta->learninggoals) && !empty($meta->learninggoals)) {
-            $description .= "<div class='learninggoals'>$learninggoals</div>";
+            $description .= "<div class='learninggoals'>$meta->learninggoals</div>";
         }
         if (isset($meta->structure) && !empty($meta->structure)) {
-            $description .= "<div class='structure'>$structure</div>";
+            $description .= "<div class='structure'>$meta->structure</div>";
         }
 
         $metaentry['attributes']['description'] = $description;
@@ -178,6 +178,7 @@ if (!isset($metarecords) or empty($metarecords)) {
             'ru'
         ];
         $metaentry['attributes']['inLanguage'] = [$langlist[$meta->courselanguage]];
+        // Set course start and end date.
         $metaentry['attributes']['endDate'] = date('c', $meta->starttime);
         $metaentry['attributes']['endDate'] = null;
         $metaentry['attributes']['expires'] = null;
@@ -328,7 +329,25 @@ if (!isset($metarecords) or empty($metarecords)) {
 
         // TODO Set audience.
         // TODO Set educationalAlignement.
-        // TODO Set educationalLevel.
+
+        // Set educationalLevel.
+        if (isset($meta->edulevel) && $meta->edulevel > 0) {
+            $metaentry['attributes']['educationalLevel'] = [
+                [
+                    'name' => [
+                        [
+                            'inLanguage' => 'de',
+                            'name' => $vocabularies->edulevel_digcomp22[$meta->edulevel - 1]
+                        ]
+                    ],
+                    'shortCode' => $meta->edulevel,
+                    'educationalFrameworkVersion' => '2.2',
+                    'educationalFramework' => 'DigComp',
+                    'type' => 'EducationalLevel',
+                ]
+            ];
+        }
+
         // TODO Set actual creator. For now copy publisher.
         $metaentry['attributes']['creator'] = [$metaentry['attributes']['publisher']];
 
@@ -350,7 +369,8 @@ if (!isset($metarecords) or empty($metarecords)) {
 if (class_exists('Opis\JsonSchema\Validator')) {
     // Schema Validation.
     $validator = new Validator();
-    $schemaurl = "https://raw.githubusercontent.com/MOOChub/schema/b89a218d74fec89fe01ea5ad68b95b07dcfe17a6/moochub-schema.json";
+    $schemaurl = "https://raw.githubusercontent.com/MOOChub/schema/f7f169761263988fc47e0bca27f1b12eb4519196/moochub-schema.json";
+
     // Get schema from github.
     $schemajson = file_get_contents($schemaurl);
     $schema = Helper::toJSON(json_decode($schemajson));
@@ -399,8 +419,12 @@ if (class_exists('Opis\JsonSchema\Validator')) {
         $message .= $errormessage;
 
         // Send email.
-        email_to_user($adminuser, $adminuser, $subject, $message, '', '', '', true);
-
+        try {
+            email_to_user($adminuser, $adminuser, $subject, $message, '', '', '', true);
+        } catch (Exception $e) {
+            // Log error.
+            error_log('Error while sending email to admin: ' . $e->getMessage());
+        }
         // Send error 500 response.
         $error = [
             'errors' => $formattederror,

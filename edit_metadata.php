@@ -88,7 +88,8 @@ $customdata = array(
     'editoropts' => $editoropts,
     'max_lecturer' => $maxlecturer,
     'courseid' => $id,
-    'lecturer' => $recordslect);
+    'lecturer' => $recordslect
+);
 
 $mform = new edit_metadata_form($url . '?courseid=' . $id, $customdata);
 
@@ -188,6 +189,9 @@ if ($mform->is_cancelled()) {
         }
     } else {
         $todb->availableuntil = null;
+    }
+    if (isset($fromform->edulevel)) {
+        $todb->edulevel = $fromform->edulevel;
     }
 
     // If course is not in db yet.
@@ -345,6 +349,7 @@ if ($mform->is_cancelled()) {
         $toform->videocode = $getdb->videocode;
         $toform->videolicense = $getdb->videolicense;
         $toform->tags = $getdb->tags;
+        $toform->edulevel = $getdb->edulevel;
 
         // Bird/DC properties.
         $toform->birdsubjectarea = $getdb->birdsubjectarea;
@@ -421,7 +426,7 @@ if ($mform->is_cancelled()) {
 
         $coursetags = $DB->get_records_sql($sql, array('courseid' => $id));
         if (isset($coursetags) && !empty($coursetags)) {
-            $coursetags = array_map(fn ($a) => $a->name, $coursetags);
+            $coursetags = array_map(fn($a) => $a->name, $coursetags);
             $toform->tags = implode(' ', $coursetags);
         }
 
@@ -445,6 +450,7 @@ if ($mform->is_cancelled()) {
         $toform->license = 0;
         $toform->videocode = null;
         $toform->videolicense = null;
+        $toform->edulevel = null;
 
         // Bird/DC properties.
         $toform->exporttobird = 0;

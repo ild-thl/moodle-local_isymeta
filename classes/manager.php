@@ -278,6 +278,45 @@ class manager {
             ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE),
         ];
         $DB->insert_record('ildmeta_vocabulary', $languagelevels);
+
+        $edulevel_digcomp22 = [
+            'title' => 'edulevel_digcomp22',
+            'terms' => json_encode([
+                [
+                    "de" => "Grundlagen (Level 1)",
+                    "en" => "Foundation (Level 1)",
+                ],
+                [
+                    "de" => "Grundlagen (Level 2)",
+                    "en" => "Foundation (Level 2)",
+                ],
+                [
+                    "de" => "Aufbau (Level 3)",
+                    "en" => "Intermediate (Level 3)",
+                ],
+                [
+                    "de" => "Aufbau (Level 4)",
+                    "en" => "Intermediate (Level 4)",
+                ],
+                [
+                    "de" => "Fortgeschritten (Level 5)",
+                    "en" => "Advanced (Level 5)",
+                ],
+                [
+                    "de" => "Fortgeschritten (Level 6)",
+                    "en" => "Advanced (Level 6)",
+                ],
+                [
+                    "de" => "Hochspezialisiert (Level 7)",
+                    "en" => "Highly specialised (Level 7)",
+                ],
+                [
+                    "de" => "Hochspezialisiert (Level 8)",
+                    "en" => "Highly specialised (Level 8)",
+                ]
+            ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE),
+        ];
+        $DB->insert_record('ildmeta_vocabulary', $edulevel_digcomp22);
     }
 
     private static function detailpage_is_enabled() {

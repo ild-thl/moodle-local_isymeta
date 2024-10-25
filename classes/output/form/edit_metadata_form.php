@@ -110,6 +110,9 @@ class edit_metadata_form extends \moodleform {
         $mform->setType('subjectarea', PARAM_RAW);
         // $mform->addRule('subjectarea', get_string('required'), 'required', null, 'client');
 
+        // Bildungsniveau. Required.
+        edu_level_form_element::toHTML($mform);
+
         // Kurssprache. Required.
         $mform->addElement('select', 'courselanguage', get_string('courselanguage', 'local_ildmeta'), $langlist);
         $mform->setType('courselanguage', PARAM_RAW);

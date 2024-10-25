@@ -1,0 +1,166 @@
+{{!
+    This file is part of Moodle - https://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_ildmeta/edu_level_form_element
+
+    Template for rendering educational level form element with custom styling.
+
+    Classes required for JS:
+    * none
+
+    Data attributes required for JS:
+    * none
+
+    Context variables required for this template:
+    * options: Array of options for the radio buttons.
+        * value: The value of the radio button.
+        * label: The label for the radio button.
+        * complexity: The complexity of tasks description.
+        * autonomy: The autonomy description.
+        * cognitive: The cognitive domain description.
+
+    Example context (json):
+    {
+        "options": [
+            {
+                "value": 0,
+                "label": "",
+                "complexity": "",
+                "autonomy": "",
+                "cognitive": ""
+            },
+            {
+                "value": 1,
+                "label": "Foundation Level 1",
+                "complexity": "Simple task",
+                "autonomy": "With guidance",
+                "cognitive": "Remembering"
+            },
+            {
+                "value": 2,
+                "label": "Foundation Level 2",
+                "complexity": "Simple task",
+                "autonomy": "Autonomy and with guidance when needed",
+                "cognitive": "Remembering"
+            }
+        ]
+    }
+}}
+
+<style>
+.ildmeta_edulevel_granular_levels td:not(:first-child) {
+    text-align: center;
+}
+
+.ildmeta_edulevel_granular_levels td input+label {
+    margin-left: 1em;
+    color: #fff;
+}
+
+.ildmeta_edulevel_granular_levels td:not(:first-child), .ildmeta_edulevel_overall_levels td:not(:first-child) {
+    font-weight: bold;
+}
+
+.edu-level-table tr td:first-child {
+    color: #006AA8;
+}
+
+.edu-level-table td {
+    border-right: 1px dashed #666;
+    border-top: 1px dashed #666;
+}
+
+.edu-level-table tr:last-child td {
+    border-bottom: 1px dashed #666;
+}
+
+.edu-level-table td:last-child {
+    border-right: none;
+}
+
+.edu-level-table caption {
+    background-color: #006AA8;
+    color: white;
+    padding: 10px;
+    border-radius: 5px 5px 0 0;
+}
+
+.edu-level-table caption a {
+    color: #fff;
+    text-decoration: underline;
+}
+
+.edu-level-table caption span{
+    float: right;
+}
+
+.edu-level-table caption span input+label{
+    margin: 0 .5em;
+}
+</style>
+<div id="fgroup_id_edulevel_group" class="mb-3 row fitem" data-groupname="edulevel_group">
+    <details>
+        <summary>{{#str}}edulevelguide, local_ildmeta{{/str}}</summary>
+        <div class="col-md-9 d-flex flex-wrap align-items-start felement" data-fieldtype="group">
+            <fieldset class="w-100 m-0 p-0 border-0">
+                <legend class="sr-only">{{#str}}edulevel, local_ildmeta{{/str}}</legend>
+                <table class="edu-level-table table">
+                    <caption>
+                        <a href="https://data.europa.eu/doi/10.2760/115376">
+                            {{#str}}digicomp_link, local_ildmeta{{/str}}
+                        </a>
+                        <div style="display: none">{{{none_option}}}</div>
+                    </caption>
+                    <tbody>
+                        <tr class="ildmeta_edulevel_overall_levels">
+                            <td>{{#str}}overall_levels, local_ildmeta{{/str}}</td>
+                            {{#options}}
+                            {{#overall_level}}
+                            <td colspan="2">{{.}}</td>
+                            {{/overall_level}}
+                            {{/options}}
+                        </tr>
+                        <tr class="ildmeta_edulevel_granular_levels">
+                            <td>{{#str}}granular_levels, local_ildmeta{{/str}}</td>
+                            {{#options}}
+                            <td style="{{style}}"><div style="display: none">{{{radio}}}</div>{{ value }}</td>
+                            {{/options}}
+                        </tr>
+                        <tr>
+                            <td>{{#str}}complexity_of_tasks, local_ildmeta{{/str}}</td>
+                            {{#options}}
+                            <td>{{complexity}}</td>
+                            {{/options}}
+                        </tr>
+                        <tr>
+                            <td>{{#str}}autonomy, local_ildmeta{{/str}}</td>
+                            {{#options}}
+                            <td>{{autonomy}}</td>
+                            {{/options}}
+                        </tr>
+                        <tr>
+                            <td>{{#str}}cognitive_domain, local_ildmeta{{/str}}</td>
+                            {{#options}}
+                            <td>{{cognitive}}</td>
+                            {{/options}}
+                        </tr>
+                    </tbody>
+                </table>
+            </fieldset>
+        </div>
+    </details>
+</div>

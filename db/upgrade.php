@@ -430,5 +430,63 @@ function xmldb_local_ildmeta_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2023111619, 'local', 'ildmeta');
     }
 
+    if ($oldversion < 2024102509) {
+        $ildmetatable = new xmldb_table('ildmeta');
+
+        // new field <FIELD NAME="edulevel" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        $field = new xmldb_field('edulevel', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'shortname');
+
+        // Conditionally launch add field edulevel.
+        if (!$dbman->field_exists($ildmetatable, $field)) {
+            $dbman->add_field($ildmetatable, $field);
+        }
+
+        // Add vocabulary for DigComp 2.2 educational levels.
+        if (!$DB->record_exists('ildmeta_vocabulary', array('title' => 'edulevel_digcomp22'))) {
+            $edulevel_digcomp22 = [
+                'title' => 'edulevel_digcomp22',
+                'terms' => json_encode([
+                    [
+                        "de" => "Grundlagen (Level 1)",
+                        "en" => "Foundation (Level 1)",
+                    ],
+                    [
+                        "de" => "Grundlagen (Level 2)",
+                        "en" => "Foundation (Level 2)",
+                    ],
+                    [
+                        "de" => "Aufbau (Level 3)",
+                        "en" => "Intermediate (Level 3)",
+                    ],
+                    [
+                        "de" => "Aufbau (Level 4)",
+                        "en" => "Intermediate (Level 4)",
+                    ],
+                    [
+                        "de" => "Fortgeschritten (Level 5)",
+                        "en" => "Advanced (Level 5)",
+                    ],
+                    [
+                        "de" => "Fortgeschritten (Level 6)",
+                        "en" => "Advanced (Level 6)",
+                    ],
+                    [
+                        "de" => "Hochspezialisiert (Level 7)",
+                        "en" => "Highly specialised (Level 7)",
+                    ],
+                    [
+                        "de" => "Hochspezialisiert (Level 8)",
+                        "en" => "Highly specialised (Level 8)",
+                    ]
+                ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE),
+            ];
+
+            $DB->insert_record('ildmeta_vocabulary', $edulevel_digcomp22);
+        }
+
+        // Ildmeta savepoint reached.
+        upgrade_plugin_savepoint(true, 2024102509, 'local', 'ildmeta');
+    }
+
     return true;
 }
