@@ -137,3 +137,6 @@ $string['understanding'] = 'Understanding';
 $string['applying'] = 'Applying';
 $string['evaluating'] = 'Evaluating';
 $string['creating'] = 'Creating';
+$string['targetgroup_heading'] = 'Target Group';
+$string['learninggoals_heading'] = 'Learning Goals';
+$string['structure_heading'] = 'Course Structure';

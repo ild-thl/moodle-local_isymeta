@@ -160,13 +160,16 @@ if (!isset($metarecords) or empty($metarecords)) {
             $description .= "<div class='teasertext'>$meta->teasertext</div>";
         }
         if (isset($meta->targetgroup) && !empty($meta->targetgroup)) {
-            $description .= "<div class='targetgroup'>$meta->targetgroup</div>";
+            $heading = get_string('targetgroup_heading', 'local_ildmeta', $meta->courselanguage);
+            $description .= "<div class='targetgroup'><h3>$heading</h3>$meta->targetgroup</div>";
         }
         if (isset($meta->learninggoals) && !empty($meta->learninggoals)) {
-            $description .= "<div class='learninggoals'>$meta->learninggoals</div>";
+            $heading = get_string('learninggoals_heading', 'local_ildmeta', $meta->courselanguage);
+            $description .= "<div class='learninggoals'><h3>$heading</h3>$meta->learninggoals</div>";
         }
         if (isset($meta->structure) && !empty($meta->structure)) {
-            $description .= "<div class='structure'>$meta->structure</div>";
+            $heading = get_string('structure_heading', 'local_ildmeta', $meta->courselanguage);
+            $description .= "<div class='structure'><h3>$heading</h3>$meta->structure</div>";
         }
 
         $metaentry['attributes']['description'] = $description;
