@@ -44,7 +44,7 @@ class edit_metadata_form extends \moodleform {
         // Get list of providers.
         $providers = manager::get_providers();
         // Reduce list to names only.
-        $providers = array_map(fn ($a) => $a['name'], $providers);
+        $providers = array_map(fn($a) => $a['name'], $providers);
 
         $vocabularysettings = '/local/ildmeta/edit_vocabulary.php';
         $providersettings = '/local/ildmeta/edit_provider.php';
@@ -148,8 +148,8 @@ class edit_metadata_form extends \moodleform {
         $mform->hideIf('overviewimage', 'customoverviewimage', "eq", 0);
 
         // Videocode.
-        $mform->addElement('text', 'videocode', get_string('videocode', 'local_ildmeta'));
-        $mform->setType('videocode', PARAM_TEXT);
+        $mform->addElement('url', 'videocode', get_string('videocode', 'local_ildmeta'));
+        $mform->setType('videocode', PARAM_URL);
 
         // Videolizenz.
         $licenses = $DB->get_records('license');
