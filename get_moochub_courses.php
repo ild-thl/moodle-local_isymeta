@@ -230,6 +230,10 @@ if (!isset($metarecords) or empty($metarecords)) {
                 $metaentry['attributes']['image']['license'] = array();
                 $metaentry['attributes']['image']['license'][0]['identifier'] = $spdxlicense->spdx_shortname;
                 $metaentry['attributes']['image']['license'][0]['url'] = $spdxurl;
+            } else {
+                $metaentry['attributes']['license'] = [];
+                $metaentry['attributes']['license'][0]['identifier'] = 'Proprietary';
+                $metaentry['attributes']['license'][0]['url'] = null;
             }
         }
 
