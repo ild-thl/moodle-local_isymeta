@@ -425,9 +425,9 @@ if (class_exists('Opis\JsonSchema\Validator')) {
         $message .= '<br><br>';
         $message .= $errormessage;
 
-        // Send email.
         try {
-            email_to_user($adminuser, $adminuser, $subject, $message, '', '', '', true);
+            // Deactivate email notification for now because of risk of spamming.
+            // email_to_user($adminuser, $adminuser, $subject, $message, '', '', '', true);
         } catch (Exception $e) {
             // Log error.
             error_log('Error while sending email to admin: ' . $e->getMessage());
@@ -441,6 +441,7 @@ if (class_exists('Opis\JsonSchema\Validator')) {
 
         header('Content-Type: application/vnd.api+json; moochub-version=3');
         $json = json_encode($error, JSON_UNESCAPED_SLASHES);
+        error_log('Error while validating JSON Schema: ' . $json);
         http_response_code(500);
         echo $json;
     }
