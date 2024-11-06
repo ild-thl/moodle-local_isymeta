@@ -160,16 +160,25 @@ if (!isset($metarecords) or empty($metarecords)) {
             $description .= "<div class='teasertext'>$meta->teasertext</div>";
         }
         if (isset($meta->targetgroup) && !empty($meta->targetgroup)) {
-            $heading = get_string('targetgroup_heading', 'local_ildmeta', $meta->courselanguage);
-            $description .= "<div class='targetgroup'><h3>$heading</h3>$meta->targetgroup</div>";
+            $heading = "";
+            if (isset($meta->targetgroupheading) && !empty($meta->targetgroupheading)) {
+                $heading = "<h3>$meta->targetgroupheading</h3>";
+            }
+            $description .= "<div class='targetgroup'>$heading$meta->targetgroup</div>";
         }
         if (isset($meta->learninggoals) && !empty($meta->learninggoals)) {
-            $heading = get_string('learninggoals_heading', 'local_ildmeta', $meta->courselanguage);
-            $description .= "<div class='learninggoals'><h3>$heading</h3>$meta->learninggoals</div>";
+            $heading = "";
+            if (isset($meta->learninggoalsheading) && !empty($meta->learninggoalsheading)) {
+                $heading = "<h3>$meta->learninggoalsheading</h3>";
+            }
+            $description .= "<div class='learninggoals'>$heading$meta->learninggoals</div>";
         }
         if (isset($meta->structure) && !empty($meta->structure)) {
-            $heading = get_string('structure_heading', 'local_ildmeta', $meta->courselanguage);
-            $description .= "<div class='structure'><h3>$heading</h3>$meta->structure</div>";
+            $heading = "";
+            if (isset($meta->structureheading) && !empty($meta->structureheading)) {
+                $heading = "<h3>$meta->structureheading</h3>";
+            }
+            $description .= "<div class='structure'>$heading$meta->structure</div>";
         }
 
         $metaentry['attributes']['description'] = $description;
