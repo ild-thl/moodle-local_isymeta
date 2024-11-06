@@ -488,5 +488,28 @@ function xmldb_local_ildmeta_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2024102509, 'local', 'ildmeta');
     }
 
+    if ($oldversion < 2024110610) {
+        $ildmetatable = new xmldb_table('ildmeta');
+
+        // Add new fields to ildmeta table.
+        $targetgroupheading = new xmldb_field('targetgroupheading', XMLDB_TYPE_CHAR, '120', null, null, null, null, 'edulevel');
+        if (!$dbman->field_exists($ildmetatable, $targetgroupheading)) {
+            $dbman->add_field($ildmetatable, $targetgroupheading);
+        }
+
+        $learninggoalsheading = new xmldb_field('learninggoalsheading', XMLDB_TYPE_CHAR, '120', null, null, null, null, 'targetgroupheading');
+        if (!$dbman->field_exists($ildmetatable, $learninggoalsheading)) {
+            $dbman->add_field($ildmetatable, $learninggoalsheading);
+        }
+
+        $structureheading = new xmldb_field('structureheading', XMLDB_TYPE_CHAR, '120', null, null, null, null, 'learninggoalsheading');
+        if (!$dbman->field_exists($ildmetatable, $structureheading)) {
+            $dbman->add_field($ildmetatable, $structureheading);
+        }
+
+        // Ildmeta savepoint reached.
+        upgrade_plugin_savepoint(true, 2024110610, 'local', 'ildmeta');
+    }
+
     return true;
 }

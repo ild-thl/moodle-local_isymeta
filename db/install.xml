@@ -45,6 +45,9 @@
         <FIELD NAME="abstract" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="shortname" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="edulevel" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="targetgroupheading" TYPE="char" LENGTH="120" SEQUENCE="false"/>
+        <FIELD NAME="learninggoalsheading" TYPE="char" LENGTH="120" SEQUENCE="false"/>
+        <FIELD NAME="structureheading" TYPE="char" LENGTH="120" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key"/>

@@ -177,14 +177,32 @@ class edit_metadata_form extends \moodleform {
         $mform->addRule('teasertext', get_string('required'), 'required', null, 'client');
 
         // Zielgruppe.
+        $mform->addElement('header', 'targetgroup_section', get_string('targetgroup', 'local_ildmeta'));
+        // Zielgruppe Heading.
+        $mform->addElement('text', 'targetgroupheading', get_string('description_heading', 'local_ildmeta'), 'maxlength="120"');
+        $mform->setType('targetgroupheading', PARAM_TEXT);
+        $mform->addRule('targetgroupheading', null, 'maxlength', 120, 'client');
+        $mform->setDefault('targetgroupheading', get_string('targetgroup_heading', 'local_ildmeta'));
         $mform->addElement('editor', 'targetgroup', get_string('targetgroup', 'local_ildmeta'));
         $mform->setType('targetgroup', PARAM_RAW);
 
         // Lernziele.
+        $mform->addElement('header', 'learninggoals_section', get_string('learninggoals', 'local_ildmeta'));
+        // Lernziele Heading.
+        $mform->addElement('text', 'learninggoalsheading', get_string('description_heading', 'local_ildmeta'), 'maxlength="120"');
+        $mform->setType('learninggoalsheading', PARAM_TEXT);
+        $mform->addRule('learninggoalsheading', null, 'maxlength', 120, 'client');
+        $mform->setDefault('learninggoalsheading', get_string('learninggoals_heading', 'local_ildmeta'));
         $mform->addElement('editor', 'learninggoals', get_string('learninggoals', 'local_ildmeta'));
         $mform->setType('learninggoals', PARAM_RAW);
 
         // Gliederung.
+        $mform->addElement('header', 'structure_section', get_string('structure', 'local_ildmeta'));
+        // Gliederung Heading.
+        $mform->addElement('text', 'structureheading', get_string('description_heading', 'local_ildmeta'), 'maxlength="120"');
+        $mform->setType('structureheading', PARAM_TEXT);
+        $mform->addRule('structureheading', null, 'maxlength', 120, 'client');
+        $mform->setDefault('structureheading', get_string('structure_heading', 'local_ildmeta'));
         $mform->addElement('editor', 'structure', get_string('structure', 'local_ildmeta'));
         $mform->setType('structure', PARAM_RAW);
 

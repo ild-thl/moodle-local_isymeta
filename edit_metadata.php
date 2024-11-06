@@ -130,8 +130,11 @@ if ($mform->is_cancelled()) {
     $todb->starttime = $fromform->starttime;
     $todb->teasertext = $fromform->teasertext['text'];
     $todb->targetgroup = $fromform->targetgroup['text'];
+    $todb->targetgroupheading = $fromform->targetgroupheading;
     $todb->learninggoals = $fromform->learninggoals['text'];
+    $todb->learninggoalsheading = $fromform->learninggoalsheading;
     $todb->structure = $fromform->structure['text'];
+    $todb->structureheading = $fromform->structureheading;
     $todb->certificateofachievement = $fromform->certificateofachievement['text'];
     $todb->license = $fromform->license;
     $todb->videocode = $fromform->videocode;
@@ -341,8 +344,11 @@ if ($mform->is_cancelled()) {
         $toform->starttime = $getdb->starttime;
         $toform->teasertext['text'] = $getdb->teasertext;
         $toform->targetgroup['text'] = $getdb->targetgroup;
+        $toform->targetgroupheading = $getdb->targetgroupheading;
         $toform->learninggoals['text'] = $getdb->learninggoals;
+        $toform->learninggoalsheading = $getdb->learninggoalsheading;
         $toform->structure['text'] = $getdb->structure;
+        $toform->structureheading = $getdb->structureheading;
         $toform->additional_lecturer = '0';
         $toform->certificateofachievement['text'] = $getdb->certificateofachievement;
         $toform->license = $getdb->license;
@@ -440,8 +446,11 @@ if ($mform->is_cancelled()) {
         $toform->courselanguage = 0;
         $toform->processingtime = 0;
         $toform->targetgroup = null;
+        $toform->targetgroupheading = null;
         $toform->learninggoals = null;
+        $toform->learninggoalsheading = null;
         $toform->structure = null;
+        $toform->structureheading = null;
         $toform->detailslecturer = 0;
         $toform->detailsmorelecturer = null;
         $toform->detailslecturerimage = '';
