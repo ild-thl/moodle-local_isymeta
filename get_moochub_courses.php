@@ -321,7 +321,7 @@ if (!isset($metarecords) or empty($metarecords)) {
             $metaentry['attributes']['publisher']['image']['type'] = "ImageObject";
             $metaentry['attributes']['publisher']['image']['contentUrl'] = trim((string)$provider['logo']);
             $metaentry['attributes']['publisher']['image']['license'] = array();
-            $metaentry['attributes']['publisher']['image']['license'][0]['identifier'] = 'proprietary';
+            $metaentry['attributes']['publisher']['image']['license'][0]['identifier'] = 'Proprietary';
             $metaentry['attributes']['publisher']['image']['license'][0]['url'] = null;
         }
 
@@ -405,7 +405,7 @@ if (class_exists('Opis\JsonSchema\Validator')) {
         if ($download) {
             send_file($json, 'courses_moochub.json', 0, 0, true, $download);
         } else {
-            header('Content-Type: application/vnd.api+json; moochub-version=3');
+            header('Content-Type: application/vnd.api+json; moochub-version=3.0.1');
             echo $json;
         }
     }
@@ -448,7 +448,7 @@ if (class_exists('Opis\JsonSchema\Validator')) {
             'schema' => $schema,
         ];
 
-        header('Content-Type: application/vnd.api+json; moochub-version=3');
+        header('Content-Type: application/vnd.api+json; moochub-version=3.0.1');
         $json = json_encode($error, JSON_UNESCAPED_SLASHES);
         error_log('Error while validating JSON Schema: ' . $json);
         http_response_code(500);
@@ -461,7 +461,7 @@ if (class_exists('Opis\JsonSchema\Validator')) {
     if ($download) {
         send_file($json, 'courses_moochub.json', 0, 0, true, $download);
     } else {
-        header('Content-Type: application/vnd.api+json; moochub-version=3');
+        header('Content-Type: application/vnd.api+json; moochub-version=3.0.1');
         echo $json;
     }
 }
