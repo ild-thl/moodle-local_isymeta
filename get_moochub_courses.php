@@ -294,7 +294,7 @@ if (!isset($metarecords) or empty($metarecords)) {
             $teaches['name'][0]['name'] = $competency->shortname;
             $teaches['description'] = $competency->description;
             $teaches['educationalFramework'] = $competency->frameworkname;
-            $teaches['educationalFramework_version'] = $competency->frameworkversion;
+            $teaches['educationalFrameworkVersion'] = $competency->frameworkversion;
             $teaches['targetUrl'] = $competency->idnumber;
             $metaentry['attributes']['teaches'][] = $teaches;
         }
