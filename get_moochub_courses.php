@@ -313,7 +313,7 @@ if (!isset($metarecords) or empty($metarecords)) {
         if (strpos($provider['url'], 'http') === false) {
             $urlwithprotocol = 'https://' . $provider['url'];
         }
-        $metaentry['attributes']['publisher']['identifier'] = $urlwithprotocol;
+        $metaentry['attributes']['publisher']['url'] = $urlwithprotocol;
         $metaentry['attributes']['publisher']['type'] = 'Organization';
 
         if (isset($provider['logo']) && !empty((string)$provider['logo'])) {
