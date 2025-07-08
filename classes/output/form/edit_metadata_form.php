@@ -126,7 +126,7 @@ class edit_metadata_form extends \moodleform {
         $licenses = $DB->get_records('license');
         $licensesarr = [];
         foreach ($licenses as $license) {
-            $licensesarr[] = $license->fullname;
+            $licensesarr[$license->id] = $license->fullname;
         }
 
         $mform->addElement('select', 'license', get_string('license', 'local_ildmeta'), $licensesarr);
