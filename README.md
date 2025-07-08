@@ -37,6 +37,8 @@ To create a new provider access /local/ildmeta/edit_provider.php or go to Site a
 
 To edit vocabularies for coursetypes, courseformats, audiences, and subjectareas access /local/ildmeta/edit_vocabulary.php or go to Site administration -> Plugins -> Local Plugins -> ILD Meta -> Edit vocabulary. Here you can edit or delete existing terms. Make sure you use the correct json grammar to describe your data. You can add terms in diffrent languages by using the respective language code. See [list of language codes](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes).
 
+Also check the SPDX license mappings. These are settings that map moodles available licenses to licenses linking to spdx.org/licenses, which moochub prefers. Got to Site administration -> Plugins -> Local Plugins -> ILD Meta -> Edit licenses mapping to SPDX and check if the mappings are correct and complete.
+
 ### Competencies
 
 The course competences are added to the metadata if a competence from one of the following frameworks is attached to the course:
