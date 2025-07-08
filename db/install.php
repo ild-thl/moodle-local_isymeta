@@ -48,45 +48,45 @@ function xmldb_local_ildmeta_install() {
         $DB->insert_record('ildmeta_spdx_licenses', $default);
         // Public domain.
         $default["moodle_license"] = 3;
-        $default["spdx_shortname"] = 'GPL-3.0-or-later';
-        $default["spdx_fullname"] = 'GNU General Public License v3.0 or later';
-        $default["spdx_url"] = "https://spdx.org/licenses/GPL-3.0-or-later.html";
+        $default["spdx_shortname"] = 'CC-BY-4.0';
+        $default["spdx_fullname"] = 'Creative Commons - 4.0 International';
+        $default["spdx_url"] = "https://spdx.org/licenses/CC-BY-4.0.html";
         $DB->insert_record('ildmeta_spdx_licenses', $default);
         // All rights reserved.
         $default["moodle_license"] = 4;
-        $default["spdx_shortname"] = 'CC-BY-3.0-DE';
-        $default["spdx_fullname"] = 'Creative Commons Attribution 3.0 Germany';
-        $default["spdx_url"] = "https://spdx.org/licenses/CC-BY-3.0-DE.html";
+        $default["spdx_shortname"] = 'CC-BY-4.0';
+        $default["spdx_fullname"] = 'Creative Commons - 4.0 International';
+        $default["spdx_url"] = "https://spdx.org/licenses/CC-BY-4.0.html";
         $DB->insert_record('ildmeta_spdx_licenses', $default);
         // All rights reserved.
         $default["moodle_license"] = 5;
-        $default["spdx_shortname"] = 'CC-BY-ND-3.0-DE';
-        $default["spdx_fullname"] = 'Creative Commons Attribution No Derivatives 3.0 Germany';
-        $default["spdx_url"] = "https://spdx.org/licenses/CC-BY-ND-3.0-DE.html";
+        $default["spdx_shortname"] = 'CC-BY-NC-4.0';
+        $default["spdx_fullname"] = 'Creative Commons - NonCommercial 4.0 International';
+        $default["spdx_url"] = "https://spdx.org/licenses/CC-BY-NC-4.0.html";
         $DB->insert_record('ildmeta_spdx_licenses', $default);
         // All rights reserved.
         $default["moodle_license"] = 6;
-        $default["spdx_shortname"] = 'CC-BY-NC-ND-3.0-DE';
-        $default["spdx_fullname"] = 'Creative Commons Attribution Non Commercial No Derivatives 3.0 Germany';
-        $default["spdx_url"] = "https://spdx.org/licenses/CC-BY-NC-ND-3.0-DE.html";
+        $default["spdx_shortname"] = 'CC-BY-ND-4.0';
+        $default["spdx_fullname"] = 'Creative Commons - NoDerivatives 4.0 International';
+        $default["spdx_url"] = "https://spdx.org/licenses/CC-BY-ND-4.0.html";
         $DB->insert_record('ildmeta_spdx_licenses', $default);
         // All rights reserved.
         $default["moodle_license"] = 7;
-        $default["spdx_shortname"] = 'CC-BY-NC-3.0-DE';
-        $default["spdx_fullname"] = 'Creative Commons Attribution Non Commercial 3.0 Germany';
-        $default["spdx_url"] = "https://spdx.org/licenses/CC-BY-NC-3.0-DE.html";
+        $default["spdx_shortname"] = 'CC-BY-NC-ND-4.0';
+        $default["spdx_fullname"] = 'Creative Commons - NonCommercial-NoDerivatives 4.0 International';
+        $default["spdx_url"] = "https://spdx.org/licenses/CC-BY-NC-ND-4.0.html";
         $DB->insert_record('ildmeta_spdx_licenses', $default);
         // All rights reserved.
         $default["moodle_license"] = 8;
-        $default["spdx_shortname"] = 'CC-BY-NC-SA-3.0-DE';
-        $default["spdx_fullname"] = 'Creative Commons Attribution Non Commercial Share Alike 3.0 Germany';
-        $default["spdx_url"] = "https://spdx.org/licenses/CC-BY-NC-SA-3.0-DE.html";
+        $default["spdx_shortname"] = 'CC-BY-NC-SA-4.0';
+        $default["spdx_fullname"] = 'Creative Commons - NonCommercial-ShareAlike 4.0 International';
+        $default["spdx_url"] = "https://spdx.org/licenses/CC-BY-NC-SA-4.0.html";
         $DB->insert_record('ildmeta_spdx_licenses', $default);
         // All rights reserved.
         $default["moodle_license"] = 9;
-        $default["spdx_shortname"] = 'CC-BY-SA-3.0-DE';
-        $default["spdx_fullname"] = 'Creative Commons Attribution Share Alike 3.0 Germany';
-        $default["spdx_url"] = "https://spdx.org/licenses/CC-BY-SA-3.0-DE.html";
+        $default["spdx_shortname"] = 'CC-BY-SA-4.0';
+        $default["spdx_fullname"] = 'Creative Commons - ShareAlike 4.0 International';
+        $default["spdx_url"] = "https://spdx.org/licenses/CC-BY-SA-4.0.html";
         $DB->insert_record('ildmeta_spdx_licenses', $default);
     }
 
