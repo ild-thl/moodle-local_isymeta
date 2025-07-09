@@ -213,7 +213,7 @@ class edit_metadata_form extends \moodleform {
          * Each record will be selected by "courseid" and "name"
         */
 
-        $mform->addElement('html', '<h2>Angaben zu Autor*innen und Anbieter*innen</h2>');
+        $mform->addElement('header', 'creator_section', 'Angaben zu Autor*innen und Anbieter*innen');
         $i = 1;
 
         // Above $i will be used here!
@@ -316,7 +316,7 @@ class edit_metadata_form extends \moodleform {
         );
         $this->add_action_buttons($cancel = false, $submitlabel = 'Felder hinzufügen - bitte vorher speichern');
 
-        $mform->addElement('html', '<h2>Weitere Informationen</h2>');
+        $mform->addElement('header', 'misc', 'Weitere Informationen');
 
         // Leistungsnachweis.
         $mform->addElement('editor', 'certificateofachievement', get_string('certificateofachievement', 'local_ildmeta'));
@@ -326,7 +326,7 @@ class edit_metadata_form extends \moodleform {
         $mform->addElement('text', 'tags', get_string('tags', 'local_ildmeta'));
         $mform->setType('tags', PARAM_TEXT);
 
-        $mform->addElement('html', '<h2>' . get_string('birdmetadata', 'local_ildmeta') . '</h2>');
+        $mform->addElement('header', 'birdmetadata', get_string('birdmetadata', 'local_ildmeta'));
 
         // Export to bird.
         $mform->addElement('selectyesno', 'exporttobird', get_string('exporttobird', 'local_ildmeta'));

@@ -81,7 +81,7 @@ if (isset($record->detailslecturer)) {
     $maxlecturer = 0;
 }
 
-$recordslect = $DB->get_records($tbllecturer, array('courseid' => $id));
+$recordslect = $DB->get_records($tbllecturer, array('courseid' => $id), 'id ASC');
 
 $customdata = array(
     'filemanageropts' => $filemanageropts,
