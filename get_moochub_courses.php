@@ -364,8 +364,109 @@ if (!isset($metarecords) or empty($metarecords)) {
             ];
         }
 
-        // TODO Set actual creator. For now copy publisher.
+        // By default set creator to publisher, since this can not be empty.
         $metaentry['attributes']['creator'] = [$metaentry['attributes']['publisher']];
+
+
+        // Get creators from ildmeta_lecturer.
+        $getlect = $DB->get_records('ildmeta_additional', array('courseid' => $meta->courseid));
+        if (!empty($getlect)) {
+            // Set creators.
+            $creatorindex = 0;
+
+            // Group lecturer data by number (e.g., lecturer_type_1, detailslecturer_editor_1)
+            $creatordatas = array();
+            $metacreators = array();
+
+            foreach ($getlect as $lec) {
+                // Extract the lecturer number from the field name
+                if (preg_match('/_(\d+)$/', $lec->name, $matches)) {
+                    $creatornumber = $matches[1];
+
+                    if (!isset($creatordatas[$creatornumber])) {
+                        $creatordatas[$creatornumber] = array();
+                    }
+
+                    $creatordatas[$creatornumber][$lec->name] = $lec->value;
+                }
+            }
+
+            // Process each lecturer
+            foreach ($creatordatas as $creatornumber => $creatordata) {
+                $typename = "lecturer_type_$creatornumber";
+                $editorname = "detailslecturer_editor_$creatornumber";
+                $imagename = "detailslecturer_image_$creatornumber";
+
+                // Check if we have both type and editor data for this lecturer
+                if (isset($creatordata[$typename]) && isset($creatordata[$editorname])) {
+                    $creator = new \stdClass();
+
+                    // Extract name from the HTML content in the editor field
+                    $htmlcontent = $creatordata[$editorname];
+                    if (empty($htmlcontent)) {
+                        continue;
+                    }
+                    // Use regex to find the first heading (h1-h6) and extract the name and description.
+                    // If no heading is found, convert to plain text and leave name empty.
+                    if (preg_match('/<h[1-6]>(.*?)<\/h[1-6]>/', $htmlcontent, $matches)) {
+                        $creator->name = trim($matches[1]);
+                        $creator->description = trim(str_replace($matches[0], '', $htmlcontent)); // The rest of the content after the heading.
+                    } else {
+                        // If no heading is found, convert to plain text leave name empty and set description to the whole content.
+                        $creator->name = '';
+                        $creator->description = trim(strip_tags($htmlcontent));
+                    }
+
+                    // Set type based on lecturer_type value: 0 = Person, 1 = Organization
+                    $creator->type = ($creatordata[$typename] == '1') ? 'Organization' : 'Person';
+
+                    // Get image file if available.
+                    if (isset($creatordata[$imagename]) && !empty($creatordata[$imagename])) {
+                        $files = $fs->get_area_files($context->id, 'local_ildmeta', 'detailslecturer_image_' . $creatornumber);
+                        $imagefile = null;
+                        foreach ($files as $file) {
+                            if ($file->is_valid_image()) {
+                                $imagefile = $file;
+                                $fileurl = moodle_url::make_pluginfile_url(
+                                    $file->get_contextid(),
+                                    $file->get_component(),
+                                    $file->get_filearea(),
+                                    $file->get_itemid(),
+                                    $file->get_filepath(),
+                                    $file->get_filename(),
+                                    false
+                                );
+                            }
+                        }
+                        if (isset($imagefile) && $imagefile->is_valid_image()) {
+                            $creator->image = array();
+                            $creator->image['type'] = "ImageObject";
+                            $creator->image['contentUrl'] = trim((string)$fileurl);
+                            // Get License of image and convert to an SPDX license.
+                            $license = $DB->get_record('license', array('shortname' => $imagefile->get_license()), '*', MUST_EXIST);
+                            if (isset($license) && !empty($license) && $license->shortname != 'unknown') {
+                                $spdxlicense = $DB->get_record('ildmeta_spdx_licenses', array('moodle_license' => $license->id), '*', MUST_EXIST);
+                                $spdxurl = !empty($spdxlicense->spdx_url) ? $spdxlicense->spdx_url : null;
+                                $creator->image['license'] = array();
+                                $creator->image['license'][0]['identifier'] = $spdxlicense->spdx_shortname;
+                                $creator->image['license'][0]['url'] = $spdxurl;
+                            } else {
+                                $creator->image['license'] = [];
+                                $creator->image['license'][0]['identifier'] = 'Proprietary';
+                                $creator->image['license'][0]['url'] = null;
+                            }
+                        }
+                    }
+
+                    $metacreators[$creatorindex] = $creator;
+                    $creatorindex++;
+                }
+            }
+
+            if (!empty($metacreators)) {
+                $metaentry['attributes']['creator'] = $metacreators;
+            }
+        }
 
         if (isset($meta->tags) && !empty($meta->tags)) {
             $metaentry['attributes']['keywords'] = explode(', ', $meta->tags);
