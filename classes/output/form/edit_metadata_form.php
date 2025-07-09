@@ -213,93 +213,81 @@ class edit_metadata_form extends \moodleform {
          * Each record will be selected by "courseid" and "name"
         */
 
-        $mform->addElement('header', 'creator_section', 'Angaben zu Autor*innen und Anbieter*innen');
-        $i = 1;
+        $mform->addElement('header', 'creator_section', 'Angaben zur Urheberschaft');
 
-        // Above $i will be used here!
-        if (empty($lecturer)) {
-
-            while ($i <= $maxlecturer) {
-
-                // Anbieter*innen / Autor*innen.
-                $radioarray = array();
-                $radioarray[] = $mform->createElement('radio', 'lecturer_type_' . $i, '', get_string('lecturer_type_0', 'local_ildmeta'), 0);
-                $radioarray[] = $mform->createElement('radio', 'lecturer_type_' . $i, '', get_string('lecturer_type_1', 'local_ildmeta'), 1);
-                $mform->addGroup($radioarray, 'radioar', get_string('lecturer_type', 'local_ildmeta'), array(' '), false);
-                if ($i > 1) {
-                    $mform->setDefault('lecturer_type_' . $i, 1);
-                }
-
-                // Bild Anbieter*innen / Autor*innen.
-                $mform->addElement(
-                    'filemanager',
-                    'detailslecturer_image_' . $i,
-                    get_string('detailslecturer_image', 'local_ildmeta'),
-                    null,
-                    $filemanageropts
-                );
-
-                // Details Anbieter*innen / Autor*innen.
-                $mform->addElement(
-                    'editor',
-                    'detailslecturer_editor_' . $i,
-                    get_string('detailslecturer', 'local_ildmeta'),
-                    null,
-                    $editoropts
-                );
-                $mform->setType('detailslecturer_editor_' . $i, PARAM_RAW);
-                $mform->addRule('detailslecturer_editor_' . $i, get_string('required'), 'required', null, 'client');
-
-                $url = new \moodle_url('/local/ildmeta/ildmeta_delete_lecturer.php', array('courseid' => $courseid, 'id' => $i));
-
-                $mform->addElement('html', \html_writer::link($url, 'Eingabefeld entfernen'));
-
-                $mform->addElement('html', '<h>');
-
-                $i++;
-            }
-        } else {
+        // Group lecturer data by lecturer number first
+        $lecturergroups = array();
+        if (!empty($lecturer)) {
             foreach ($lecturer as $lect) {
-                if (strpos($lect->name, 'type')) {
-                    // Anbieter*innen / Autor*innen.
-                    $radioarray = array();
-                    $radioarray[] = $mform->createElement('radio', $lect->name, '', get_string('lecturer_type_0', 'local_ildmeta'), 0);
-                    $radioarray[] = $mform->createElement('radio', $lect->name, '', get_string('lecturer_type_1', 'local_ildmeta'), 1);
-                    $mform->addGroup($radioarray, 'radioar', get_string('lecturer_type', 'local_ildmeta'), array(' '), false);
-                    if ($i > 1) {
-                        $mform->setDefault($lect->name, 1);
+                // Extract the lecturer number from the field name
+                if (preg_match('/_(\d+)$/', $lect->name, $matches)) {
+                    $lecturernumber = $matches[1];
+
+                    if (!isset($lecturergroups[$lecturernumber])) {
+                        $lecturergroups[$lecturernumber] = array();
                     }
-                }
-                if (strpos($lect->name, 'image')) {
-                    // Bild Anbieter*innen / Autor*innen.
-                    $mform->addElement(
-                        'filemanager',
-                        $lect->name,
-                        get_string('detailslecturer_image', 'local_ildmeta'),
-                        null,
-                        $filemanageropts
-                    );
-                }
-                if (strpos($lect->name, 'editor')) {
-                    // Details Anbieter*innen / Autor*innen.
-                    $mform->addElement(
-                        'editor',
-                        $lect->name,
-                        get_string('detailslecturer', 'local_ildmeta'),
-                        null,
-                        $editoropts
-                    );
-                    $mform->setType($lect->name, PARAM_RAW);
-                    $mform->addRule($lect->name, get_string('required'), 'required', null, 'client');
 
-                    $id = substr($lect->name, -1);
-                    $url = new \moodle_url('/local/ildmeta/ildmeta_delete_lecturer.php', array('courseid' => $courseid, 'id' => $id));
-                    $mform->addElement('html', \html_writer::link($url, 'Eingabefeld entfernen'));
-                    $mform->addElement('html', '<h>');
-
-                    $i++;
+                    $lecturergroups[$lecturernumber][$lect->name] = $lect;
                 }
             }
+        }
+
+        // Build form elements for each lecturer group
+        $i = 1;
+        foreach ($lecturergroups as $lecturernumber => $lecturerdata) {
+            $typename = "lecturer_type_$lecturernumber";
+            $imagename = "detailslecturer_image_$lecturernumber";
+            $namename = "detailslecturer_name_$lecturernumber";
+            $editorname = "detailslecturer_editor_$lecturernumber";
+
+            // Add a visual separator for each lecturer (except the first one)
+            if ($i > 1) {
+                $mform->addElement('html', '<hr style="margin: 20px 0;">');
+            }
+
+            $mform->addElement('html', '<h4>Urheber*in ' . $i . '</h4>');
+
+            // Type field (Person/Organization radio buttons)
+            $radioarray = array();
+            $radioarray[] = $mform->createElement('radio', $typename, '', get_string('lecturer_type_0', 'local_ildmeta'), 0);
+            $radioarray[] = $mform->createElement('radio', $typename, '', get_string('lecturer_type_1', 'local_ildmeta'), 1);
+            $mform->addGroup($radioarray, 'radioar_' . $lecturernumber, get_string('lecturer_type', 'local_ildmeta'), array(' '), false);
+
+            // Set default to Organization for lecturers after the first one
+            if ($i > 1) {
+                $mform->setDefault($typename, 1);
+            }
+
+            // Image field
+            $mform->addElement(
+                'filemanager',
+                $imagename,
+                get_string('detailslecturer_image', 'local_ildmeta'),
+                null,
+                $filemanageropts
+            );
+
+            // Name field
+            $mform->addElement('text', $namename, get_string('detailslecturer_name', 'local_ildmeta'));
+            $mform->setType($namename, PARAM_TEXT);
+            $mform->addRule($namename, get_string('required'), 'required', null, 'client');
+
+            // Editor field (details)
+            $mform->addElement(
+                'editor',
+                $editorname,
+                get_string('detailslecturer', 'local_ildmeta'),
+                null,
+                $editoropts
+            );
+            $mform->setType($editorname, PARAM_RAW);
+            $mform->addRule($editorname, get_string('required'), 'required', null, 'client');
+
+            // Add delete link
+            $url = new \moodle_url('/local/ildmeta/ildmeta_delete_lecturer.php', array('courseid' => $courseid, 'id' => $lecturernumber));
+            $mform->addElement('html', \html_writer::link($url, 'Eingabefeld entfernen'));
+
+            $i++;
         }
 
         $mform->addElement('html', '<hr>');

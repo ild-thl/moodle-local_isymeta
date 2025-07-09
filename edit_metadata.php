@@ -253,8 +253,9 @@ if ($mform->is_cancelled()) {
             $str1 = "lecturer_type_" . $i;
             $str2 = "detailslecturer_image_" . $i;
             $str3 = "detailslecturer_editor_" . $i;
+            $str4 = "detailslecturer_name_" . $i;
 
-            $fields = array($str1, $str2, $str3);
+            $fields = array($str1, $str2, $str3, $str4);
 
             foreach ($fields as $f) {
                 $ins = new stdClass();
@@ -288,6 +289,10 @@ if ($mform->is_cancelled()) {
         }
         if (strpos($key, '_editor')) {
             $lecturer->$key = ($fromform->$key)['text'];
+        }
+        if (strpos($key, '_name')) {
+            // Name of lecturer.
+            $lecturer->$key = $fromform->$key;
         }
     }
 

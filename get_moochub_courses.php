@@ -394,6 +394,7 @@ if (!isset($metarecords) or empty($metarecords)) {
             // Process each lecturer
             foreach ($creatordatas as $creatornumber => $creatordata) {
                 $typename = "lecturer_type_$creatornumber";
+                $namename = "detailslecturer_name_$creatornumber";
                 $editorname = "detailslecturer_editor_$creatornumber";
                 $imagename = "detailslecturer_image_$creatornumber";
 
@@ -401,20 +402,27 @@ if (!isset($metarecords) or empty($metarecords)) {
                 if (isset($creatordata[$typename]) && isset($creatordata[$editorname])) {
                     $creator = new \stdClass();
 
-                    // Extract name from the HTML content in the editor field
-                    $htmlcontent = $creatordata[$editorname];
-                    if (empty($htmlcontent)) {
-                        continue;
-                    }
-                    // Use regex to find the first heading (h1-h6) and extract the name and description.
-                    // If no heading is found, convert to plain text and leave name empty.
-                    if (preg_match('/<h[1-6]>(.*?)<\/h[1-6]>/', $htmlcontent, $matches)) {
-                        $creator->name = trim($matches[1]);
-                        $creator->description = trim(str_replace($matches[0], '', $htmlcontent)); // The rest of the content after the heading.
+                    // See if detailslecturer_name is availbale, if not use the name from the editor field.
+                    if (isset($creatordata[$namename]) && !empty($creatordata[$namename])) {
+                        $creator->name = trim($creatordata[$namename]);
+                        $creator->description = trim($creatordata[$editorname]);
                     } else {
-                        // If no heading is found, convert to plain text leave name empty and set description to the whole content.
-                        $creator->name = '';
-                        $creator->description = trim(strip_tags($htmlcontent));
+
+                        // Extract name from the HTML content in the editor field
+                        $htmlcontent = $creatordata[$editorname];
+                        if (empty($htmlcontent)) {
+                            continue;
+                        }
+                        // Use regex to find the first heading (h1-h6) and extract the name and description.
+                        // If no heading is found, convert to plain text and leave name empty.
+                        if (preg_match('/<h[1-6]>(.*?)<\/h[1-6]>/', $htmlcontent, $matches)) {
+                            $creator->name = trim($matches[1]);
+                            $creator->description = trim(str_replace($matches[0], '', $htmlcontent)); // The rest of the content after the heading.
+                        } else {
+                            // If no heading is found, convert to plain text leave name empty and set description to the whole content.
+                            $creator->name = '';
+                            $creator->description = trim(strip_tags($htmlcontent));
+                        }
                     }
 
                     // Set type based on lecturer_type value: 0 = Person, 1 = Organization
