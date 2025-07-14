@@ -443,7 +443,8 @@ if ($mform->is_cancelled()) {
 
         $toform->courseid = $id;
         $toform->lecturer = '';
-        $toform->noindexcourse = 0;
+        // CHANGED tinjohn 20250714 - noindexcourse = 1 is default for no indexation at all, 0 for moochub, 2 for only course tile. 
+        $toform->noindexcourse = 1;
         $toform->overviewimage = null;
         $toform->detailimage = null;
         $toform->provider = 0;
