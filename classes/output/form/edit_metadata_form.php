@@ -75,9 +75,14 @@ class edit_metadata_form extends \moodleform {
                 'select',
                 'noindexcourse',
                 get_string('noindexcourse', 'local_ildmeta'),
-                array(get_string('noindexcourse_yes', 'local_ildmeta'), get_string('noindexcourse_no', 'local_ildmeta'), get_string('noindexcourse_limited', 'local_ildmeta'))
+                array(
+                    get_string('noindexcourse_index', 'local_ildmeta'), 
+                    get_string('noindexcourse_noindex', 'local_ildmeta'),
+                    get_string('noindexcourse_limited', 'local_ildmeta')
+                )
             );
             $mform->setType('index', PARAM_RAW);
+            $mform->addHelpButton('noindexcourse', 'noindexcourse', 'local_ildmeta');
             // $mform->addRule('noindexcourse', get_string('required'), 'required', null, 'server');
         }
 
