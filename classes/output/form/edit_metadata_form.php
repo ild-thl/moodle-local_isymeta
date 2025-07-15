@@ -76,7 +76,7 @@ class edit_metadata_form extends \moodleform {
                 'noindexcourse',
                 get_string('noindexcourse', 'local_ildmeta'),
                 array(
-                    get_string('noindexcourse_index', 'local_ildmeta'), 
+                    get_string('noindexcourse_index', 'local_ildmeta'),
                     get_string('noindexcourse_noindex', 'local_ildmeta'),
                     get_string('noindexcourse_limited', 'local_ildmeta')
                 )
@@ -218,7 +218,7 @@ class edit_metadata_form extends \moodleform {
          * Each record will be selected by "courseid" and "name"
         */
 
-        $mform->addElement('header', 'creator_section', 'Angaben zur Urheberschaft');
+        $mform->addElement('header', 'creator_section', 'Angaben zu Autor*innen und Anbieter*innen');
 
         // Group lecturer data by lecturer number first
         $lecturergroups = array();
@@ -250,7 +250,7 @@ class edit_metadata_form extends \moodleform {
                 $mform->addElement('html', '<hr style="margin: 20px 0;">');
             }
 
-            $mform->addElement('html', '<h4>Urheber*in ' . $i . '</h4>');
+            $mform->addElement('html', '<h4>Autor*in/Anbieter*in ' . $i . '</h4>');
 
             // Type field (Person/Organization radio buttons)
             $radioarray = array();

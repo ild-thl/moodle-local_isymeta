@@ -402,6 +402,10 @@ if (!isset($metarecords) or empty($metarecords)) {
                 if (isset($creatordata[$typename]) && isset($creatordata[$editorname])) {
                     $creator = new \stdClass();
 
+                    if ($creatordata[$typename] == '1') {
+                        continue;
+                    }
+
                     // See if detailslecturer_name is availbale, if not use the name from the editor field.
                     if (isset($creatordata[$namename]) && !empty($creatordata[$namename])) {
                         $creator->name = trim($creatordata[$namename]);
@@ -425,8 +429,10 @@ if (!isset($metarecords) or empty($metarecords)) {
                         }
                     }
 
+                    // TODO: Type currently sets wether its about a author or a provider. So for now we assume its a person.
                     // Set type based on lecturer_type value: 0 = Person, 1 = Organization
-                    $creator->type = ($creatordata[$typename] == '1') ? 'Organization' : 'Person';
+                    // $creator->type = ($creatordata[$typename] == '1') ? 'Organization' : 'Person';
+                    $creator->type = 'Person'; // Default to Person, as we do not have Organization data yet.
 
                     // Get image file if available.
                     if (isset($creatordata[$imagename]) && !empty($creatordata[$imagename])) {
