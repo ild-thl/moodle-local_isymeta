@@ -157,11 +157,7 @@ class edit_metadata_form extends \moodleform {
         $mform->setType('videocode', PARAM_URL);
 
         // Videolizenz.
-        $licenses = $DB->get_records('license');
-        $licenseoptions = array_map(function ($license) {
-            return $license->fullname;
-        }, $licenses);
-        $mform->addElement('select', 'videolicense', get_string('videolicense', 'local_ildmeta'), $licenseoptions);
+        $mform->addElement('select', 'videolicense', get_string('videolicense', 'local_ildmeta'), $licensesarr);
         // Disabled if exporttobird is not set to 1 -> Yes.
         $mform->disabledIf('videolicense', 'videocode', 'eq', '');
 

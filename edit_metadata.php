@@ -462,7 +462,7 @@ if ($mform->is_cancelled()) {
         $toform->detailslecturerimage = '';
         $toform->additional_lecturer = 0;
         $toform->certificateofachievement = null;
-        $toform->license = 0;
+        $toform->license = 2; // Default to All rights reserved.
         $toform->videocode = null;
         $toform->videolicense = null;
         $toform->edulevel = null;

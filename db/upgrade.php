@@ -511,5 +511,19 @@ function xmldb_local_ildmeta_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2024110610, 'local', 'ildmeta');
     }
 
+    if ($oldversion < 2025070914) {
+        // For all rows in ildmeta, increase the license id by 1 to fix a long standing issue where the licenses selectable in the UI
+        // were not matching the actual license ids in the database leading to the wrong license stored in the database.
+        $records = $DB->get_records('ildmeta', [], '', 'id,license');
+        foreach ($records as $rec) {
+            if ($rec->license !== null && is_numeric($rec->license) && intval($rec->license) > 0) {
+                $rec->license = (string)(intval($rec->license) + 1);
+                $DB->update_record('ildmeta', $rec);
+            }
+        }
+        // savepoint
+        upgrade_plugin_savepoint(true, 2025070914, 'local', 'ildmeta');
+    }
+
     return true;
 }
