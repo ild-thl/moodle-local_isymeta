@@ -118,10 +118,29 @@ class edit_metadata_form extends \moodleform {
         // Bildungsniveau. Required.
         edu_level_form_element::toHTML($mform);
 
-        // Kurssprache. Required.
-        $mform->addElement('select', 'courselanguage', get_string('courselanguage', 'local_ildmeta'), $langlist);
-        $mform->setType('courselanguage', PARAM_RAW);
-        // $mform->addRule('courselanguage', get_string('required'), 'required', null, 'client');
+        $languagecheckboxes = [];
+        foreach ($langlist as $idx => $label) {
+            // name is courselanguage[idx], checked‐value is idx, unchecked‐value is 0
+            $languagecheckboxes[] = $mform->createElement(
+                'advcheckbox',
+                "courselanguage[{$idx}]",
+                '',
+                $label,
+                $idx,
+                0,
+                ['group' => 1]
+            );
+            // ensure we store it as an int
+            $mform->setType("courselanguage[{$idx}]", PARAM_INT);
+        }
+        $mform->addGroup(
+            $languagecheckboxes,
+            'courselanguage',
+            get_string('courselanguage', 'local_ildmeta'),
+            [' '],
+            false
+        );
+        $mform->addRule('courselanguage', get_string('required'), 'required', null, 'client');
 
         // Startzeit. Required.
         $mform->addElement('date_selector', 'starttime', get_string('starttime', 'local_ildmeta'));
@@ -439,6 +458,11 @@ class edit_metadata_form extends \moodleform {
     // Custom validation.
     public function validation($data, $files) {
         $errors = array();
+
+        // Check that at elast one of the course languages is selected.
+        if (!isset($data['courselanguage']) || !is_array($data['courselanguage']) || count($data['courselanguage']) == 0) {
+            $errors['courselanguage'] = get_string('required');
+        }
 
         if ($data['exporttobird']) {
             // Requires abstract.

@@ -125,7 +125,16 @@ if ($mform->is_cancelled()) {
 
     $todb->provider = $fromform->provider;
     $todb->subjectarea = $fromform->subjectarea;
-    $todb->courselanguage = $fromform->courselanguage;
+    foreach ($fromform->courselanguage as $idx => $value) {
+        if ($value == true) {
+            $todb->courselanguage[] = $idx;
+        }
+    }
+    if (isset($todb->courselanguage)) {
+        $todb->courselanguage = implode(',', $todb->courselanguage);
+    } else {
+        $todb->courselanguage = '0'; // Has to be at least one language. Default to german.
+    }
     $todb->processingtime = $fromform->processingtime;
     $todb->starttime = $fromform->starttime;
     $todb->teasertext = $fromform->teasertext['text'];
@@ -344,7 +353,9 @@ if ($mform->is_cancelled()) {
         $toform->provider = $getdb->provider;
         $toform->noindexcourse = $getdb->noindexcourse;
         $toform->subjectarea = $getdb->subjectarea;
-        $toform->courselanguage = $getdb->courselanguage;
+        foreach (explode(',', $getdb->courselanguage) as $idx) {
+            $toform->courselanguage[$idx] = true;
+        }
         $toform->processingtime = $getdb->processingtime;
         $toform->starttime = $getdb->starttime;
         $toform->teasertext['text'] = $getdb->teasertext;
@@ -449,7 +460,7 @@ if ($mform->is_cancelled()) {
         $toform->detailimage = null;
         $toform->provider = 0;
         $toform->subjectarea = 0;
-        $toform->courselanguage = 0;
+        $toform->courselanguage = [0 => 1]; # By default first language is selected (German).
         $toform->processingtime = 0;
         $toform->targetgroup = null;
         $toform->targetgroupheading = null;

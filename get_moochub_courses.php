@@ -189,7 +189,16 @@ if (!isset($metarecords) or empty($metarecords)) {
             'uk',
             'ru'
         ];
-        $metaentry['attributes']['inLanguage'] = [$langlist[$meta->courselanguage]];
+        $inLanguage = [];
+        foreach (explode(',', $meta->courselanguage) as $lang) {
+            if (isset($langlist[$lang]) && !empty($langlist[$lang])) {
+                $inLanguage[] = $langlist[$lang];
+            }
+        }
+        if (empty($inLanguage)) {
+            $inLanguage = ['de']; // Default to german if no language is set.
+        }
+        $metaentry['attributes']['inLanguage'] = $inLanguage;
         // Set course start and end date.
         $metaentry['attributes']['endDate'] = date('c', $meta->starttime);
         $metaentry['attributes']['endDate'] = null;
