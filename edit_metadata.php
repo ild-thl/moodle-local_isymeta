@@ -24,9 +24,12 @@
 
 require_once(__DIR__ . '/../../config.php');
 require_once('lib.php');
+require_once($CFG->libdir . '/licenselib.php');
 
 use local_ildmeta\output\form\edit_metadata_form;
 use local_ildmeta\manager;
+
+global $CFG;
 
 $id = required_param('id', PARAM_INT);
 $coursecontext = context_course::instance($id);
@@ -473,9 +476,11 @@ if ($mform->is_cancelled()) {
         $toform->detailslecturerimage = '';
         $toform->additional_lecturer = 0;
         $toform->certificateofachievement = null;
-        $toform->license = 2; // Default to All rights reserved.
+        // Get default from config value "sitedefaultlicense" if available.
+        $default = $CFG->sitedefaultlicense ?? 'allrightsreserved';
+        $toform->license = license_manager::get_license_by_shortname($default)?->id ?? 1;
         $toform->videocode = null;
-        $toform->videolicense = null;
+        $toform->videolicense = license_manager::get_license_by_shortname($default)?->id ?? 1;
         $toform->edulevel = null;
 
         // Bird/DC properties.
