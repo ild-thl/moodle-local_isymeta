@@ -494,6 +494,13 @@ if (!isset($metarecords) or empty($metarecords)) {
         if (isset($meta->tags) && !empty($meta->tags)) {
             $metaentry['attributes']['keywords'] = explode(', ', $meta->tags);
         }
+        // Also add the moodle course tags as keywords.
+        $coursetags = core_tag_tag::get_item_tags_array('core', 'course', $meta->courseid);
+        foreach ($coursetags as $tag) {
+            if (!in_array($tag, $metaentry['attributes']['keywords'] ?? [])) {
+                $metaentry['attributes']['keywords'][] = $tag;
+            }
+        }
         // TODO Set numberOfCredits.
         // TODO Set educationalCredentialsAwarded.
         // TODO Set competencyRequired.

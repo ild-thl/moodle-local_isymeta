@@ -330,9 +330,22 @@ class edit_metadata_form extends \moodleform {
         $mform->addElement('editor', 'certificateofachievement', get_string('certificateofachievement', 'local_ildmeta'));
         $mform->setType('certificateofachievement', PARAM_RAW);
 
-        // Schlagwörter.
+        // Course tags from Moodle course settings (read-only).
+        if (!empty($this->_customdata['coursetags'])) {
+            $coursetags_str = implode(', ', $this->_customdata['coursetags']);
+            $mform->addElement(
+                'static',
+                'coursetags_display',
+                get_string('coursetags', 'local_ildmeta'),
+                '<strong>' . htmlspecialchars($coursetags_str, ENT_QUOTES, 'UTF-8') . '</strong>'
+            );
+            $mform->addHelpButton('coursetags_display', 'coursetags', 'local_ildmeta');
+        }
+
+        // Schlagwörter (additional export keywords).
         $mform->addElement('text', 'tags', get_string('tags', 'local_ildmeta'));
         $mform->setType('tags', PARAM_TEXT);
+        $mform->addHelpButton('tags', 'tags', 'local_ildmeta');
 
         $mform->addElement('header', 'birdmetadata', get_string('birdmetadata', 'local_ildmeta'));
 

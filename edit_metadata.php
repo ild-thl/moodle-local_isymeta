@@ -86,12 +86,17 @@ if (isset($record->detailslecturer)) {
 
 $recordslect = $DB->get_records($tbllecturer, array('courseid' => $id), 'id ASC');
 
+// Get course tags from Moodle course settings.
+require_once($CFG->dirroot . '/tag/lib.php');
+$coursetags = \core_tag_tag::get_item_tags_array('core', 'course', $id);
+
 $customdata = array(
     'filemanageropts' => $filemanageropts,
     'editoropts' => $editoropts,
     'max_lecturer' => $maxlecturer,
     'courseid' => $id,
-    'lecturer' => $recordslect
+    'lecturer' => $recordslect,
+    'coursetags' => $coursetags
 );
 
 $mform = new edit_metadata_form($url . '?courseid=' . $id, $customdata);
