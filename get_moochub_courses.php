@@ -492,7 +492,9 @@ if (!isset($metarecords) or empty($metarecords)) {
         }
 
         if (isset($meta->tags) && !empty($meta->tags)) {
-            $metaentry['attributes']['keywords'] = explode(', ', $meta->tags);
+            $metaentry['attributes']['keywords'] = explode(',', $meta->tags);
+            // Trim whitespace from keywords.
+            $metaentry['attributes']['keywords'] = array_map('trim', $metaentry['attributes']['keywords']);
         }
         // Also add the moodle course tags as keywords.
         $coursetags = core_tag_tag::get_item_tags_array('core', 'course', $meta->courseid);

@@ -322,7 +322,11 @@ class edit_metadata_form extends \moodleform {
             '',
             'Bitte die Anzahl der zusätzlich benötigten Felder zum Anlegen weiterer Autor*innen und Anbieter*innen angeben.'
         );
-        $this->add_action_buttons($cancel = false, $submitlabel = 'Felder hinzufügen - bitte vorher speichern');
+
+        // Add button to add more lecturer fields (inside creator_section)
+        $mform->addElement('html', '<div style="margin-top: 20px;">');
+        $mform->addElement('submit', 'add_lecturer_fields', 'Felder hinzufügen - bitte vorher speichern');
+        $mform->addElement('html', '</div>');
 
         $mform->addElement('header', 'misc', 'Weitere Informationen');
 

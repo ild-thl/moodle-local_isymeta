@@ -501,6 +501,13 @@ if ($mform->is_cancelled()) {
         $toform->courseprerequisites = null;
         $toform->availablefrom = null;
         $toform->availableuntil = null;
+
+        // Add DLC-Original tag by default if setting is enabled and this is a new record
+        if (get_config('local_ildmeta', 'add_dlc_original_tag')) {
+            $toform->tags = 'DLC-Original';
+        } else {
+            $toform->tags = '';
+        }
     }
 
 

@@ -47,6 +47,13 @@ if ($hassiteconfig) {
             0
         ));
 
+        $settingspage->add(new admin_setting_configcheckbox(
+            'local_ildmeta/add_dlc_original_tag',
+            new lang_string('add_dlc_original_tag', 'local_ildmeta'),
+            new lang_string('add_dlc_original_tag_desc', 'local_ildmeta'),
+            0
+        ));
+
         if (!get_config('local_ildmeta', 'usecustomvocabulary')) {
             manager::set_default_vocabulary();
         }
