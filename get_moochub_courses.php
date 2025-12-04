@@ -503,6 +503,8 @@ if (!isset($metarecords) or empty($metarecords)) {
                 $metaentry['attributes']['keywords'][] = $tag;
             }
         }
+        // Remove duplicate keywords.
+        $metaentry['attributes']['keywords'] = array_unique($metaentry['attributes']['keywords']);
         // TODO Set numberOfCredits.
         // TODO Set educationalCredentialsAwarded.
         // TODO Set competencyRequired.
