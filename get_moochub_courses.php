@@ -504,7 +504,9 @@ if (!isset($metarecords) or empty($metarecords)) {
             }
         }
         // Remove duplicate keywords.
-        $metaentry['attributes']['keywords'] = array_unique($metaentry['attributes']['keywords']);
+        if (!empty($metaentry['attributes']['keywords'])) {
+            $metaentry['attributes']['keywords'] = array_unique($metaentry['attributes']['keywords']);
+        }
         // TODO Set numberOfCredits.
         // TODO Set educationalCredentialsAwarded.
         // TODO Set competencyRequired.
