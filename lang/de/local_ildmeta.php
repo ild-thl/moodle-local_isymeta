@@ -23,7 +23,8 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
-
+$string['lecturer_provider'] = 'Autor*in / Anbieter*in';
+$string['lecturer_n_provider'] = 'Angaben zu Autor*innen und Anbieter*innen';
 $string['abstract'] = 'Kursbeschreibung kurz';
 $string['audience'] = 'Zielgruppe';
 $string['availablefrom'] = 'Verfügbar ab';

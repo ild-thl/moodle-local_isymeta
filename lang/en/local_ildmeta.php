@@ -23,7 +23,8 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
-
+$string['lecturer_provider'] = 'Lecturer/ Provider';
+$string['lecturer_n_provider'] = 'Information about Lecturers and Providers';
 $string['abstract'] = 'Abstract';
 $string['audience'] = 'Audience';
 $string['availablefrom'] = 'Available from';

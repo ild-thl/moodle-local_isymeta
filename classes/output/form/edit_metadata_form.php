@@ -233,7 +233,7 @@ class edit_metadata_form extends \moodleform {
          * Each record will be selected by "courseid" and "name"
         */
 
-        $mform->addElement('header', 'creator_section', 'Angaben zu Autor*innen und Anbieter*innen');
+        $mform->addElement('header', 'creator_section',  get_string('lecturer_n_provider', 'local_ildmeta') );
 
         // Group lecturer data by lecturer number first
         $lecturergroups = array();
@@ -265,7 +265,7 @@ class edit_metadata_form extends \moodleform {
                 $mform->addElement('html', '<hr style="margin: 20px 0;">');
             }
 
-            $mform->addElement('html', '<h4>Autor*in/Anbieter*in ' . $i . '</h4>');
+            $mform->addElement('html', '<h4>'. get_string('lecturer_provider', 'local_ildmeta') . ' ' . $i . '</h4>');
 
             // Type field (Person/Organization radio buttons)
             $radioarray = array();
